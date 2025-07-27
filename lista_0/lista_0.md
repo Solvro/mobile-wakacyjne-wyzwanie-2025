@@ -1,7 +1,7 @@
 ### Lista 0 (instalacja fluttera i przygotowanie środowiska)
 
-- Jak zaistalować i skonfigurać środowisko sprawdź [tu](https://docs.solvro.pl/sections/mobile/)
+- Jak zainstalować i skonfigurać środowisko sprawdź [tu](https://docs.solvro.pl/sections/mobile/)
 - Zapoznaj się ze składnią darta (przykładowe materiały):
   - [Kurs Dart dla początkujących](https://docs.solvro.pl/sections/mobile/dart-for-begginers/)
-  - [Oficjana dokumentacja dart](https://dart.dev/language)
+  - [Oficjalna dokumentacja dart](https://dart.dev/language)
   - Dowolne inne źródła znalezione w internecie
