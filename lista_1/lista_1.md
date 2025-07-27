@@ -36,7 +36,7 @@
 5. **Ożywiamy naszą Aplikację! (StatefulWidget i IconButton)**
     - Na koniec dodajmy trochę życia! Umieścimy w AppBarze przycisk "ulubione", którego stan będzie można zmieniać.
     - Konwersja na StatefulWidget: Kliknij na nazwę klasy DreamPlaceScreen, użyj skrótu Ctrl + . (lub Cmd + .) i wybierz "Convert to StatefulWidget".
-    - Dodanie stanu: W nowo powstałej klasie _DreamPlaceScreenState dodaj zmienną stanu: bool_isFavorited = false;.
+    - Dodanie stanu: W nowo powstałej klasie _DreamPlaceScreenState dodaj zmienną stanu: bool _isFavorited = false;.
     - Funkcja zmiany stanu: Stwórz metodę, która będzie zmieniać wartość _isFavorited i odświeżać interfejs za pomocą setState:
     - Dodanie przycisku: W AppBar dodaj właściwość actions. Jest to lista widżetów po prawej stronie tytułu. Umieść tam IconButton.
     - W onPressed wywołaj funkcję _toggleFavorite.
