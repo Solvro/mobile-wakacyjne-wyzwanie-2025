@@ -1,0 +1,29 @@
+name: PR Title Check
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [opened, synchronize]
+    paths:
+      - 'where_to_go/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: where_to_go
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version-file: where_to_go/pubspec.yaml
+          
+      - run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Validate Title of PR
+        run: echo "${{github.event.pull_request.title}}" | dart run commitlint_cli
+  
