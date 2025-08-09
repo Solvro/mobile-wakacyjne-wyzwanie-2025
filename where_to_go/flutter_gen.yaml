@@ -1,0 +1,7 @@
+output: lib/gen/  
+
+flutter:
+  assets:
+    enabled: true  
+  colors:
+    enabled: true  
