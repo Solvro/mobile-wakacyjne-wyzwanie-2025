@@ -92,8 +92,8 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(6),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      await Navigator.push(
                         context,
                         MaterialPageRoute<MyDetailPage>(
                           builder: (context) => MyDetailPage(
