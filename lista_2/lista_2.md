@@ -4,87 +4,68 @@ W pierwszej liście ożywiliśmy naszą aplikację za pomocą `StatefulWidget`. 
 
 Następnie zajmiemy się problemem globalnego stanu, czyli tego, który chcemy udostępnić w wielu miejscach aplikacji. Poznamy **Riverpod** do zarządzania globalnym stanem oraz **GoRouter** do deklaratywnego routing’u.
 
-### 1. Hooki Flutter — lżejsza alternatywa dla `StatefulWidget`
 
-#### Dlaczego hooki?
+### Teoria — Hooki w Flutterze
 
-* Hooki pozwalają na zarządzanie stanem bez rozdzielania widgetów na dwie klasy — używamy funkcji i hooków w `HookWidget`.
-* Kod jest bardziej zwięzły i łatwiejszy do czytania.
-* Pozwalają na korzystanie z gotowych hooków np. do efektów ubocznych (`useEffect`), animacji, kontrolerów itd.
+**Dlaczego hooki?**
 
-#### Jak użyć hooków w naszej aplikacji?
+* Pozwalają zarządzać stanem w `HookWidget` bez tworzenia osobnej klasy stanu (`StatefulWidget`).
+* Kod jest krótszy i bardziej czytelny.
+* Dostępne są gotowe hooki, np. `useEffect`, `useAnimationController`, `useTextEditingController`.
 
-* Dodaj do `pubspec.yaml`:
+**Podstawy użycia:**
 
-```yaml
-dependencies:
-  flutter_hooks: <najnowsza_wersja>
-```
+* Importujemy pakiet `flutter_hooks`.
+* Zamiast `StatefulWidget` tworzymy `HookWidget`.
+* Stan przechowujemy np. w `useState()`.
 
+### 1. Zadanie do wykonania
 
-```dart
-import 'package:flutter_hooks/flutter_hooks.dart';
+1. Dodaj do pliku `pubspec.yaml` zależność:
 
-class DreamPlaceScreen extends HookWidget {
-  const DreamPlaceScreen({super.key});
+   ```yaml
+   dependencies:
+     flutter_hooks: <najnowsza_wersja>
+   ```
+2. W ekranie `DreamPlaceScreen`:
 
-  @override
-  Widget build(BuildContext context) {
-    // Hook do stanu bool
-    final isFavorited = useState(false);
+   * Zmień go na `HookWidget`.
+   * Utwórz stan `isFavorited` za pomocą `useState(false)`.
+   * Dodaj ikonę serca w `AppBar`, która po kliknięciu:
 
-    void toggleFavorite() {
-      isFavorited.value = !isFavorited.value;
-    }
+     * przełącza `isFavorited` między `true` a `false`
+     * zmienia ikonę między `Icons.favorite` a `Icons.favorite_border`
+     * ustawia kolor na czerwony, gdy jest ulubione.
+3. Resztę ekranu (`body`) pozostaw bez zmian.
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Santorini, Grecja'),
-        actions: [
-          IconButton(
-            onPressed: toggleFavorite,
-            icon: Icon(
-              isFavorited.value ? Icons.favorite : Icons.favorite_border,
-              color: isFavorited.value ? Colors.red : null,
-            ),
-          ),
-        ],
-      ),
-      body: // ...
-    );
-  }
-}
-```
-
-**Korzyści:**
-
-* Nie trzeba tworzyć klasy stanu — cały stan jest blisko miejsca użycia.
-* Kod jest krótszy i bardziej deklaratywny.
-* Możemy łatwo dodawać więcej hooków do innych celów (np. `useEffect`, `useAnimationController`).
-
-### 2. Problem: "Prop Drilling" (przekazywanie stanu przez wiele widgetów)
+### Problem: "Prop Drilling" (przekazywanie stanu przez wiele widgetów)
 
 * Gdy nasza aplikacja rośnie, często potrzebujemy udostępnić stan wielu widgetom.
 * Przekazywanie przez wiele warstw widgetów danych i funkcji staje się uciążliwe i utrudnia konserwację.
 * Przykład: w `DreamPlaceScreen` przenieśliśmy `IconButton` z `AppBar` do dedykowanego `AttractionsWidget`.
 * Jak teraz `AttractionsWidget` ma wiedzieć, czy miejsce jest ulubione i jak wywołać funkcję zmiany stanu?
 
-### 3. Historyczne rozwiązanie: `InheritedWidget`
+###  Historyczne rozwiązanie: `InheritedWidget`
 
 * Flutter oferuje `InheritedWidget` do udostępniania danych całemu poddrzewu widgetów.
 * Mechanizm ten stosowany jest np. w `Theme.of(context)` czy `MediaQuery.of(context)`.
 * Jest jednak dość skomplikowany w użyciu — wymaga napisania dodatkowego kodu (statyczna metoda `of`, `updateShouldNotify`).
 * Dla prostych przypadków jest to ok, ale przy bardziej skomplikowanych stanach i wielu providerach staje się trudny do utrzymania.
+
+### 2. Zadanie do wykonania
+
 * Dla chętnych - zaimplementować rozwiązanie zarządzania stanem za pomocą `InheritedWidget`
 
-### 4. Nowoczesne zarządzanie stanem: Riverpod
+### Nowoczesne zarządzanie stanem: Riverpod
 
 #### Czym jest Riverpod?
 
 * Riverpod to nowoczesny, bezpieczny i elastyczny system zarządzania stanem.
 * Działa globalnie i pozwala na łatwy dostęp i modyfikację stanu z dowolnego miejsca aplikacji — bez przekazywania przez widgety.
 
-#### Konfiguracja
+### 3. Zadanie do wykoniania
+
+**Zamień dotychczasowy spsób zarządzania stanem na riverpod**
 
 Szczegółowo opisana w dokumentacji [Riverpod](https://riverpod.dev/docs/introduction/getting_started)
 
@@ -103,7 +84,7 @@ void main() {
 ```
 Jeśli tego nie zrobisz wszystkie następne wykonane kroki nie będą działać poprawnie.
 
-### 5. Refaktoryzacja stanu ulubionych do Riverpoda
+#### Refaktoryzacja stanu ulubionych do Riverpoda
 
 * Stwórz plik `lib/features/favorite/favorite_provider.dart`:
 
@@ -165,12 +146,12 @@ class DreamPlaceScreen extends ConsumerWidget {
 }
 ```
 
-### 6. Globalny stan i nawigacja z GoRouter
+### 4. Globalny stan i nawigacja z GoRouter
 
 * Riverpod świetnie działa z routingiem, a do nawigacji użyjemy **go\_router** — narzędzia rekomendowanego przez zespół Fluttera.
 
 
-#### 6.1. Model i źródło danych z Riverpod (code generation)
+#### 4.1. Model i źródło danych z Riverpod (code generation)
 
 Zamiast trzymać dane „na sztywno” w ekranie, stworzymy model i globalne źródło danych.
 
@@ -209,7 +190,7 @@ import 'place.dart';
 
 part 'places_provider.g.dart';
 
-final _initialPlaces = [
+const _initialPlaces = [
   Place(id: '1', title: 'Santorini, Grecja', description: 'Białe domki nad morzem'),
   Place(id: '2', title: 'Kioto, Japonia', description: 'Świątynie i ogrody'),
 ];
@@ -231,12 +212,12 @@ class Places extends _$Places {
 Uruchom generator kodu:
 
 ```bash
-flutter pub run build_runner build -d
+dart run build_runner build -d
 ```
 
 Teraz masz automatycznie wygenerowany `placesProvider`.
 
-#### 6.2. Konfiguracja `go_router`
+#### 4.2. Konfiguracja `go_router`
 
 W pliku `lib/app_router.dart`:
 
@@ -259,20 +240,17 @@ final goRouter = GoRouter(
 );
 ```
 
-#### 6.3. Pobieranie danych w ekranach
+### 4.3. Ekran główny i nawigacja
 
-* **HomeScreen**: `ref.watch(placesProvider)` i lista miejsc z przyciskiem nawigacji.
-* **DetailsScreen**: `ref.watch(placesProvider)` i wyszukanie konkretnego miejsca po `id`, plus przycisk do `ref.read(placesProvider.notifier).toggleFavorite(id)`.
-
-### 7. Ekran główny i nawigacja
-
-Kliknięcie w kafelek:
+Na ekranie głównym ustaw callback kliknięcia w kafelek na 
 
 ```dart
 GoRouter.of(context).push("${DetailsScreen.route}/$id");
 ```
 
-### 8. Uruchom i sprawdź
+aby przekierować do strony z detalami miejsca.
+
+### 4.4. Uruchom i sprawdź
 
 1. Uruchom aplikację.
 2. Na ekranie głównym widać listę miejsc z ikonami serca.
