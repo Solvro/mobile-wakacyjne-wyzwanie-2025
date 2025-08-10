@@ -83,7 +83,6 @@ class DreamPlaceScreen extends HookWidget {
 
 * Riverpod to nowoczesny, bezpieczny i elastyczny system zarządzania stanem.
 * Działa globalnie i pozwala na łatwy dostęp i modyfikację stanu z dowolnego miejsca aplikacji — bez przekazywania przez widgety.
-* Nie wymaga `BuildContext` do działania, co pozwala na lepsze testowanie i modularność.
 
 #### Konfiguracja
 
