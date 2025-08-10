@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "gen/assets.gen.dart"; // jeśli nie używasz FlutterGen, usuń ten import
 
 void main() {
   runApp(const MyApp());
@@ -88,7 +87,7 @@ class PlacesListScreen extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () async {
               await Navigator.of(context).push(
-                MaterialPageRoute(
+                MaterialPageRoute<DreamPlaceScreen>(
                   builder: (context) {
                     return DreamPlaceScreen(
                       title: p.title,
