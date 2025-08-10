@@ -69,46 +69,13 @@ class DreamPlaceScreen extends HookWidget {
 * Przykład: w `DreamPlaceScreen` przenieśliśmy `IconButton` z `AppBar` do dedykowanego `AttractionsWidget`.
 * Jak teraz `AttractionsWidget` ma wiedzieć, czy miejsce jest ulubione i jak wywołać funkcję zmiany stanu?
 
-#### Rozwiązanie tymczasowe: dodanie do `AttractionsWidget` pól i przekazywanie ich:
-
-```dart
-class AttractionsWidget extends StatelessWidget {
-  final bool isFavorited;
-  final VoidCallback onFavoritePressed;
-
-  const AttractionsWidget({
-    super.key,
-    required this.isFavorited,
-    required this.onFavoritePressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // inne ikony
-        IconButton(
-          icon: Icon(
-            isFavorited ? Icons.favorite : Icons.favorite_border,
-            color: isFavorited ? Colors.red : null,
-          ),
-          onPressed: onFavoritePressed,
-        ),
-      ],
-    );
-  }
-}
-```
-
-* W `DreamPlaceScreen` przekazujemy te wartości do `AttractionsWidget`.
-* Działa, ale jeśli drzewo widgetów jest głębokie, trzeba przekazywać te dane przez wiele widgetów pośrednich — to jest właśnie **prop drilling**.
-
 ### 3. Historyczne rozwiązanie: `InheritedWidget`
 
 * Flutter oferuje `InheritedWidget` do udostępniania danych całemu poddrzewu widgetów.
 * Mechanizm ten stosowany jest np. w `Theme.of(context)` czy `MediaQuery.of(context)`.
 * Jest jednak dość skomplikowany w użyciu — wymaga napisania dodatkowego kodu (statyczna metoda `of`, `updateShouldNotify`).
 * Dla prostych przypadków jest to ok, ale przy bardziej skomplikowanych stanach i wielu providerach staje się trudny do utrzymania.
+* Dla chętnych - zaimplementować rozwiązanie zarządzania stanem za pomocą `InheritedWidget`
 
 ### 4. Nowoczesne zarządzanie stanem: Riverpod
 
