@@ -18,12 +18,10 @@ class $AssetsImagesGen {
   AssetGenImage get bali => const AssetGenImage('assets/images/bali.jpg');
 
   /// File path: assets/images/nowyJork.jpg
-  AssetGenImage get nowyJork =>
-      const AssetGenImage('assets/images/nowyJork.jpg');
+  AssetGenImage get nowyJork => const AssetGenImage('assets/images/nowyJork.jpg');
 
   /// File path: assets/images/santorini.png
-  AssetGenImage get santorini =>
-      const AssetGenImage('assets/images/santorini.png');
+  AssetGenImage get santorini => const AssetGenImage('assets/images/santorini.png');
 
   /// File path: assets/images/sycylia.png
   AssetGenImage get sycylia => const AssetGenImage('assets/images/sycylia.png');
