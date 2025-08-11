@@ -1,6 +1,7 @@
 abstract final class PlacesListScreenConfig {
   static const imageSize = 60.0;
   static const titleFontSize = 16.0;
+  static const radius = 15.0;
 }
 
 abstract final class DreamPlaceScreenConfig {

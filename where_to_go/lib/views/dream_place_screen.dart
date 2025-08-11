@@ -48,7 +48,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         children: [
           Image.asset(fit: BoxFit.fitWidth, widget.dreamPlace.imagePath, width: double.infinity),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppPaddings.large),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -14,7 +14,7 @@ class PlacesListScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text("Browse Beautiful Places"),
+        title: const Text("Przeglądaj piękne miejsca"),
       ),
       body: ListView.builder(
         itemCount: dreamPlacesList.length,
@@ -32,14 +32,14 @@ class PlacesListScreen extends StatelessWidget {
             margin: const EdgeInsets.all(AppPaddings.tiny),
             decoration: BoxDecoration(
               color: AppColors.shadow,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(PlacesListScreenConfig.radius),
             ),
             child: Row(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
+                    topLeft: Radius.circular(PlacesListScreenConfig.radius),
+                    bottomLeft: Radius.circular(PlacesListScreenConfig.radius),
                   ),
                   child: Image.asset(
                     dreamPlacesList[index].imagePath,
