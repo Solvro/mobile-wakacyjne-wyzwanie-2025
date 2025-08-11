@@ -18,22 +18,19 @@ class $AssetsImagesGen {
   AssetGenImage get canyon => const AssetGenImage('assets/images/canyon.jpeg');
 
   /// File path: assets/images/machu_piccu.jpeg
-  AssetGenImage get machuPiccu =>
-      const AssetGenImage('assets/images/machu_piccu.jpeg');
+  AssetGenImage get machuPiccu => const AssetGenImage('assets/images/machu_piccu.jpeg');
 
   /// File path: assets/images/reef.jpeg
   AssetGenImage get reef => const AssetGenImage('assets/images/reef.jpeg');
 
   /// File path: assets/images/santorini.jpeg
-  AssetGenImage get santorini =>
-      const AssetGenImage('assets/images/santorini.jpeg');
+  AssetGenImage get santorini => const AssetGenImage('assets/images/santorini.jpeg');
 
   /// File path: assets/images/teide.jpeg
   AssetGenImage get teide => const AssetGenImage('assets/images/teide.jpeg');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [canyon, machuPiccu, reef, santorini, teide];
+  List<AssetGenImage> get values => [canyon, machuPiccu, reef, santorini, teide];
 }
 
 class Assets {
