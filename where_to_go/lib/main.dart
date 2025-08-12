@@ -1,125 +1,254 @@
+import "dart:math";
+
 import "package:flutter/material.dart";
+import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
 
-  // This widget is the root of your application.
+  final data = [
+    {
+      "name": "Auckland, New Zealand",
+      "description": "Gdzie nowoczesne miasto spotyka się z zapierającymi dech w piersiach krajobrazami.",
+      "image": Assets.images.auckland,
+      "attractions": {
+        "Sky Tower": Icons.location_city,
+        "Waiheke Island": Icons.beach_access,
+        "Hobbiton": Icons.movie,
+      },
+    },
+    {
+      "name": "Kyoto, Japan",
+      "description": "Starożytna stolica pełna świątyń, tradycyjnych ogrodów i malowniczych uliczek.",
+      "image": Assets.images.kyoto,
+      "attractions": {
+        "Kinkaku-ji": Icons.location_city,
+        "Arashiyama Bamboo Grove": Icons.nature,
+      },
+    },
+    {
+      "name": "Santorini, Greece",
+      "description": "Bajkowa wyspa z białymi domami i błękitnymi kopułami nad lazurowym morzem.",
+      "image": Assets.images.santorini,
+      "attractions": {
+        "Oia": Icons.location_city,
+        "Fira": Icons.beach_access,
+        "Akrotiri": Icons.history,
+      }
+    },
+    {
+      "name": "Machu Picchu, Peru",
+      "description": "Tajemnicze ruiny inkaskiego miasta ukryte wysoko w Andach.",
+      "image": Assets.images.macchuPicchu,
+      "attractions": {
+        "Inti Punku": Icons.location_city,
+        "Sacsayhuamán": Icons.history,
+      }
+    },
+    {
+      "name": "Reykjavik, Iceland",
+      "description": "Kraina zorzy polarnej, gejzerów i zapierających dech krajobrazów wulkanicznych.",
+      "image": Assets.images.reykjavik,
+      "attractions": {
+        "Hallgrímskirkja": Icons.church,
+        "Geysir": Icons.thermostat,
+        "Blue Lagoon": Icons.pool,
+      }
+    }
+  ];
+
+  @override
+  // State<MyApp> createState() => _DreamPlaceScreen(appBarText, headerText, descriptionText, image, attractions);
+  State<MyApp> createState() => _HomeScreen(data);
+}
+
+class _HomeScreen extends State<MyApp> {
+  _HomeScreen(this.data);
+
+  final List<Map<String, dynamic>> data;
+
+  Widget getImageWidget(dynamic imageSource) {
+    if (imageSource is String) {
+      return Image.asset(
+        imageSource,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    } else if (imageSource is AssetGenImage) {
+      return imageSource.image(
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    }
+    // Fallback
+    return const ColoredBox(
+      color: Colors.grey,
+      child: Icon(Icons.image_not_supported, size: 50),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Flutter Demo",
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("My Favorite Places", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
       ),
-      home: const MyHomePage(title: "Flutter Demo Home Page"),
+      body: GridView.count(
+        primary: false,
+        padding: const EdgeInsets.all(20),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        crossAxisCount: 2,
+        children: <Widget>[
+          ...data.map((entry) => GestureDetector(
+                onTap: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => DreamPlaceScreen(
+                            appBarText: entry["name"] as String,
+                            headerText: entry["name"] as String,
+                            descriptionText: entry["description"] as String,
+                            image: entry["image"] as AssetGenImage,
+                            attractions: entry["attractions"] as Map<String, IconData>)),
+                  );
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                          child: (entry["image"] as AssetGenImage).image(
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          entry["name"] as String? ?? "",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ))
+        ],
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class DreamPlaceScreen extends StatefulWidget {
+  final String appBarText;
+  final String headerText;
+  final String descriptionText;
+  final dynamic image;
+  final Map<String, IconData> attractions;
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const DreamPlaceScreen({
+    required this.appBarText,
+    required this.headerText,
+    required this.descriptionText,
+    required this.image,
+    required this.attractions,
+    super.key,
+  });
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DreamPlaceScreen> createState() =>
+      _DreamPlaceScreenState(appBarText, headerText, descriptionText, image as AssetGenImage, attractions);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
+  var _isFavourited = false;
+  var _icon = Icons.favorite_border;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final String appBarText;
+  final String headerText;
+  final String descriptionText;
+  final AssetGenImage image;
+  final Map<String, IconData> attractions;
 
+  _DreamPlaceScreenState(this.appBarText, this.headerText, this.descriptionText, this.image, this.attractions);
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              "You have pushed the button this many times:",
+        title: Text(appBarText),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _icon,
+              color: _isFavourited ? Colors.red : Colors.black,
+              size: 28,
             ),
-            Text(
-              "$_counter",
-              style: Theme.of(context).textTheme.headlineMedium,
+            onPressed: () {
+              setState(() {
+                _isFavourited = !_isFavourited;
+                _icon = _isFavourited ? Icons.favorite : Icons.favorite_border;
+              });
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: "Increment",
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Column(
+        children: [
+          image.image(
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(headerText,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    )),
+                const SizedBox(height: 8),
+                Text(descriptionText),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 36),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ...attractions.entries.map((entry) => Column(
+                      children: [
+                        Icon(entry.value),
+                        Text(entry.key),
+                      ],
+                    )),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
