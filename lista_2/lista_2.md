@@ -248,7 +248,11 @@ GoRouter.of(context).push("${DetailsScreen.route}/$id");
 
 aby przekierować do strony z detalami miejsca.
 
-### 4.4. Uruchom i sprawdź
+### 4.4 Wykorzystaj provider
+
+Na obu ekranach zaobserwuj wygenerowany placesProvider oraz użyj metody `toggle(String id)` aby zmienić jego stan w ekranie szczegółów.
+
+### 4.5. Uruchom i sprawdź
 
 1. Uruchom aplikację.
 2. Na ekranie głównym widać listę miejsc z ikonami serca.
