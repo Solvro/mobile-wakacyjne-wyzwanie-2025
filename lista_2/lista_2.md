@@ -5,7 +5,7 @@ W pierwszej liście ożywiliśmy naszą aplikację za pomocą `StatefulWidget`. 
 Następnie zajmiemy się problemem globalnego stanu, czyli tego, który chcemy udostępnić w wielu miejscach aplikacji. Poznamy **Riverpod** do zarządzania globalnym stanem oraz **GoRouter** do deklaratywnego routing’u.
 
 
-### Teoria — Hooki w Flutterze
+### Teoria — Hooki we Flutterze
 
 **Dlaczego hooki?**
 
@@ -42,8 +42,6 @@ Następnie zajmiemy się problemem globalnego stanu, czyli tego, który chcemy u
 
 * Gdy nasza aplikacja rośnie, często potrzebujemy udostępnić stan wielu widgetom.
 * Przekazywanie przez wiele warstw widgetów danych i funkcji staje się uciążliwe i utrudnia konserwację.
-* Przykład: w `DreamPlaceScreen` przenieśliśmy `IconButton` z `AppBar` do dedykowanego `AttractionsWidget`.
-* Jak teraz `AttractionsWidget` ma wiedzieć, czy miejsce jest ulubione i jak wywołać funkcję zmiany stanu?
 
 ###  Historyczne rozwiązanie: `InheritedWidget`
 
