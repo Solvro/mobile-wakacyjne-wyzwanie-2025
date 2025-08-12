@@ -65,7 +65,7 @@ Następnie zajmiemy się problemem globalnego stanu, czyli tego, który chcemy u
 
 **Zamień dotychczasowy spsób zarządzania stanem na riverpod**
 
-Szczegółowo opisana w dokumentacji [Riverpod](https://riverpod.dev/docs/introduction/getting_started)
+Konfiguracja i działanie bibliteki szczegółowo opisana w dokumentacji [Riverpod](https://riverpod.dev/docs/introduction/getting_started)
 
 * Częsty błąd - pamiętaj aby owinąć aplikacje w `ProviderScope`:
 
@@ -262,5 +262,5 @@ aby przekierować do strony z detalami miejsca.
 * **InheritedWidget** — historyczne rozwiązanie, dziś raczej rzadziej stosowane.
 * **Riverpod** (z code generation) — nowoczesny globalny stan z automatycznie generowanymi providerami.
 * **GoRouter** — deklaratywna nawigacja, współpracuje z Riverpod.
-* Model + provider = aplikacja działa na prawdziwych danych, stan zsynchronizowany między ekranami.
+* **Model + provider** - aplikacja działa na prawdziwych danych i stan zsynchronizowany między ekranami.
 
