@@ -37,7 +37,8 @@ class DreamPlaceHeader extends StatelessWidget {
             Text(
               "Malaga",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
+                fontFamily: "Plus Jakarta Sans",
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF141414),
               ),
@@ -46,7 +47,9 @@ class DreamPlaceHeader extends StatelessWidget {
               height: 8,
             ),
             Text(
-                "Malaga is a sunny city in southern Spain, known for its beautiful beaches, historic architecture, and Mediterranean climate.")
+              "Malaga is a sunny city in southern Spain, known for its beautiful beaches, historic architecture, and Mediterranean climate.",
+              style: TextStyle(fontSize: 16, fontFamily: "Plus Jakarta Sans"),
+            )
           ],
         ));
   }
