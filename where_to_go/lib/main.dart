@@ -112,9 +112,9 @@ class HomeScreen extends StatelessWidget {
         body: ListView(
           children: [
             ...places.map((place) => GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => DreamPlaceScreen(place: place)),
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<dynamic>(builder: (context) => DreamPlaceScreen(place: place)),
                     );
                   },
                   child: Container(
