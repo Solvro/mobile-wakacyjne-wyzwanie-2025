@@ -2,8 +2,21 @@ import "package:flutter/material.dart";
 
 import "gen/assets.gen.dart";
 
-class DreamPlaceScreen extends StatelessWidget {
+class DreamPlaceScreen extends StatefulWidget {
   const DreamPlaceScreen({super.key});
+
+  @override
+  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
+}
+
+class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
+  bool _isFavorited = false;
+
+  void _toggleFavorited() {
+    setState(() {
+      _isFavorited = !_isFavorited;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +24,14 @@ class DreamPlaceScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFFAFAFA),
         appBar: AppBar(
           title: const Text("Malaga"),
+          actions: [
+            IconButton(
+                onPressed: _toggleFavorited,
+                icon: Icon(
+                  _isFavorited ? Icons.favorite : Icons.favorite_border,
+                ),
+                color: _isFavorited ? Colors.red : const Color(0xFF141414))
+          ],
         ),
         body: Column(children: [
           Image(
