@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:flutter/material.dart";
 import "gen/assets.gen.dart";
 
@@ -109,7 +107,7 @@ class _HomeScreen extends State<MyApp> {
           ...data.map((entry) => GestureDetector(
                 onTap: () async {
                   await Navigator.of(context).push(
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                         builder: (context) => DreamPlaceScreen(
                             appBarText: entry["name"] as String,
                             headerText: entry["name"] as String,
