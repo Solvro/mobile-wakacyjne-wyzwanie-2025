@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "gen/assets.gen.dart";
+import "dart:async";
 
 const Color greenIcons = Color.fromARGB(255, 26, 89, 48);
 const Color greenBackground = Color.fromARGB(255, 109, 197, 112);
@@ -59,9 +60,11 @@ class DreamPlaceScreen extends StatelessWidget {
   Widget _placeButton(BuildContext context, IconData icon, String label, SinglePlaceView page) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<Widget>(builder: (context) => page),
+       unawaited(
+          Navigator.push(
+            context,
+            MaterialPageRoute<Widget>(builder: (context) => page),
+          ),
         );
       },
       style: ElevatedButton.styleFrom(
