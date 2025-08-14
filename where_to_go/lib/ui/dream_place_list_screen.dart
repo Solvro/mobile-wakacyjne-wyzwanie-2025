@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../models/dream_place.dart";
+import "dream_place_screen.dart";
 
 class DreamPlaceListScreen extends StatelessWidget {
   final List<DreamPlace> places;
@@ -33,24 +34,33 @@ class DreamPlaceListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(place.imagePath, fit: BoxFit.cover),
+    return InkWell(
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute<DreamPlaceScreen>(
+            builder: (context) => DreamPlaceScreen(place: place),
+          ),
+        );
+      },
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(place.imagePath, fit: BoxFit.cover),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(place.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(place.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+            ),
+          ],
+        ),
       ),
     );
   }
