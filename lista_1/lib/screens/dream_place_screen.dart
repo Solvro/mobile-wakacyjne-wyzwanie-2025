@@ -205,7 +205,7 @@ class ActivitiesRow extends StatelessWidget {
         const SizedBox(height: 24),
         const Text(
           'Wybierz aktywność',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+          style: TextStyle(color: Colors.white, fontSize: 12),
         ),
       ],
     );

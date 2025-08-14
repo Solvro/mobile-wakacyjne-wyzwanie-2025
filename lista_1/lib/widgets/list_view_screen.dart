@@ -127,7 +127,6 @@ class ListViewScreen extends StatefulWidget {
 }
 
 class _ListViewScreenState extends State<ListViewScreen> {
-  // Użycie zdefiniowanej listy jako źródła danych.
   final List<DreamPlace> places = dreamPlacesData;
 
   @override
@@ -136,7 +135,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
     double containerWidth = screenWidth * 0.95 > 900 ? 900 : screenWidth * 0.95;
 
     return Scaffold(
-      // ZMIANA: AppBar na ekranie listy nie ma przycisku ulubionych.
       appBar: AppBarExample(appBarTitle: widget.appBarTitle),
       backgroundColor: widget.backgroundColor,
       body: Column(
@@ -175,7 +173,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 ),
                 child: SingleChildScrollView(
                   child: Column(
-                    // ZMIANA: Iteracja po liście 'places'.
                     children: places.map((place) {
                       final imageSize = max(120.0, containerWidth * 0.3);
 
@@ -187,7 +184,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
                             onTap: () {
-                              // ZMIANA: Przekazanie całego obiektu 'place' do ekranu szczegółów.
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -200,7 +196,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
                               contentPadding: const EdgeInsets.all(12),
                               leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                // ZMIANA: Użycie obiektu obrazu z modelu.
                                 child: place.image.image(
                                   width: imageSize * 0.5,
                                   height: imageSize * 2,
@@ -208,7 +203,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                 ),
                               ),
                               title: Text(
-                                place.title, // Dane z modelu
+                                place.title,
                                 style: TextStyle(
                                   color: widget.listItemTitleColor,
                                   fontSize: 25,
@@ -216,7 +211,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                 ),
                               ),
                               subtitle: Text(
-                                place.imageDescription, // Dane z modelu
+                                place.imageDescription,
                                 style: TextStyle(
                                   color: widget.listItemSubtitleColor,
                                   fontSize: 20,

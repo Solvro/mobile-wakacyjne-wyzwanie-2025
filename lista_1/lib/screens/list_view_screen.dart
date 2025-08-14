@@ -6,8 +6,6 @@ import 'package:hello_flutter/models/dream_place_model.dart';
 import 'package:hello_flutter/screens/dream_place_screen.dart';
 import 'package:hello_flutter/widgets/appBar_widget.dart';
 
-// ZMIANA: Dane są teraz zdefiniowane jako lista obiektów modelu.
-// W większej aplikacji ta lista pochodziłaby z bazy danych lub API.
 final List<DreamPlace> dreamPlacesData = [
   DreamPlace(
     title: 'Santorini',
@@ -143,7 +141,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 8),
               child: Text(
                 widget.appBarText,
                 style: TextStyle(

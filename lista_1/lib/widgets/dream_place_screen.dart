@@ -75,7 +75,7 @@ class MainContainer extends StatelessWidget {
   final AssetGenImage backgroundImage;
   final String descriptionImageText;
   final String descriptionText;
-  final List<Activity> activities; // ZMIANA: Typ na List<Activity>
+  final List<Activity> activities;
   final Color iconColor;
 
   const MainContainer({
