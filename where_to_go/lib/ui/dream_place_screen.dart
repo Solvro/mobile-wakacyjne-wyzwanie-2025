@@ -1,48 +1,38 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
 import "../models/dream_place.dart";
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends HookWidget {
   final DreamPlace place;
 
   const DreamPlaceScreen({super.key, required this.place});
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavorited = false;
-
-  void _toggleFavorited() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isFavorited = useState(false);
+
     return Scaffold(
         backgroundColor: const Color(0xFFFAFAFA),
         appBar: AppBar(
-          title: Text(widget.place.name),
+          title: Text(place.name),
           actions: [
             IconButton(
-                onPressed: _toggleFavorited,
+                onPressed: () => isFavorited.value = !isFavorited.value,
                 icon: Icon(
-                  _isFavorited ? Icons.favorite : Icons.favorite_border,
+                  isFavorited.value ? Icons.favorite : Icons.favorite_border,
                 ),
-                color: _isFavorited ? Colors.red : const Color(0xFF141414))
+                color: isFavorited.value ? Colors.red : const Color(0xFF141414))
           ],
         ),
         body: Column(children: [
-          Image.asset(widget.place.imagePath, fit: BoxFit.cover),
+          Image.asset(place.imagePath, fit: BoxFit.cover),
           DreamPlaceHeader(
-            name: widget.place.name,
-            description: widget.place.description,
+            name: place.name,
+            description: place.description,
           ),
           DreamPlaceAttractions(
-            attractions: widget.place.attractions,
+            attractions: place.attractions,
           )
         ]));
   }
