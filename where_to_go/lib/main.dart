@@ -73,10 +73,10 @@ class PlaceListScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final place = places[index];
               return InkWell(
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    await Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      MaterialPageRoute<DreamPlaceScreen>(
                         builder: (context) => DreamPlaceScreen(
                           myPlaceName: place.placeName,
                           myPlaceDescription: place.placeDescription,
@@ -107,10 +107,10 @@ class PlaceListScreen extends StatelessWidget {
                                     title: Text(place.placeName,
                                         style: const TextStyle(
                                             fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold)),
-                                    onTap: () {
-                                      Navigator.push(
+                                    onTap: () async {
+                                      await Navigator.push(
                                           context,
-                                          MaterialPageRoute(
+                                          MaterialPageRoute<DreamPlaceScreen>(
                                               builder: (context) => DreamPlaceScreen(
                                                     myPlaceName: place.placeName,
                                                     myPlaceDescription: place.placeDescription,
