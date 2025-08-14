@@ -106,9 +106,9 @@ class PlaceScreenList extends StatelessWidget {
           itemBuilder: (context, index) {
             final place = places[index];
             return InkWell(
-                onTap: () {
-                  Navigator.push<void>(
-                      context, MaterialPageRoute<void>(builder: (_) => DreamPlaceScreen(place: place)));
+                onTap: () async {
+                  // ignore: discarded_futures
+                  await Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => DreamPlaceScreen(place: place)));
                 },
                 child: Card(
                   margin: const EdgeInsets.all(8),
