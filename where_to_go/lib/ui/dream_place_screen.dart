@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 
-import "gen/assets.gen.dart";
+import "../models/dream_place.dart";
 
 class DreamPlaceScreen extends StatefulWidget {
-  const DreamPlaceScreen({super.key});
+  final DreamPlace place;
+
+  const DreamPlaceScreen({super.key, required this.place});
 
   @override
   State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
@@ -23,7 +25,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
     return Scaffold(
         backgroundColor: const Color(0xFFFAFAFA),
         appBar: AppBar(
-          title: const Text("Malaga"),
+          title: Text(widget.place.name),
           actions: [
             IconButton(
                 onPressed: _toggleFavorited,
@@ -34,42 +36,49 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
           ],
         ),
         body: Column(children: [
-          Image(
-            image: AssetImage(Assets.images.malaga.path),
-            fit: BoxFit.cover,
+          Image.asset(widget.place.imagePath, fit: BoxFit.cover),
+          DreamPlaceHeader(
+            name: widget.place.name,
+            description: widget.place.description,
           ),
-          const DreamPlaceHeader(),
-          const DreamPlaceAttractions()
+          DreamPlaceAttractions(
+            attractions: widget.place.attractions,
+          )
         ]));
   }
 }
 
 class DreamPlaceHeader extends StatelessWidget {
+  final String name;
+  final String description;
+
   const DreamPlaceHeader({
     super.key,
+    required this.name,
+    required this.description,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-        padding: EdgeInsets.all(16),
+    return Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Malaga",
-              style: TextStyle(
+              name,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF141414),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
-              "Malaga is a sunny city in southern Spain, known for its beautiful beaches, historic architecture, and Mediterranean climate.",
-              style: TextStyle(fontSize: 16),
+              description,
+              style: const TextStyle(fontSize: 16),
             )
           ],
         ));
@@ -77,15 +86,18 @@ class DreamPlaceHeader extends StatelessWidget {
 }
 
 class DreamPlaceAttractions extends StatelessWidget {
+  final List<Attraction> attractions;
+
   const DreamPlaceAttractions({
     super.key,
+    required this.attractions,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        Padding(
+        const Padding(
           padding: EdgeInsets.all(16),
           child: SizedBox(
             width: double.infinity,
@@ -105,31 +117,29 @@ class DreamPlaceAttractions extends StatelessWidget {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            DreamPlaceTile(icon: Icons.wb_sunny, label: "Sunny"),
-            DreamPlaceTile(icon: Icons.beach_access, label: "Beaches"),
-            DreamPlaceTile(icon: Icons.restaurant, label: "Food"),
-          ],
+          children: attractions
+              .map((attraction) => DreamPlaceAttractionTile(
+                    attraction: attraction,
+                  ))
+              .toList(),
         )
       ],
     );
   }
 }
 
-class DreamPlaceTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
+class DreamPlaceAttractionTile extends StatelessWidget {
+  final Attraction attraction;
 
-  const DreamPlaceTile({
+  const DreamPlaceAttractionTile({
     super.key,
-    required this.icon,
-    required this.label,
+    required this.attraction,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Icon(icon), Text(label)],
+      children: [Icon(attraction.icon), Text(attraction.label)],
     );
   }
 }

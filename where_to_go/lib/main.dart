@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 
-import "dream_place_screen.dart";
 import "gen/fonts.gen.dart";
+import "models/dream_place.dart";
+import "ui/dream_place_list_screen.dart";
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Where2Go",
       theme: ThemeData(fontFamily: FontFamily.plusJakartaSans),
-      home: const DreamPlaceScreen(),
+      home: DreamPlaceListScreen(places: exampleDreamPlaces),
     );
   }
 }
