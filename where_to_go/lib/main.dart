@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
 
-import "gen/assets.gen.dart";
-
 void main() {
   runApp(const MyApp());
 }
