@@ -105,7 +105,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                     onTap: () async {
                       await Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        MaterialPageRoute<void>(
                           builder: (context) => MyDetailPage(
                             placeName: place["name"]! as String,
                             image: place["image"]! as AssetGenImage,
