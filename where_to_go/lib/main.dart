@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
+//import "package:flutter_hooks/flutter_hooks.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "features/favorite/favorite_provider.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +23,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Lista miejsc — korzystamy z map, żeby było czytelnie
 final placesData = [
   {
     "name": "Sycylia, Włochy",
@@ -53,23 +55,12 @@ final placesData = [
   },
 ];
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends ConsumerWidget {
   const DreamPlaceScreen({super.key});
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool isFavorited = false;
-
-  @override
-  Widget build(BuildContext context) {
-    void toggleFavorite() {
-      setState(() {
-        isFavorited = !isFavorited;
-      });
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorited = ref.watch(favoriteProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFCF8DD),
@@ -78,10 +69,13 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         backgroundColor: Colors.amber[200],
         actions: [
           IconButton(
-            icon: isFavorited ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-            color: isFavorited ? Colors.red : Colors.white,
-            onPressed: toggleFavorite,
-            tooltip: isFavorited ? "Usuń z ulubionych" : "Dodaj do ulubionych",
+            onPressed: () {
+              ref.read(favoriteProvider.notifier).toggle();
+            },
+            icon: Icon(
+              isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited ? Colors.red : Colors.white,
+            ),
           ),
         ],
       ),
