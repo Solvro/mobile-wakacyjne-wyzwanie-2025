@@ -18,8 +18,7 @@ class $AssetsImagesGen {
   AssetGenImage get kair => const AssetGenImage('assets/images/kair.jpeg');
 
   /// File path: assets/images/nowy_jork.jpeg
-  AssetGenImage get nowyJork =>
-      const AssetGenImage('assets/images/nowy_jork.jpeg');
+  AssetGenImage get nowyJork => const AssetGenImage('assets/images/nowy_jork.jpeg');
 
   /// File path: assets/images/paryz.jpg
   AssetGenImage get paryz => const AssetGenImage('assets/images/paryz.jpg');
