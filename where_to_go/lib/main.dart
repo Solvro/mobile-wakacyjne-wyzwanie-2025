@@ -20,28 +20,37 @@ class MyApp extends StatelessWidget {
   }
 }
 
-List<String> favoritePlaces = [
-  "Sycylia, Włochy",
-  "Santorini, Grecja",
-  "Bali, Indonezja",
-  "Nowy Jork, USA",
-  "Tokio, Japonia",
-];
-
-List<String> descriptionPlaces = [
-  "Sycylia to największa wyspa Morza Śródziemnego, znana z pięknych plaż, wulkanu Etna i bogatej historii.",
-  "Santorini to grecka wyspa słynąca z białych domów z niebieskimi kopułami, spektakularnych zachodów słońca i wulkanicznych plaż.",
-  "Bali to indonezyjska wyspa znana z tropikalnych plaż, świątyń i bogatej kultury.",
-  "Nowy Jork to amerykańskie miasto znane z ikonicznych wieżowców, Central Parku i różnorodności kulturowej.",
-  "Tokio to japońska metropolia łącząca nowoczesność z tradycją, znana z technologii, kuchni i kultury.",
-];
-
-final List<AssetGenImage> assetImages = [
-  Assets.images.sycylia,
-  Assets.images.santorini,
-  Assets.images.bali,
-  Assets.images.nowyJork,
-  Assets.images.tokio,
+// Lista miejsc — korzystamy z map, żeby było czytelnie
+final placesData = [
+  {
+    "name": "Sycylia, Włochy",
+    "description":
+        "Sycylia to największa wyspa Morza Śródziemnego, znana z pięknych plaż, wulkanu Etna i bogatej historii.",
+    "image": Assets.images.sycylia,
+  },
+  {
+    "name": "Santorini, Grecja",
+    "description":
+        "Santorini to grecka wyspa słynąca z białych domów z niebieskimi kopułami, spektakularnych zachodów słońca i wulkanicznych plaż.",
+    "image": Assets.images.santorini,
+  },
+  {
+    "name": "Bali, Indonezja",
+    "description": "Bali to indonezyjska wyspa znana z tropikalnych plaż, świątyń i bogatej kultury.",
+    "image": Assets.images.bali,
+  },
+  {
+    "name": "Nowy Jork, USA",
+    "description":
+        "Nowy Jork to amerykańskie miasto znane z ikonicznych wieżowców, Central Parku i różnorodności kulturowej.",
+    "image": Assets.images.nowyJork,
+  },
+  {
+    "name": "Tokio, Japonia",
+    "description":
+        "Tokio to japońska metropolia łącząca nowoczesność z tradycją, znana z technologii, kuchni i kultury.",
+    "image": Assets.images.tokio,
+  },
 ];
 
 class DreamPlaceScreen extends StatefulWidget {
@@ -87,19 +96,20 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              itemCount: favoritePlaces.length,
+              itemCount: placesData.length,
               itemBuilder: (context, index) {
+                final place = placesData[index];
                 return Padding(
                   padding: const EdgeInsets.all(6),
                   child: GestureDetector(
                     onTap: () async {
                       await Navigator.push(
                         context,
-                        MaterialPageRoute<MyDetailPage>(
+                        MaterialPageRoute(
                           builder: (context) => MyDetailPage(
-                            placeName: favoritePlaces[index],
-                            image: assetImages[index],
-                            desc: descriptionPlaces[index],
+                            placeName: place["name"]! as String,
+                            image: place["image"]! as AssetGenImage,
+                            desc: place["description"]! as String,
                           ),
                         ),
                       );
@@ -112,8 +122,8 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                           children: [
                             Expanded(
                               child: Hero(
-                                tag: favoritePlaces[index],
-                                child: assetImages[index].image(
+                                tag: place["name"]! as String,
+                                child: (place["image"]! as AssetGenImage).image(
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: double.infinity,
@@ -123,7 +133,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Text(
-                                favoritePlaces[index],
+                                place["name"]! as String,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.black,
