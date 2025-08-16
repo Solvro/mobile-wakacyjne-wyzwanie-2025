@@ -7,8 +7,27 @@ void main() {
   ));
 }
 
+class Destination {
+  final String name;
+  final String description;
+  final AssetGenImage image;
+  final Map<String, IconData> attractions;
+
+  Destination(this.name, this.description, this.image, this.attractions);
+}
+
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  MyApp({super.key}) {
+    destinations = data.map((entry) {
+      final destination = Destination(
+        entry["name"]! as String,
+        entry["description"]! as String,
+        entry["image"]! as AssetGenImage,
+        Map<String, IconData>.from(entry["attractions"]! as Map),
+      );
+      return destination;
+    }).toList();
+  }
 
   final data = [
     {
@@ -61,14 +80,16 @@ class MyApp extends StatefulWidget {
     }
   ];
 
+  late final List<Destination> destinations;
+
   @override
-  // State<MyApp> createState() => _DreamPlaceScreen(appBarText, headerText, descriptionText, image, attractions);
-  State<MyApp> createState() => _HomeScreen(data);
+  State<MyApp> createState() => _HomeScreen(destinations, data);
 }
 
 class _HomeScreen extends State<MyApp> {
-  _HomeScreen(this.data);
+  _HomeScreen(this.destinations, this.data);
 
+  final List<Destination> destinations;
   final List<Map<String, dynamic>> data;
 
   Widget getImageWidget(dynamic imageSource) {
@@ -84,7 +105,6 @@ class _HomeScreen extends State<MyApp> {
         fit: BoxFit.cover,
       );
     }
-    // Fallback
     return const ColoredBox(
       color: Colors.grey,
       child: Icon(Icons.image_not_supported, size: 50),
@@ -98,55 +118,54 @@ class _HomeScreen extends State<MyApp> {
         title: const Text("My Favorite Places", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
       ),
       body: GridView.count(
-        primary: false,
-        padding: const EdgeInsets.all(20),
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        crossAxisCount: 2,
-        children: <Widget>[
-          ...data.map((entry) => GestureDetector(
-                onTap: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute<void>(
+          primary: false,
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          children: destinations
+              .map((entry) => GestureDetector(
+                    onTap: () async {
+                      await Navigator.of(context).push(MaterialPageRoute<void>(
                         builder: (context) => DreamPlaceScreen(
-                            appBarText: entry["name"] as String,
-                            headerText: entry["name"] as String,
-                            descriptionText: entry["description"] as String,
-                            image: entry["image"] as AssetGenImage,
-                            attractions: entry["attractions"] as Map<String, IconData>)),
-                  );
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                          child: (entry["image"] as AssetGenImage).image(
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                          appBarText: entry.name,
+                          headerText: entry.name,
+                          descriptionText: entry.description,
+                          image: entry.image,
+                          attractions: entry.attractions,
+                        ),
+                      ));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                              child: entry.image.image(
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              entry.name,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          entry["name"] as String? ?? "",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ))
-        ],
-      ),
+                    ),
+                  ))
+              .toList()),
     );
   }
 }
@@ -155,7 +174,7 @@ class DreamPlaceScreen extends StatefulWidget {
   final String appBarText;
   final String headerText;
   final String descriptionText;
-  final dynamic image;
+  final AssetGenImage image;
   final Map<String, IconData> attractions;
 
   const DreamPlaceScreen({
@@ -168,28 +187,20 @@ class DreamPlaceScreen extends StatefulWidget {
   });
 
   @override
-  State<DreamPlaceScreen> createState() =>
-      _DreamPlaceScreenState(appBarText, headerText, descriptionText, image as AssetGenImage, attractions);
+  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
 }
 
 class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
   var _isFavourited = false;
   var _icon = Icons.favorite_border;
 
-  final String appBarText;
-  final String headerText;
-  final String descriptionText;
-  final AssetGenImage image;
-  final Map<String, IconData> attractions;
+  _DreamPlaceScreenState();
 
-  _DreamPlaceScreenState(this.appBarText, this.headerText, this.descriptionText, this.image, this.attractions);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarText),
+        title: Text(widget.appBarText),
         actions: [
           IconButton(
             icon: Icon(
@@ -211,7 +222,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
       ),
       body: Column(
         children: [
-          image.image(
+          widget.image.image(
             width: double.infinity,
             fit: BoxFit.cover,
           ),
@@ -220,13 +231,13 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(headerText,
+                Text(widget.headerText,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(height: 8),
-                Text(descriptionText),
+                Text(widget.descriptionText),
               ],
             ),
           ),
@@ -235,14 +246,14 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             padding: const EdgeInsets.only(bottom: 36),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ...attractions.entries.map((entry) => Column(
-                      children: [
-                        Icon(entry.value),
-                        Text(entry.key),
-                      ],
-                    )),
-              ],
+              children: widget.attractions.entries
+                  .map((entry) => Column(
+                        children: [
+                          Icon(entry.value),
+                          Text(entry.key),
+                        ],
+                      ))
+                  .toList(),
             ),
           ),
         ],
