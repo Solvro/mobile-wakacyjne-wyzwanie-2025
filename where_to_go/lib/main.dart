@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
+
+import "gen/assets.gen.dart";
 
 void main() {
   runApp(const MyApp());
@@ -7,119 +10,176 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Flutter Demo",
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.robotoTextTheme(),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color.fromARGB(255, 177, 208, 223),
+            titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        home: PlaceScreenList());
+  }
+}
+
+class Place {
+  final String titleText;
+  final ImageProvider image;
+  final Column feature1;
+  final Column feature2;
+  final Column feature3;
+  final Center placeName;
+  final Center catchPhrase;
+
+  Place({
+    required this.titleText,
+    required this.image,
+    required this.placeName,
+    required this.catchPhrase,
+    required this.feature1,
+    required this.feature2,
+    required this.feature3,
+  });
+}
+
+class PlaceScreenList extends StatelessWidget {
+  final List<Place> places = [
+    Place(
+      titleText: "Cool place",
+      image: Assets.images.snowdin.provider(),
+      placeName: const Center(child: Text("Snowdin", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+      catchPhrase: const Center(child: Text("here lives the GREAT Papyrus")),
+      feature1: const Column(children: [Icon(Icons.wb_sunny), Text("No sun")]),
+      feature2: const Column(children: [Icon(Icons.beach_access), Text("No beach")]),
+      feature3: const Column(children: [Icon(Icons.restaurant), Text("Tasty pasta")]),
+    ),
+    Place(
+      titleText: "The longest city in Europe",
+      image: Assets.images.kr.provider(),
+      placeName: const Center(child: Text("Kryvyi Rih", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+      catchPhrase: const Center(child: Text("A life-long city")),
+      feature1: const Column(children: [Icon(Icons.iron), Text("Metals!")]),
+      feature2: const Column(children: [Icon(Icons.pets), Text("Green dogs")]),
+      feature3: const Column(children: [Icon(Icons.do_not_disturb), Text("Less criminal then before")]),
+    ),
+    Place(
+      titleText: "Big snowy mountains",
+      image: Assets.images.zakopane.provider(),
+      placeName: const Center(child: Text("Zakopane", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+      catchPhrase: const Center(child: Text("Zakopane - najbliżej Tatr")),
+      feature1: const Column(children: [Icon(Icons.snowboarding), Text("Snow sports!")]),
+      feature2: const Column(children: [Icon(Icons.hiking), Text("Cool routes to go hiking")]),
+      feature3: const Column(children: [Icon(Icons.water), Text("Oko morskie!")]),
+    ),
+    Place(
+      titleText: "GAMBLING",
+      image: Assets.images.gambling.provider(),
+      placeName: const Center(child: Text("Las Vegas", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+      catchPhrase: const Center(child: Text("LET`S GO GAMBLING")),
+      feature1: const Column(children: [Icon(Icons.money_off), Text("GAMBLING")]),
+      feature2: const Column(children: [Icon(Icons.attach_money), Text("GAMBLING")]),
+      feature3: const Column(children: [Icon(Icons.monetization_on), Text("GAMBLING")]),
+    ),
+    Place(
+      titleText: "I need to get there",
+      image: Assets.images.pentagon.provider(),
+      placeName: const Center(child: Text("Pentagon", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+      catchPhrase: const Center(child: Text("You know they built it in 1943?")),
+      feature1: const Column(children: [Icon(Icons.house), Text("5 sides")]),
+      feature2: const Column(children: [Icon(Icons.build), Text("Looks cozy")]),
+      feature3: const Column(
+          children: [Icon(Icons.build_circle), Text("5 aboveground floors,\nand 2 underground,\nofficially")]),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Dream places"),
       ),
-      home: const MyHomePage(title: "Flutter Demo Home Page"),
+      body: ListView.builder(
+          itemCount: places.length,
+          itemBuilder: (context, index) {
+            final place = places[index];
+            return InkWell(
+                onTap: () async {
+                  // ignore: discarded_futures
+                  await Navigator.push<void>(
+                      context, MaterialPageRoute<void>(builder: (_) => DreamPlaceScreen(place: place)));
+                },
+                child: Card(
+                  margin: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Image(image: place.image, height: 200, fit: BoxFit.cover),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(place.titleText, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ));
+          }),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class DreamPlaceScreen extends StatefulWidget {
+  final Place place;
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const DreamPlaceScreen({super.key, required this.place});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
+  bool _isFavored = false;
 
-  void _incrementCounter() {
+  void _toggleFavorite() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _isFavored = !_isFavored;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: const Color.fromARGB(196, 195, 218, 230),
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.place.titleText),
+        actions: [
+          IconButton(
+              onPressed: _toggleFavorite,
+              icon: _isFavored ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border))
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              "You have pushed the button this many times:",
+      body: Column(
+        children: [
+          Image(image: widget.place.image, height: 250, fit: BoxFit.cover),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                widget.place.placeName,
+                const SizedBox(
+                  height: 8,
+                ),
+                widget.place.catchPhrase
+              ],
             ),
-            Text(
-              "$_counter",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [widget.place.feature1, widget.place.feature2, widget.place.feature3],
+          )
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: "Increment",
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
