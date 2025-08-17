@@ -25,16 +25,13 @@ class DreamPlaceScreen extends StatefulWidget {
 
 class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
   bool _isFavorited = false;
-  int _favoriteCount = 0;
 
   void _toggleFavorite() {
     setState(() {
       if (_isFavorited) {
         _isFavorited = false;
-        _favoriteCount -= 1;
       } else {
         _isFavorited = true;
-        _favoriteCount += 1;
       }
     });
   }
