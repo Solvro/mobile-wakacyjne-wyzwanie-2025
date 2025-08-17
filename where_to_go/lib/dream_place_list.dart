@@ -70,7 +70,7 @@ class DreamPlaceList extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                     builder: (context) => DreamPlaceScreen(place: place),
                   ),
                 );
