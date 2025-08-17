@@ -68,8 +68,8 @@ class DreamPlaceList extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              onTap: () {
-                Navigator.of(context).push(
+              onTap: () async {
+                await Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (context) => DreamPlaceScreen(place: place),
                   ),
