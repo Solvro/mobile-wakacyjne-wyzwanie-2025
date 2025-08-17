@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:where_to_go/gen/assets.gen.dart";
 
 void main() {
   runApp(const MyApp());
@@ -28,9 +29,7 @@ class DreamPlaceScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Image.asset(
-            'assets/images/santorini.jpg',
-
+          Assets.images.santorini.image(
             fit: BoxFit.cover
           ),
         ],
