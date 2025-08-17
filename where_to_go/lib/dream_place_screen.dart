@@ -22,8 +22,9 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
         title: Text(widget.place.title),
         centerTitle: true,
@@ -48,26 +49,13 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.place.subtitle,
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey[800],
-                  ),
-                ),
+                Text(widget.place.subtitle, style: textTheme.headlineMedium),
                 const SizedBox(height: 8),
-                Text(
-                  widget.place.description,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    height: 1.4,
-                  ),
-                ),
+                Text(widget.place.description, style: textTheme.bodyMedium),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
