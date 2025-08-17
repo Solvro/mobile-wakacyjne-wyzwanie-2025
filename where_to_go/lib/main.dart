@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'dream_place_list.dart';
+import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
+import "dream_place_list.dart";
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Dream Places',
+      title: "Dream Places",
 
       theme: baseTheme.copyWith(
         colorScheme: baseTheme.colorScheme.copyWith(
@@ -28,11 +28,11 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.latoTextTheme(baseTheme.textTheme).copyWith(
           headlineMedium: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 24.0,
+            fontSize: 24,
             color: Color(0xFF333333),
           ),
           bodyMedium: const TextStyle(
-            fontSize: 16.0,
+            fontSize: 16,
             height: 1.5,
             color: Color(0xFF555555),
           ),
@@ -46,9 +46,9 @@ class MyApp extends StatelessWidget {
 
         cardTheme: CardThemeData(
           elevation: 3,
-          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),

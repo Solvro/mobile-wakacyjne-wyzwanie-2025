@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'place.dart';
+import "package:flutter/material.dart";
+import "place.dart";
 
 class DreamPlaceScreen extends StatefulWidget {
 
@@ -12,7 +12,7 @@ class DreamPlaceScreen extends StatefulWidget {
 }
 
 class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavorited = false;
+  var _isFavorited = false;
 
   void _toggleFavorite() {
     setState(() {
@@ -45,7 +45,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             height: 250,
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,35 +56,35 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Column(
+              Column(
                 children: [
                   Icon(Icons.wb_sunny, color: Colors.orange, size: 40),
                   SizedBox(height: 8),
-                  Text('Słońce'),
+                  Text("Słońce"),
                 ],
               ),
-              const Column(
+              Column(
                 children: [
                   Icon(Icons.beach_access, color: Colors.blueAccent, size: 40),
                   SizedBox(height: 8),
-                  Text('Plaże'),
+                  Text("Plaże"),
                 ],
               ),
-              const Column(
+              Column(
                 children: [
                   Icon(Icons.restaurant, color: Colors.red, size: 40),
                   SizedBox(height: 8),
-                  Text('Jedzenie'),
+                  Text("Jedzenie"),
                 ],
               ),
-              const Column(
+              Column(
                 children: [
                   Icon(Icons.landscape, color: Colors.green, size: 40),
                   SizedBox(height: 8),
-                  Text('Widoki'),
+                  Text("Widoki"),
                 ],
               ),
             ],

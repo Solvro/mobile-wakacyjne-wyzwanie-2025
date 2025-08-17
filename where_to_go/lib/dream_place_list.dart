@@ -1,40 +1,41 @@
-import 'package:flutter/material.dart';
-import 'place.dart';
-import 'dream_place_screen.dart';
-import 'gen/assets.gen.dart';
+import "package:flutter/material.dart";
+
+import "dream_place_screen.dart";
+import "gen/assets.gen.dart";
+import "place.dart";
 
 class DreamPlaceList extends StatelessWidget {
   DreamPlaceList({super.key});
 
-  final List<Place> places = [
+  final places = <Place>[
     Place(
-      title: 'Santorini, Grecja',
-      subtitle: 'Perła Cyklad na Morzu Egejskim',
-      description: 'Odkryj magiczne białe domki zawieszone na klifach i zanurz się w błękicie morza.',
+      title: "Santorini, Grecja",
+      subtitle: "Perła Cyklad na Morzu Egejskim",
+      description: "Odkryj magiczne białe domki zawieszone na klifach i zanurz się w błękicie morza.",
       image: Assets.images.santorini,
     ),
     Place(
-      title: 'Kyoto, Japonia',
-      subtitle: 'Serce tradycyjnej Japonii',
-      description: 'Przechadzaj się wśród starożytnych świątyń, bambusowych lasów i ogrodów gejsz.',
+      title: "Kyoto, Japonia",
+      subtitle: "Serce tradycyjnej Japonii",
+      description: "Przechadzaj się wśród starożytnych świątyń, bambusowych lasów i ogrodów gejsz.",
       image: Assets.images.kyoto,
     ),
     Place(
-      title: 'Malediwy',
-      subtitle: 'Rajskie atole na Oceanie Indyjskim',
-      description: 'Zamieszkaj w domku na wodzie i ciesz się krystalicznie czystą wodą i białym piaskiem.',
+      title: "Malediwy",
+      subtitle: "Rajskie atole na Oceanie Indyjskim",
+      description: "Zamieszkaj w domku na wodzie i ciesz się krystalicznie czystą wodą i białym piaskiem.",
       image: Assets.images.maldives,
     ),
     Place(
-      title: 'Islandia',
-      subtitle: 'Kraina lodu, ognia i zorzy polarnej',
-      description: 'Zobacz potężne wodospady, gejzery i lodowce w jednym z najbardziej epickich krajobrazów.',
+      title: "Islandia",
+      subtitle: "Kraina lodu, ognia i zorzy polarnej",
+      description: "Zobacz potężne wodospady, gejzery i lodowce w jednym z najbardziej epickich krajobrazów.",
       image: Assets.images.iceland,
     ),
     Place(
-      title: 'Patagonia, Argentyna',
-      subtitle: 'Surowe piękno na końcu świata',
-      description: 'Wędruj pośród monumentalnych gór, turkusowych jezior i bezkresnych stepów.',
+      title: "Patagonia, Argentyna",
+      subtitle: "Surowe piękno na końcu świata",
+      description: "Wędruj pośród monumentalnych gór, turkusowych jezior i bezkresnych stepów.",
       image: Assets.images.patagonia,
     ),
   ];
@@ -43,7 +44,7 @@ class DreamPlaceList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wymarzone miejsca'),
+        title: const Text("Wymarzone miejsca"),
       ),
       body: ListView.builder(
         itemCount: places.length,
@@ -54,7 +55,7 @@ class DreamPlaceList extends StatelessWidget {
             child: ListTile(
               contentPadding: const EdgeInsets.all(10),
               leading: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(8),
                 child: place.image.image(
                   width: 80,
                   height: 80,
