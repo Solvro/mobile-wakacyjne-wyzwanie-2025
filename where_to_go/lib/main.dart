@@ -27,7 +27,7 @@ class DreamPlaceScreen extends StatelessWidget {
         title: const Text('Santorini, Grecja'),
         centerTitle: true,
       ),
-      body: Column(
+      body: ListView(
         children: [
           Assets.images.santorini.image(
             fit: BoxFit.cover
