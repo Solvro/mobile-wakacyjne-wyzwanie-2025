@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:where_to_go/gen/assets.gen.dart";
+import "gen/assets.gen.dart";
 
 void main() {
   runApp(const MyApp());
@@ -60,6 +60,44 @@ class DreamPlaceScreen extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 16),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Icon(Icons.wb_sunny, color: Colors.orange, size: 40),
+                  SizedBox(height: 8),
+                  Text('Słońce'),
+                ],
+              ),
+
+              Column(
+                children: [
+                  Icon(Icons.beach_access, color: Colors.blueAccent, size: 40),
+                  SizedBox(height: 8),
+                  Text('Plaże'),
+                ],
+              ),
+
+              Column(
+                children: [
+                  Icon(Icons.restaurant, color: Colors.red[400], size: 40),
+                  SizedBox(height: 8),
+                  Text('Jedzenie'),
+                ],
+              ),
+
+              Column(
+                children: [
+                  Icon(Icons.landscape, color: Colors.green, size: 40),
+                  SizedBox(height: 8),
+                  Text('Widoki'),
+                ],
+              ),
+            ],
           ),
         ],
       ),
