@@ -63,7 +63,11 @@ class DreamPlaceList extends StatelessWidget {
                 ),
               ),
               title: Text(place.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(place.subtitle, maxLines: 1, overflow: TextOverflow.ellipsis,),
+              subtitle: Text(
+                place.subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(

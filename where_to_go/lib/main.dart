@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Dream Places",
-
       theme: baseTheme.copyWith(
         colorScheme: baseTheme.colorScheme.copyWith(
           primary: const Color(0xFF0D47A1),
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
           surface: const Color(0xFFF5F5F5),
         ),
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-
         textTheme: GoogleFonts.latoTextTheme(baseTheme.textTheme).copyWith(
           headlineMedium: const TextStyle(
             fontWeight: FontWeight.bold,
@@ -37,13 +35,11 @@ class MyApp extends StatelessWidget {
             color: Color(0xFF555555),
           ),
         ),
-
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF0D47A1),
           foregroundColor: Colors.white,
           elevation: 4,
         ),
-
         cardTheme: CardThemeData(
           elevation: 3,
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -52,7 +48,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-
       home: DreamPlaceList(),
     );
   }

@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "place.dart";
 
 class DreamPlaceScreen extends StatefulWidget {
-
   final Place place;
 
   const DreamPlaceScreen({super.key, required this.place});
