@@ -26,9 +26,14 @@ class DreamPlaceScreen extends StatelessWidget {
         title: const Text('Santorini, Grecja'),
         centerTitle: true,
       ),
+      body: Column(
+        children: [
+          Image.asset(
+            'assets/images/santorini.jpg',
 
-      body: const Center(
-        child: Text('Tutaj pojawi się zawartość ekranu.'),
+            fit: BoxFit.cover
+          ),
+        ],
       ),
     );
   }
