@@ -26,8 +26,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final List<DreamPlaceScreen> places = [
-  DreamPlaceScreen(
+class Attraction {
+  final IconData icon;
+  final String label;
+
+  const Attraction({required this.icon, required this.label});
+}
+
+class DreamPlace {
+  final String title;
+  final String imagePath;
+  final String placeName;
+  final String description;
+  final List<Attraction> attractions;
+
+  const DreamPlace({
+    required this.title,
+    required this.imagePath,
+    required this.placeName,
+    required this.description,
+    required this.attractions,
+  });
+}
+
+final List<DreamPlace> places = [
+  DreamPlace(
     title: "Tokio, Japonia",
     imagePath: Assets.images.tokio.path,
     placeName: "Wieża Tokio Tower",
@@ -40,7 +63,7 @@ final List<DreamPlaceScreen> places = [
       Attraction(icon: Icons.train, label: "Shinkansen"),
     ],
   ),
-  DreamPlaceScreen(
+  DreamPlace(
     title: "Paryż, Francja",
     imagePath: Assets.images.paryz.path,
     placeName: "Wieża Eiffla",
@@ -53,7 +76,7 @@ final List<DreamPlaceScreen> places = [
       Attraction(icon: Icons.brush, label: "Sztuka"),
     ],
   ),
-  DreamPlaceScreen(
+  DreamPlace(
     title: "Rzym, Włochy",
     imagePath: Assets.images.rzym.path,
     placeName: "Koloseum",
@@ -66,7 +89,7 @@ final List<DreamPlaceScreen> places = [
       Attraction(icon: Icons.local_cafe, label: "Kawiarnie"),
     ],
   ),
-  DreamPlaceScreen(
+  DreamPlace(
     title: "Nowy Jork, USA",
     imagePath: Assets.images.nowyJork.path,
     placeName: "Statua Wolności",
@@ -79,7 +102,7 @@ final List<DreamPlaceScreen> places = [
       Attraction(icon: Icons.park, label: "Central Park"),
     ],
   ),
-  DreamPlaceScreen(
+  DreamPlace(
     title: "Kair, Egipt",
     imagePath: Assets.images.kair.path,
     placeName: "Wielkie Piramidy w Gizie",
@@ -132,7 +155,7 @@ class DreamPlacesListScreen extends StatelessWidget {
                 await Navigator.push(
                   context,
                   MaterialPageRoute<DreamPlaceScreen>(
-                    builder: (_) => place,
+                    builder: (_) => DreamPlaceScreen(place: place),
                   ),
                 );
               },
@@ -144,28 +167,10 @@ class DreamPlacesListScreen extends StatelessWidget {
   }
 }
 
-class Attraction {
-  final IconData icon;
-  final String label;
-
-  const Attraction({required this.icon, required this.label});
-}
-
 class DreamPlaceScreen extends StatefulWidget {
-  final String title;
-  final String imagePath;
-  final String placeName;
-  final String description;
-  final List<Attraction> attractions;
+  final DreamPlace place;
 
-  const DreamPlaceScreen({
-    super.key,
-    required this.title,
-    required this.imagePath,
-    required this.placeName,
-    required this.description,
-    required this.attractions,
-  });
+  const DreamPlaceScreen({super.key, required this.place});
 
   @override
   State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
@@ -182,10 +187,12 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final place = widget.place;
+
     return Scaffold(
-      backgroundColor: Colors.pink[900],
+      backgroundColor: Colors.pink[300],
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(place.title),
         actions: [
           IconButton(
             icon: Icon(
@@ -213,11 +220,11 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                   ],
                 ),
                 child: Hero(
-                  tag: widget.title,
+                  tag: place.title,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
-                      widget.imagePath,
+                      place.imagePath,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -230,7 +237,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.placeName,
+                    place.placeName,
                     style: const TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -238,7 +245,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    widget.description,
+                    place.description,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -251,7 +258,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: widget.attractions.map((attr) {
+              children: place.attractions.map((attr) {
                 return Column(
                   children: [
                     Icon(attr.icon, size: 40),
