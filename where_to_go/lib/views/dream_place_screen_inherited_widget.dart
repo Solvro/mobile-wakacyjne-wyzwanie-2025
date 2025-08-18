@@ -1,87 +1,72 @@
-// import "package:flutter/cupertino.dart";
-// import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 
-// import "../app/colors.dart";
-// import "../app/ui_config.dart";
-// import "../models/dream_place.dart";
+import "../app/colors.dart";
+import "../app/ui_config.dart";
+import "../features/places/places_inherited_provider.dart";
 
-// class DreamPlaceScreenHookWidget extends StatefulWidget {
-//   const DreamPlaceScreenHookWidget({super.key, required this.dreamPlace});
+class DreamPlaceScreenInheritedWidget extends StatelessWidget {
+  const DreamPlaceScreenInheritedWidget({super.key, required this.id});
 
-//   final DreamPlace dreamPlace;
+  static String route = "/dream_place";
+  final String id;
+  @override
+  Widget build(BuildContext context) {
+    final dreamPlace = DreamPlacesInheritedProvider.of(context).places.firstWhere((place) => place.id == id);
 
-//   @override
-//   State<DreamPlaceScreenHookWidget> createState() => _DreamPlaceScreenHookWidgetState();
-// }
-
-// class _DreamPlaceScreenHookWidgetState extends State<DreamPlaceScreenHookWidget> {
-//   bool _isFavorited = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _isFavorited = widget.dreamPlace.isFavorited;
-//   }
-
-//   void _toggleFavourited() {
-//     setState(() {
-//       _isFavorited = !_isFavorited;
-//       widget.dreamPlace.isFavorited = _isFavorited;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.transparent,
-//         title: Text(widget.dreamPlace.location),
-//         actions: [
-//           IconButton(
-//               onPressed: _toggleFavourited, icon: Icon(_isFavorited ? CupertinoIcons.heart_fill : CupertinoIcons.heart))
-//         ],
-//       ),
-//       backgroundColor: AppColors.backgroundColor,
-//       body: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Image.asset(fit: BoxFit.fitWidth, widget.dreamPlace.imagePath, width: double.infinity),
-//           Padding(
-//             padding: const EdgeInsets.all(AppPaddings.large),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   widget.dreamPlace.title,
-//                   style: const TextStyle(
-//                     fontSize: DreamPlaceScreenConfig.titleFontSize,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 const SizedBox(
-//                   width: AppPaddings.small,
-//                 ),
-//                 Text(widget.dreamPlace.description,
-//                     style: const TextStyle(
-//                       fontSize: DreamPlaceScreenConfig.descriptionFontSize,
-//                       color: AppColors.secondaryTextColor,
-//                     )),
-//               ],
-//             ),
-//           ),
-//           Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: widget.dreamPlace.attractions.map((attraction) {
-//                 return Column(
-//                   children: [
-//                     Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),
-//                     Text(attraction.title),
-//                   ],
-//                 );
-//               }).toList())
-//         ],
-//       ),
-//     );
-//   }
-// }
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(dreamPlace.location),
+        actions: [
+          IconButton(
+              onPressed: () => DreamPlacesInheritedProvider.of(context).toggleFavorite(id),
+              icon: Icon(
+                dreamPlace.isFavorited ? Icons.favorite : Icons.favorite_border,
+                color: dreamPlace.isFavorited ? Colors.red : null,
+              ))
+        ],
+      ),
+      backgroundColor: AppColors.backgroundColor,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(fit: BoxFit.fitWidth, dreamPlace.imagePath, width: double.infinity),
+          Padding(
+            padding: const EdgeInsets.all(AppPaddings.large),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  dreamPlace.title,
+                  style: const TextStyle(
+                    fontSize: DreamPlaceScreenConfig.titleFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  width: AppPaddings.small,
+                ),
+                Text(dreamPlace.description,
+                    style: const TextStyle(
+                      fontSize: DreamPlaceScreenConfig.descriptionFontSize,
+                      color: AppColors.secondaryTextColor,
+                    )),
+              ],
+            ),
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: dreamPlace.attractions.map((attraction) {
+                return Column(
+                  children: [
+                    Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),
+                    Text(attraction.title),
+                  ],
+                );
+              }).toList())
+        ],
+      ),
+    );
+  }
+}
