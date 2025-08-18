@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
-// import "package:hooks_riverpod/hooks_riverpod.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
 import "app/router.dart";
-import "features/places/places_inherited_wrapper.dart";
 
 void main() {
-  runApp(const PlacesInheritedWrapper(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
