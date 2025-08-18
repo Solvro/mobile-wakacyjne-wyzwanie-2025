@@ -1,44 +1,30 @@
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-
+import "package:hooks_riverpod/hooks_riverpod.dart";
 import "../app/colors.dart";
 import "../app/ui_config.dart";
-import "../models/dream_place.dart";
+import "../features/places/places_provider.dart";
 
-class DreamPlaceScreen extends StatefulWidget {
-  const DreamPlaceScreen({super.key, required this.dreamPlace});
+class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
+  const DreamPlaceScreenConsumerWidget({super.key, required this.id});
 
-  final DreamPlace dreamPlace;
-
-  @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavorited = false;
+  static String route = "/dream_place";
+  final String id;
 
   @override
-  void initState() {
-    super.initState();
-    _isFavorited = widget.dreamPlace.isFavorited;
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dreamPlace = ref.watch(placesProvider.select((places) => places.firstWhere((place) => place.id == id)));
 
-  void _toggleFavourited() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-      widget.dreamPlace.isFavorited = _isFavorited;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(widget.dreamPlace.location),
+        title: Text(dreamPlace.location),
         actions: [
           IconButton(
-              onPressed: _toggleFavourited, icon: Icon(_isFavorited ? CupertinoIcons.heart_fill : CupertinoIcons.heart))
+              onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(id),
+              icon: Icon(
+                dreamPlace.isFavorited ? Icons.favorite : Icons.favorite_border,
+                color: dreamPlace.isFavorited ? Colors.red : null,
+              ))
         ],
       ),
       backgroundColor: AppColors.backgroundColor,
@@ -46,14 +32,14 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(fit: BoxFit.fitWidth, widget.dreamPlace.imagePath, width: double.infinity),
+          Image.asset(fit: BoxFit.fitWidth, dreamPlace.imagePath, width: double.infinity),
           Padding(
             padding: const EdgeInsets.all(AppPaddings.large),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.dreamPlace.title,
+                  dreamPlace.title,
                   style: const TextStyle(
                     fontSize: DreamPlaceScreenConfig.titleFontSize,
                     fontWeight: FontWeight.bold,
@@ -62,7 +48,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                 const SizedBox(
                   width: AppPaddings.small,
                 ),
-                Text(widget.dreamPlace.description,
+                Text(dreamPlace.description,
                     style: const TextStyle(
                       fontSize: DreamPlaceScreenConfig.descriptionFontSize,
                       color: AppColors.secondaryTextColor,
@@ -72,7 +58,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
           ),
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: widget.dreamPlace.attractions.map((attraction) {
+              children: dreamPlace.attractions.map((attraction) {
                 return Column(
                   children: [
                     Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),

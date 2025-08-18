@@ -1,15 +1,18 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
 
 import "../app/colors.dart";
 import "../app/ui_config.dart";
-import "../data/places.dart";
-import "dream_place_screen.dart";
+import "../features/places/places_provider.dart";
+import "dream_place_screen_consumer_widget.dart";
 
-class PlacesListScreen extends StatelessWidget {
+class PlacesListScreen extends ConsumerWidget {
   const PlacesListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dreamPlacesList = ref.watch(placesProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -19,15 +22,8 @@ class PlacesListScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: dreamPlacesList.length,
         itemBuilder: (context, index) => GestureDetector(
-          onTap: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute<Widget>(
-                builder: (context) => DreamPlaceScreen(
-                  dreamPlace: dreamPlacesList[index],
-                ),
-              ),
-            );
-          },
+          onTap: () =>
+              GoRouter.of(context).push("${DreamPlaceScreenConsumerWidget.route}/${dreamPlacesList[index].id}"),
           child: Container(
             margin: const EdgeInsets.all(AppPaddings.tiny),
             decoration: BoxDecoration(
@@ -59,6 +55,10 @@ class PlacesListScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (dreamPlacesList[index].isFavorited)
+                  const Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: AppPaddings.large),
+                      child: Icon(Icons.favorite)),
               ],
             ),
           ),

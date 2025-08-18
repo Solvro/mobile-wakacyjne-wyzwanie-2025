@@ -1,8 +1,9 @@
 import "package:flutter/material.dart";
-import "views/places_list_screen.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
+import "app/router.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,13 +11,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: "Where to Go",
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const PlacesListScreen(),
+      routerConfig: goRouter,
     );
   }
 }
