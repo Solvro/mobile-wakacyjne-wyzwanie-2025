@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "gen/assets.gen.dart";
 
 void main() {
@@ -167,27 +168,14 @@ class DreamPlacesListScreen extends StatelessWidget {
   }
 }
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends HookWidget {
   final DreamPlace place;
 
   const DreamPlaceScreen({super.key, required this.place});
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool isFavorite = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final place = widget.place;
+    final isFavorited = useState(false);
 
     return Scaffold(
       backgroundColor: Colors.pink[300],
@@ -196,10 +184,10 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
+              isFavorited.value ? Icons.favorite : Icons.favorite_border,
               color: Colors.red,
             ),
-            onPressed: toggleFavorite,
+            onPressed: () => isFavorited.value = !isFavorited.value,
           ),
         ],
       ),
