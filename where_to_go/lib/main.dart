@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "gen/assets.gen.dart";
 
 void main() {
@@ -170,7 +171,7 @@ class _HomeScreen extends State<MyApp> {
   }
 }
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends HookWidget {
   final String appBarText;
   final String headerText;
   final String descriptionText;
@@ -187,32 +188,22 @@ class DreamPlaceScreen extends StatefulWidget {
   });
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  var _isFavourited = false;
-  var _icon = Icons.favorite_border;
-
-  _DreamPlaceScreenState();
-
-  @override
   Widget build(BuildContext context) {
+    final isFavourited = useState(false);
+    final icon = isFavourited.value ? Icons.favorite : Icons.favorite_border;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.appBarText),
+        title: Text(appBarText),
         actions: [
           IconButton(
             icon: Icon(
-              _icon,
-              color: _isFavourited ? Colors.red : Colors.black,
+              icon,
+              color: isFavourited.value ? Colors.red : Colors.black,
               size: 28,
             ),
             onPressed: () {
-              setState(() {
-                _isFavourited = !_isFavourited;
-                _icon = _isFavourited ? Icons.favorite : Icons.favorite_border;
-              });
+              isFavourited.value = !isFavourited.value;
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -222,7 +213,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
       ),
       body: Column(
         children: [
-          widget.image.image(
+          image.image(
             width: double.infinity,
             fit: BoxFit.cover,
           ),
@@ -231,13 +222,13 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.headerText,
+                Text(headerText,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(height: 8),
-                Text(widget.descriptionText),
+                Text(descriptionText),
               ],
             ),
           ),
@@ -246,7 +237,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             padding: const EdgeInsets.only(bottom: 36),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: widget.attractions.entries
+              children: attractions.entries
                   .map((entry) => Column(
                         children: [
                           Icon(entry.value),
