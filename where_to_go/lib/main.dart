@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
 import "gen/assets.gen.dart";
 
 void main() {
@@ -128,12 +127,13 @@ class _HomeScreen extends State<MyApp> {
               .map((entry) => GestureDetector(
                     onTap: () async {
                       await Navigator.of(context).push(MaterialPageRoute<void>(
-                        builder: (context) => DreamPlaceScreen(
+                        builder: (context) => DataInfo(
                           appBarText: entry.name,
                           headerText: entry.name,
                           descriptionText: entry.description,
                           image: entry.image,
                           attractions: entry.attractions,
+                          child: const DreamPlaceScreen(),
                         ),
                       ));
                     },
@@ -171,39 +171,54 @@ class _HomeScreen extends State<MyApp> {
   }
 }
 
-class DreamPlaceScreen extends HookWidget {
+class DataInfo extends InheritedWidget {
   final String appBarText;
   final String headerText;
   final String descriptionText;
   final AssetGenImage image;
   final Map<String, IconData> attractions;
 
-  const DreamPlaceScreen({
-    required this.appBarText,
-    required this.headerText,
-    required this.descriptionText,
-    required this.image,
-    required this.attractions,
-    super.key,
-  });
+  const DataInfo(
+      {required this.appBarText,
+      required this.headerText,
+      required this.descriptionText,
+      required this.image,
+      required this.attractions,
+      required super.child});
+
+  @override
+  bool updateShouldNotify(DataInfo oldWidget) {
+    return appBarText != oldWidget.appBarText ||
+        headerText != oldWidget.headerText ||
+        descriptionText != oldWidget.descriptionText ||
+        image != oldWidget.image ||
+        attractions != oldWidget.attractions;
+  }
+
+  static DataInfo of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<DataInfo>()!;
+  }
+}
+
+class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
+  bool isFavourited = false;
 
   @override
   Widget build(BuildContext context) {
-    final isFavourited = useState(false);
-    final icon = isFavourited.value ? Icons.favorite : Icons.favorite_border;
-
+    final dataInfo = DataInfo.of(context);
+    final icon = isFavourited ? Icons.favorite : Icons.favorite_border;
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarText),
+        title: Text(dataInfo.appBarText),
         actions: [
           IconButton(
             icon: Icon(
               icon,
-              color: isFavourited.value ? Colors.red : Colors.black,
+              color: isFavourited ? Colors.red : Colors.black,
               size: 28,
             ),
             onPressed: () {
-              isFavourited.value = !isFavourited.value;
+              isFavourited = !isFavourited;
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -213,7 +228,7 @@ class DreamPlaceScreen extends HookWidget {
       ),
       body: Column(
         children: [
-          image.image(
+          dataInfo.image.image(
             width: double.infinity,
             fit: BoxFit.cover,
           ),
@@ -222,13 +237,13 @@ class DreamPlaceScreen extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(headerText,
+                Text(dataInfo.headerText,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(height: 8),
-                Text(descriptionText),
+                Text(dataInfo.descriptionText),
               ],
             ),
           ),
@@ -237,7 +252,7 @@ class DreamPlaceScreen extends HookWidget {
             padding: const EdgeInsets.only(bottom: 36),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: attractions.entries
+              children: dataInfo.attractions.entries
                   .map((entry) => Column(
                         children: [
                           Icon(entry.value),
@@ -251,4 +266,13 @@ class DreamPlaceScreen extends HookWidget {
       ),
     );
   }
+}
+
+class DreamPlaceScreen extends StatefulWidget {
+  const DreamPlaceScreen({
+    super.key,
+  });
+
+  @override
+  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
 }
