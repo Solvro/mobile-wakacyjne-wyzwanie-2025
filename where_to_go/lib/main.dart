@@ -3,7 +3,7 @@ import "package:flutter_hooks/flutter_hooks.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyAppFavorites());
 }
 
 class MyApp extends StatelessWidget {
@@ -155,8 +155,8 @@ class DreamPlacesListScreen extends StatelessWidget {
               onTap: () async {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute<DreamPlaceScreen>(
-                    builder: (_) => DreamPlaceScreen(place: place),
+                  MaterialPageRoute<DreamPlaceScreenHookWidget>(
+                    builder: (_) => DreamPlaceScreenHookWidget(place: place),
                   ),
                 );
               },
@@ -168,10 +168,10 @@ class DreamPlacesListScreen extends StatelessWidget {
   }
 }
 
-class DreamPlaceScreen extends HookWidget {
+class DreamPlaceScreenHookWidget extends HookWidget {
   final DreamPlace place;
 
-  const DreamPlaceScreen({super.key, required this.place});
+  const DreamPlaceScreenHookWidget({super.key, required this.place});
 
   @override
   Widget build(BuildContext context) {
@@ -258,6 +258,233 @@ class DreamPlaceScreen extends HookWidget {
             const SizedBox(height: 16),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class FavoritesProvider extends InheritedWidget {
+  final Set<String> favorites;
+  final void Function(String place) toggleFavorite;
+
+  const FavoritesProvider({
+    super.key,
+    required super.child,
+    required this.favorites,
+    required this.toggleFavorite,
+  });
+
+  static FavoritesProvider of(BuildContext context) {
+    final FavoritesProvider? result = context.dependOnInheritedWidgetOfExactType<FavoritesProvider>();
+    assert(result != null, "Brak FavoritesProvidera w tym kontekście");
+    return result!;
+  }
+
+  @override
+  bool updateShouldNotify(FavoritesProvider oldWidget) {
+    return oldWidget.favorites != favorites;
+  }
+}
+
+class DreamPlaceScreenInheritedWidget extends StatelessWidget {
+  final DreamPlace place;
+
+  const DreamPlaceScreenInheritedWidget({super.key, required this.place});
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = FavoritesProvider.of(context);
+    final isFavorited = provider.favorites.contains(place.title);
+
+    return Scaffold(
+      backgroundColor: Colors.pink[300],
+      appBar: AppBar(
+        title: Text(place.title),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              provider.toggleFavorite(place.title);
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    )
+                  ],
+                ),
+                child: Hero(
+                  tag: place.title,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      place.imagePath,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    place.placeName,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    place.description,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: place.attractions.map((attr) {
+                return Column(
+                  children: [
+                    Icon(attr.icon, size: 40),
+                    Text(attr.label),
+                  ],
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DreamPlacesListScreenInherited extends StatefulWidget {
+  const DreamPlacesListScreenInherited({super.key});
+
+  @override
+  State<DreamPlacesListScreenInherited> createState() => _DreamPlacesListScreenInheritedState();
+}
+
+class _DreamPlacesListScreenInheritedState extends State<DreamPlacesListScreenInherited> {
+  @override
+  Widget build(BuildContext context) {
+    final provider = FavoritesProvider.of(context);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Moje wymarzone miejsca")),
+      body: ListView.separated(
+        itemCount: places.length,
+        separatorBuilder: (_, __) => const Divider(height: 4),
+        itemBuilder: (context, index) {
+          final place = places[index];
+          final isFavorited = provider.favorites.contains(place.title);
+
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 3,
+            child: ListTile(
+              horizontalTitleGap: 12,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  place.imagePath,
+                  width: 60,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              title: Text(
+                place.title,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              trailing: Icon(
+                isFavorited ? Icons.favorite : Icons.favorite_border,
+                color: Colors.red,
+              ),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute<DreamPlaceScreenInheritedWidget>(
+                    builder: (_) => DreamPlaceScreenInheritedWidget(place: place),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class MyAppFavorites extends StatefulWidget {
+  const MyAppFavorites({super.key});
+
+  @override
+  State<MyAppFavorites> createState() => _MyAppFavoritesState();
+}
+
+class _MyAppFavoritesState extends State<MyAppFavorites> {
+  Set<String> _favorites = {};
+
+  void _toggleFavorite(String place) {
+    setState(() {
+      final newFavorites = Set<String>.from(_favorites);
+      if (newFavorites.contains(place)) {
+        newFavorites.remove(place);
+      } else {
+        newFavorites.add(place);
+      }
+      _favorites = newFavorites;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FavoritesProvider(
+      favorites: _favorites,
+      toggleFavorite: _toggleFavorite,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Colors.grey[50],
+          scaffoldBackgroundColor: const Color.fromARGB(255, 236, 219, 249),
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.grey[50],
+            foregroundColor: Colors.black,
+            elevation: 2,
+          ),
+        ),
+        home: const DreamPlacesListScreenInherited(),
       ),
     );
   }
