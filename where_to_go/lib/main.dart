@@ -1,10 +1,13 @@
 import "package:flutter/material.dart";
 import "gen/assets.gen.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "features/favorite/favorite_provider.dart";
 
 void main() {
-  runApp(MaterialApp(
+  runApp(ProviderScope(
+      child: MaterialApp(
     home: MyApp(),
-  ));
+  )));
 }
 
 class Destination {
@@ -127,13 +130,12 @@ class _HomeScreen extends State<MyApp> {
               .map((entry) => GestureDetector(
                     onTap: () async {
                       await Navigator.of(context).push(MaterialPageRoute<void>(
-                        builder: (context) => DataInfo(
+                        builder: (context) => DreamPlaceScreen(
                           appBarText: entry.name,
                           headerText: entry.name,
                           descriptionText: entry.description,
                           image: entry.image,
                           attractions: entry.attractions,
-                          child: const DreamPlaceScreen(),
                         ),
                       ));
                     },
@@ -171,45 +173,30 @@ class _HomeScreen extends State<MyApp> {
   }
 }
 
-class DataInfo extends InheritedWidget {
+class DreamPlaceScreen extends ConsumerWidget {
   final String appBarText;
   final String headerText;
   final String descriptionText;
   final AssetGenImage image;
   final Map<String, IconData> attractions;
 
-  const DataInfo(
-      {required this.appBarText,
-      required this.headerText,
-      required this.descriptionText,
-      required this.image,
-      required this.attractions,
-      required super.child});
+  const DreamPlaceScreen({
+    required this.appBarText,
+    required this.headerText,
+    required this.descriptionText,
+    required this.image,
+    required this.attractions,
+    super.key,
+  });
 
   @override
-  bool updateShouldNotify(DataInfo oldWidget) {
-    return appBarText != oldWidget.appBarText ||
-        headerText != oldWidget.headerText ||
-        descriptionText != oldWidget.descriptionText ||
-        image != oldWidget.image ||
-        attractions != oldWidget.attractions;
-  }
-
-  static DataInfo of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<DataInfo>()!;
-  }
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool isFavourited = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final dataInfo = DataInfo.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavourited = ref.watch(favoriteProvider);
     final icon = isFavourited ? Icons.favorite : Icons.favorite_border;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(dataInfo.appBarText),
+        title: Text(appBarText),
         actions: [
           IconButton(
             icon: Icon(
@@ -218,7 +205,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
               size: 28,
             ),
             onPressed: () {
-              isFavourited = !isFavourited;
+              ref.read(favoriteProvider.notifier).toggle();
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -228,7 +215,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
       ),
       body: Column(
         children: [
-          dataInfo.image.image(
+          image.image(
             width: double.infinity,
             fit: BoxFit.cover,
           ),
@@ -237,13 +224,13 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(dataInfo.headerText,
+                Text(headerText,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(height: 8),
-                Text(dataInfo.descriptionText),
+                Text(descriptionText),
               ],
             ),
           ),
@@ -252,7 +239,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             padding: const EdgeInsets.only(bottom: 36),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: dataInfo.attractions.entries
+              children: attractions.entries
                   .map((entry) => Column(
                         children: [
                           Icon(entry.value),
@@ -266,13 +253,4 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
       ),
     );
   }
-}
-
-class DreamPlaceScreen extends StatefulWidget {
-  const DreamPlaceScreen({
-    super.key,
-  });
-
-  @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
 }
