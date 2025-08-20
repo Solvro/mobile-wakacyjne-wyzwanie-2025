@@ -47,3 +47,4 @@ app.*.map.json
 # FVM Version Cache
 *.g.dart
 *.freezed.dart
+!lib/features/favorite/favorite_provider.g.dart
