@@ -1,30 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyAppFavorites());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.grey[50],
-        scaffoldBackgroundColor: const Color.fromARGB(255, 236, 219, 249),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey[50],
-          foregroundColor: Colors.black,
-          elevation: 2,
-        ),
-      ),
-      home: const DreamPlacesListScreen(),
-    );
-  }
+  runApp(const MyAppInherited());
 }
 
 class Attraction {
@@ -118,56 +98,6 @@ final List<DreamPlace> places = [
   ),
 ];
 
-class DreamPlacesListScreen extends StatelessWidget {
-  const DreamPlacesListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Moje wymarzone miejsca")),
-      body: ListView.separated(
-        itemCount: places.length,
-        separatorBuilder: (_, __) => const Divider(height: 4),
-        itemBuilder: (context, index) {
-          final place = places[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 3,
-            child: ListTile(
-              horizontalTitleGap: 12,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  place.imagePath,
-                  width: 60,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              title: Text(
-                place.title,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute<DreamPlaceScreenHookWidget>(
-                    builder: (_) => DreamPlaceScreenHookWidget(place: place),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 class DreamPlaceScreenHookWidget extends HookWidget {
   final DreamPlace place;
 
@@ -259,6 +189,77 @@ class DreamPlaceScreenHookWidget extends HookWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class DreamPlacesListScreenHook extends StatelessWidget {
+  const DreamPlacesListScreenHook({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Moje wymarzone miejsca")),
+      body: ListView.separated(
+        itemCount: places.length,
+        separatorBuilder: (_, __) => const Divider(height: 4),
+        itemBuilder: (context, index) {
+          final place = places[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 3,
+            child: ListTile(
+              horizontalTitleGap: 12,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  place.imagePath,
+                  width: 60,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              title: Text(
+                place.title,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute<DreamPlaceScreenHookWidget>(
+                    builder: (_) => DreamPlaceScreenHookWidget(place: place),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class MyAppHook extends StatelessWidget {
+  const MyAppHook({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.grey[50],
+        scaffoldBackgroundColor: const Color.fromARGB(255, 236, 219, 249),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey[50],
+          foregroundColor: Colors.black,
+          elevation: 2,
+        ),
+      ),
+      home: const DreamPlacesListScreenHook(),
     );
   }
 }
@@ -446,14 +447,14 @@ class _DreamPlacesListScreenInheritedState extends State<DreamPlacesListScreenIn
   }
 }
 
-class MyAppFavorites extends StatefulWidget {
-  const MyAppFavorites({super.key});
+class MyAppInherited extends StatefulWidget {
+  const MyAppInherited({super.key});
 
   @override
-  State<MyAppFavorites> createState() => _MyAppFavoritesState();
+  State<MyAppInherited> createState() => _MyAppInheritedState();
 }
 
-class _MyAppFavoritesState extends State<MyAppFavorites> {
+class _MyAppInheritedState extends State<MyAppInherited> {
   Set<String> _favorites = {};
 
   void _toggleFavorite(String place) {
