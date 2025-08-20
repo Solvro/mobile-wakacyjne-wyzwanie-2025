@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
 void main() {
   runApp(const MyApp());
@@ -106,7 +107,7 @@ class PlacesListScreen extends StatelessWidget {
   }
 }
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends HookWidget {
   const DreamPlaceScreen({
     super.key,
     required this.title,
@@ -121,28 +122,21 @@ class DreamPlaceScreen extends StatefulWidget {
   final Color backgroundColor;
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool isFavorited = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isFavorited = useState(false);
+
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
         actions: [
           IconButton(
-            onPressed: toggleFavorite,
-            icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+            onPressed: () => isFavorited.value = !isFavorited.value,
+            icon: Icon(
+              isFavorited.value ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited.value ? Colors.red : null,
+            ),
+            tooltip: isFavorited.value ? "Usun z ulubionych" : "Dodaj do ulubionych",
           ),
         ],
       ),
@@ -151,7 +145,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: Image.asset(widget.imagePath, fit: BoxFit.cover),
+            child: Image.asset(imagePath, fit: BoxFit.cover),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -159,12 +153,12 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.title,
+                  title,
                   style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  widget.description,
+                  description,
                   style: const TextStyle(fontSize: 16, height: 1.3),
                 ),
               ],
