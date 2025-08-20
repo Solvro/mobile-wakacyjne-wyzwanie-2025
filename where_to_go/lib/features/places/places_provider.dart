@@ -65,17 +65,7 @@ var _initialPlaces = [
 @riverpod
 class Places extends _$Places {
   @override
-  List<Place> build() {
-    // Domyślny stan
-    _loadFavorites();
-    return _initialPlaces;
-  }
-
-  Future<void> _loadFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoriteIds = prefs.getStringList("favorite_places") ?? [];
-    state = [for (final place in state) place.copyWith(isFavorite: favoriteIds.contains(place.id))];
-  }
+  List<Place> build() => _initialPlaces;
 
   Future<void> toggleFavorite(String id) async {
     state = [
