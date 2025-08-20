@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "gen/assets.gen.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "features/favorite/favorite_provider.dart";
 import "app_router.dart";
 import "package:go_router/go_router.dart";
 import "features/places/places_provider.dart";
@@ -82,11 +81,22 @@ class _HomeScreen extends ConsumerWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8),
-                          child: Text(
-                            place.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  place.name,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Icon(
+                                place.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                color: place.isFavorite ? Colors.red : null,
+                                size: 20,
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -107,7 +117,7 @@ class DreamPlaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavourited = ref.watch(favoriteProvider);
+    final isFavourited = ref.watch(placesProvider.select((places) => places.firstWhere((p) => p.id == id).isFavorite));
     final icon = isFavourited ? Icons.favorite : Icons.favorite_border;
 
     final places = ref.watch(placesProvider);
@@ -124,7 +134,7 @@ class DreamPlaceScreen extends ConsumerWidget {
               size: 28,
             ),
             onPressed: () {
-              ref.read(favoriteProvider.notifier).toggle();
+              ref.read(placesProvider.notifier).toggleFavorite(id);
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,

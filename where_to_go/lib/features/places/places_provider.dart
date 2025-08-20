@@ -2,6 +2,7 @@ import "package:riverpod_annotation/riverpod_annotation.dart";
 import "../../place.dart";
 import "../../gen/assets.gen.dart";
 import "package:flutter/material.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 part "places_provider.g.dart";
 
@@ -64,12 +65,25 @@ var _initialPlaces = [
 @riverpod
 class Places extends _$Places {
   @override
-  List<Place> build() => _initialPlaces;
+  List<Place> build() {
+    // Domyślny stan
+    _loadFavorites();
+    return _initialPlaces;
+  }
 
-  void toggleFavorite(String id) {
+  Future<void> _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteIds = prefs.getStringList("favorite_places") ?? [];
+    state = [for (final place in state) place.copyWith(isFavorite: favoriteIds.contains(place.id))];
+  }
+
+  Future<void> toggleFavorite(String id) async {
     state = [
       for (final p in state)
         if (p.id == id) p.copyWith(isFavorite: !p.isFavorite) else p
     ];
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteIds = state.where((p) => p.isFavorite).map((p) => p.id).toList();
+    await prefs.setStringList("favorite_places", favoriteIds);
   }
 }

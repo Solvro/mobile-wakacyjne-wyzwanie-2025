@@ -1,6 +1,5 @@
 import "package:go_router/go_router.dart";
 import "main.dart";
-import "place.dart";
 
 final goRouter = GoRouter(
   initialLocation: "/",
