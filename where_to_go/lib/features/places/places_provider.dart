@@ -1,8 +1,8 @@
-import "package:riverpod_annotation/riverpod_annotation.dart";
-import "../../place.dart";
-import "../../gen/assets.gen.dart";
 import "package:flutter/material.dart";
+import "package:riverpod_annotation/riverpod_annotation.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import "../../gen/assets.gen.dart";
+import "../../place.dart";
 
 part "places_provider.g.dart";
 
