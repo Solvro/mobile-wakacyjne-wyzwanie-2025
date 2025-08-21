@@ -1,6 +1,6 @@
 import "package:go_router/go_router.dart";
-import "features/places/places_screen.dart";
 import "features/places/details_screen.dart";
+import "features/places/places_screen.dart";
 
 final appRouter = GoRouter(
   initialLocation: "/", // pierwsza strona po uruchomieniu

@@ -1,3 +1,4 @@
+import "dart:async";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
@@ -35,7 +36,8 @@ class PlacesScreen extends ConsumerWidget {
               ),
               onTap: () {
                 final id = p.id;
-                GoRouter.of(context).push("${DetailsScreen.route}/$id");
+                unawaited(context.push("${DetailsScreen.route}/$id"));
+                //GoRouter.of(context).push("${DetailsScreen.route}/$id");
               });
         },
       ),
