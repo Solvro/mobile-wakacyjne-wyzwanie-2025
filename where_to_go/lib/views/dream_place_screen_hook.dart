@@ -1,28 +1,32 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
 import "../models/place.dart";
+import "../utils/color_palette.dart";
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreenHook extends HookWidget {
   final Place place;
 
-  const DreamPlaceScreen({super.key, required this.place});
+  const DreamPlaceScreenHook({super.key, required this.place});
 
-  @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
   @override
   Widget build(BuildContext context) {
+    final isFavorite = useState(place.isFavorite);
+    
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 243, 253, 255),
+        backgroundColor: ColorPalette.iceBlueLight,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 216, 246, 252),
-          title: Text(widget.place.title),
+          backgroundColor: ColorPalette.iceBlueDark,
+          title: Text(place.title),
           actions: [
             IconButton(
-                onPressed: _toggleFavorite,
-                icon: widget.place.isFavorite ? const Icon(Icons.star) : const Icon(Icons.star_border))
+              onPressed: () {
+                isFavorite.value = !isFavorite.value;
+                place.isFavorite = isFavorite.value;
+              },
+              icon: isFavorite.value ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+              color: isFavorite.value ? Colors.red : null,
+            )
           ],
         ),
         body: SingleChildScrollView(
@@ -32,7 +36,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.asset(
-                widget.place.path,
+                place.path,
                 fit: BoxFit.cover,
               ),
             ),
@@ -42,22 +46,16 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.place.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(place.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text(widget.place.text)
+                Text(place.text)
               ],
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            for (final attraction in widget.place.attractionList)
+            for (final attraction in place.attractionList)
               Column(children: [Icon(attraction.icon), Text(attraction.title)])
           ])
         ])));
-  }
-
-  void _toggleFavorite() {
-    setState(() {
-      widget.place.isFavorite = !widget.place.isFavorite;
-    });
   }
 }

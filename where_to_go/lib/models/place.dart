@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_getters_setters
-
 import "attraction.dart";
 
 class Place {
@@ -8,13 +6,7 @@ class Place {
   final String path;
   final List<Attraction> attractionList;
 
-  bool _isFavorite = false;
+  bool isFavorite = false;
 
   Place(this.title, this.text, this.path, this.attractionList);
-
-  bool get isFavorite => _isFavorite;
-
-  set isFavorite(bool isFavorite) {
-    _isFavorite = isFavorite;
-  }
 }

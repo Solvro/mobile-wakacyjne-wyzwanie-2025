@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "../utils/color_palette.dart";
 import "../utils/place_list.dart";
 import "../widgets/build_list.dart";
 
@@ -9,9 +10,9 @@ class BucketListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 253, 255),
+      backgroundColor: ColorPalette.iceBlueLight,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 216, 246, 252),
+        backgroundColor: ColorPalette.iceBlueDark,
         surfaceTintColor: Colors.transparent,
         title: const Text("Bucket List"),
       ),

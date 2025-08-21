@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../models/place.dart";
-import "../views/dream_place_screen.dart";
+import "../views/dream_place_screen_hook.dart";
 
 class BuildList extends StatelessWidget {
   final Place place;
@@ -16,7 +16,7 @@ class BuildList extends StatelessWidget {
         await Navigator.push(
             context,
             PageRouteBuilder<void>(
-              pageBuilder: (context, animation, secondaryAnimation) => DreamPlaceScreen(place: place),
+              pageBuilder: (context, animation, secondaryAnimation) => DreamPlaceScreenHook(place: place),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 const begin = Offset(0, 1);
                 const end = Offset.zero;
