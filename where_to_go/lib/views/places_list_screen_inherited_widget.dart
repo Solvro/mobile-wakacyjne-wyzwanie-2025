@@ -1,18 +1,17 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
-import "package:hooks_riverpod/hooks_riverpod.dart";
 
 import "../app/colors.dart";
 import "../app/ui_config.dart";
-import "../features/places/places_provider.dart";
-import "dream_place_screen_consumer_widget.dart";
+import "../features/places/places_inherited_provider.dart";
+import "dream_place_screen_inherited_widget.dart";
 
-class PlacesListScreen extends ConsumerWidget {
-  const PlacesListScreen({super.key});
+class PlacesListScreenInheritedWidget extends StatelessWidget {
+  const PlacesListScreenInheritedWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dreamPlacesList = ref.watch(placesProvider);
+  Widget build(BuildContext context) {
+    final dreamPlacesList = DreamPlacesInheritedProvider.of(context).places;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -23,7 +22,7 @@ class PlacesListScreen extends ConsumerWidget {
         itemCount: dreamPlacesList.length,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () =>
-              GoRouter.of(context).push("${DreamPlaceScreenConsumerWidget.route}/${dreamPlacesList[index].id}"),
+              GoRouter.of(context).push("${DreamPlaceScreenInheritedWidget.route}/${dreamPlacesList[index].id}"),
           child: Container(
             margin: const EdgeInsets.all(AppPaddings.tiny),
             decoration: BoxDecoration(

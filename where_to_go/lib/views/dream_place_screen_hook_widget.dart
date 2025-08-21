@@ -1,44 +1,27 @@
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
 import "../app/colors.dart";
 import "../app/ui_config.dart";
 import "../models/dream_place.dart";
 
-class DreamPlaceScreen extends StatefulWidget {
-  const DreamPlaceScreen({super.key, required this.dreamPlace});
+class DreamPlaceScreenHookWidget extends HookWidget {
+  const DreamPlaceScreenHookWidget({super.key, required this.dreamPlace});
 
   final DreamPlace dreamPlace;
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavorited = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isFavorited = widget.dreamPlace.isFavorited;
-  }
-
-  void _toggleFavourited() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-      widget.dreamPlace.isFavorited = _isFavorited;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isFavorited = useState(false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(widget.dreamPlace.location),
+        title: Text(dreamPlace.location),
         actions: [
           IconButton(
-              onPressed: _toggleFavourited, icon: Icon(_isFavorited ? CupertinoIcons.heart_fill : CupertinoIcons.heart))
+              onPressed: () => isFavorited.value = !isFavorited.value,
+              icon: Icon(isFavorited.value ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorited.value ? Colors.red : null))
         ],
       ),
       backgroundColor: AppColors.backgroundColor,
@@ -46,14 +29,14 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(fit: BoxFit.fitWidth, widget.dreamPlace.imagePath, width: double.infinity),
+          Image.asset(fit: BoxFit.fitWidth, dreamPlace.imagePath, width: double.infinity),
           Padding(
             padding: const EdgeInsets.all(AppPaddings.large),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.dreamPlace.title,
+                  dreamPlace.title,
                   style: const TextStyle(
                     fontSize: DreamPlaceScreenConfig.titleFontSize,
                     fontWeight: FontWeight.bold,
@@ -62,7 +45,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
                 const SizedBox(
                   width: AppPaddings.small,
                 ),
-                Text(widget.dreamPlace.description,
+                Text(dreamPlace.description,
                     style: const TextStyle(
                       fontSize: DreamPlaceScreenConfig.descriptionFontSize,
                       color: AppColors.secondaryTextColor,
@@ -72,7 +55,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
           ),
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: widget.dreamPlace.attractions.map((attraction) {
+              children: dreamPlace.attractions.map((attraction) {
                 return Column(
                   children: [
                     Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),
