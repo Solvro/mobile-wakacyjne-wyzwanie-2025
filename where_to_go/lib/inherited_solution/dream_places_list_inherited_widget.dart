@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "../dream_places.dart";
+import "../features/places/dream_places.dart";
 import "dream_place_screen_inherited_widget.dart";
 import "favorites_provider.dart";
 

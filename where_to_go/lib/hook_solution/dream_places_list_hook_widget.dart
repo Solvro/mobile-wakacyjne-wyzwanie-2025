@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "../dream_places.dart";
+import "../features/places/dream_places.dart";
 import "dream_place_screen_hook_widget.dart";
 
 class DreamPlacesListScreenHook extends StatelessWidget {
