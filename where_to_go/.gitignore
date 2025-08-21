@@ -48,3 +48,4 @@ app.*.map.json
 *.g.dart
 *.freezed.dart
 !lib/features/favorite/favorite_provider.g.dart
+!lib/features/places/places_provider.g.dart
