@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
-import "dream_place_screen.dart";
+import "details_screen.dart";
 import "features/places/places_provider.dart";
 
-class DreamPlacesListScreen extends ConsumerWidget {
-  const DreamPlacesListScreen({super.key});
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +44,7 @@ class DreamPlacesListScreen extends ConsumerWidget {
                 color: place.isFavorite ? Colors.red : null,
               ),
               onTap: () async {
-                await GoRouter.of(context).push("${DreamPlaceScreen.route}/${place.id}");
+                await GoRouter.of(context).push("${DetailsScreen.route}/${place.id}");
               },
             ),
           );

@@ -4,11 +4,11 @@ import "features/favorite/favorite_provider.dart"; // ignore: unused_import
 import "features/models/dream_place.dart"; // ignore: unused_import
 import "features/places/places_provider.dart";
 
-class DreamPlaceScreen extends ConsumerWidget {
+class DetailsScreen extends ConsumerWidget {
   static const route = "/place";
   final String id;
 
-  const DreamPlaceScreen({super.key, required this.id});
+  const DetailsScreen({super.key, required this.id});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

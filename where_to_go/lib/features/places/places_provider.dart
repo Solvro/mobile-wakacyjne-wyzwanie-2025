@@ -37,7 +37,7 @@ const _initialPlaces = [
   Place(
     id: "3",
     title: "Rzym, Włochy",
-    imagePath: "assets/images/rzym.jpg",
+    imagePath: "assets/images/rzym.jpeg",
     placeName: "Koloseum",
     description:
         "Historyczne ruiny osiągnięć przodków, starożytna architektura, wyjątkowa kuchnia oraz klimat śródziemnomorski.",
@@ -51,7 +51,7 @@ const _initialPlaces = [
   Place(
     id: "4",
     title: "Nowy Jork, USA",
-    imagePath: "assets/images/nowy_jork.jpg",
+    imagePath: "assets/images/nowy_jork.jpeg",
     placeName: "Statua Wolności",
     description:
         "Ikoniczne miasto, które nigdy nie śpi, z niekończącą się energią, kulturą i rozrywką oraz kolosalnymi wieżowcami.",
@@ -65,7 +65,7 @@ const _initialPlaces = [
   Place(
     id: "5",
     title: "Kair, Egipt",
-    imagePath: "assets/images/kair.jpg",
+    imagePath: "assets/images/kair.jpeg",
     placeName: "Wielkie Piramidy w Gizie",
     description:
         "Starożytne cuda świata, pustynny krajobraz z wielbłądami oraz bogata historia starożytnej cywilizacji.",
