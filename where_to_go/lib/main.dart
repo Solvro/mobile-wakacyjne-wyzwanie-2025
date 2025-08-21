@@ -3,10 +3,11 @@ import "package:flutter_hooks/flutter_hooks.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
+import "favourite_provider.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -145,12 +146,12 @@ class ListScreen extends StatelessWidget {
   }
 }
 
-class DreamPlaceScreen extends HookWidget {
+class DreamPlaceScreen extends ConsumerWidget {
   const DreamPlaceScreen({super.key, required this.place});
   final DreamPlace place;
   @override
-  Widget build(BuildContext context) {
-    final isFavorited = useState(false);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorited = ref.watch(favoriteProvider);
 
     const colorAccent = Color.fromARGB(255, 154, 63, 11);
     return Scaffold(
@@ -214,10 +215,12 @@ class DreamPlaceScreen extends HookWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () => isFavorited.value = !isFavorited.value,
+              onPressed: () {
+                ref.read(favoriteProvider.notifier).toggle();
+              },
               icon: Icon(
-                isFavorited.value ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                color: isFavorited.value ? const Color.fromARGB(255, 174, 14, 14) : colorAccent,
+                isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: isFavorited ? const Color.fromARGB(255, 174, 14, 14) : colorAccent,
               ))
         ],
         iconTheme: const IconThemeData(

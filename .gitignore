@@ -1,3 +1,5 @@
 
 # FVM Version Cache
 .fvm/
+
+*.g.dart
