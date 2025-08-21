@@ -1,9 +1,10 @@
 import "package:flutter/material.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
 
 import "views/bucket_list_screen.dart";
 
 void main() {
-  runApp(const TravelApp());
+  runApp(const ProviderScope(child: TravelApp()));
 }
 
 class TravelApp extends StatelessWidget {
