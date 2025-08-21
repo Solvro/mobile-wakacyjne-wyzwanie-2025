@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
+import "package:go_router/go_router.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
-import "favourite_provider.dart";
-import "gen/assets.gen.dart";
+import "app_router.dart" show goRouter;
+import "places_provider.dart";
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -15,25 +15,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const ListScreen(),
+    return MaterialApp.router(
+      routerConfig: goRouter,
       theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
     );
   }
 }
 
 class DreamPlace {
+  final int id;
   final String title;
   final String imagePath;
   final String title2;
   final String description;
   final List<ListOfAtt> attractions;
+  final bool isFavorite;
   const DreamPlace(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.title2,
       required this.description,
       required this.imagePath,
-      required this.attractions});
+      required this.attractions,
+      this.isFavorite = false});
+
+  DreamPlace copyWith({required bool isFavourite}) {
+    return DreamPlace(
+      id: id,
+      title: title,
+      title2: title2,
+      description: description,
+      imagePath: imagePath,
+      attractions: attractions,
+      isFavorite: isFavourite,
+    );
+  }
 }
 
 class ListOfAtt {
@@ -42,72 +58,12 @@ class ListOfAtt {
   const ListOfAtt({required this.icon, required this.subtitle});
 }
 
-final listofplaces = [
-  DreamPlace(
-    title: "Mostar, Bośnia i Hercegowina",
-    title2: "Stary Most w Mostarze",
-    description: "Przy odrobinie szczęścia można spotkać osoby wykonujące ekstremalne skoki z mostu do rzeki.",
-    imagePath: Assets.images.mostar.path,
-    attractions: [
-      const ListOfAtt(icon: Icons.water, subtitle: "Rzeka\nNeretwa"),
-      const ListOfAtt(icon: Icons.landscape, subtitle: "Widoczki"),
-      const ListOfAtt(icon: Icons.storefront, subtitle: "Tradycyjne\nbudownictwo"),
-      const ListOfAtt(icon: Icons.mosque, subtitle: "Meczety")
-    ],
-  ),
-  DreamPlace(
-    title: "Wilno, Litwa",
-    title2: "Kościół św. Anny w Wilnie",
-    description:
-        "Jeden z najbardziej rozpoznawalnych symboli Wilna. Jeden w wielu pięknych kościołów do zobaczenia w tym mieście. ",
-    imagePath: Assets.images.wilno.path,
-    attractions: [
-      const ListOfAtt(icon: Icons.park, subtitle: "Parki"),
-      const ListOfAtt(icon: Icons.church, subtitle: "Budownictwo\nsakralne"),
-      const ListOfAtt(icon: Icons.bakery_dining_rounded, subtitle: "Kibiny")
-    ],
-  ),
-  DreamPlace(
-    title: "Berlin, Niemcy",
-    title2: "Brama Brandenburska",
-    description: "Najbardziej rozpoznawalny zabytek Berlina, obowiązkowy punkt każdej wizyty.",
-    imagePath: Assets.images.berlin.path,
-    attractions: [
-      const ListOfAtt(icon: Icons.account_balance_rounded, subtitle: "Brama\nBrandenburska"),
-      const ListOfAtt(icon: Icons.sports_bar_rounded, subtitle: "Piwo"),
-      const ListOfAtt(icon: Icons.flutter_dash_rounded, subtitle: "Fluttercon\n2025")
-    ],
-  ),
-  DreamPlace(
-    title: "Szklarska Poręba, Polska",
-    title2: "Wodospad Kamieńczyka",
-    description: "Najwyższy wodospoad w polskich Sudetach.",
-    imagePath: Assets.images.szklarska.path,
-    attractions: [
-      const ListOfAtt(icon: Icons.hiking_rounded, subtitle: "Piesze\nwycieczki"),
-      const ListOfAtt(icon: Icons.landscape, subtitle: "Góry"),
-      const ListOfAtt(icon: Icons.forest, subtitle: "Natura"),
-      const ListOfAtt(icon: Icons.waves_rounded, subtitle: "Wodospady")
-    ],
-  ),
-  DreamPlace(
-    title: "Bukareszt, Rumunia",
-    title2: "Pałac Parlamentu w Bukareszcie",
-    description: "Jeden z największych budynków na świecie, a zarazem symbol słusznie minionego komunizmu w Rumunii.",
-    imagePath: Assets.images.bukareszt.path,
-    attractions: [
-      const ListOfAtt(icon: Icons.museum, subtitle: "Muzea"),
-      const ListOfAtt(icon: Icons.location_city, subtitle: "Zróżnicowana\narchitektura"),
-      const ListOfAtt(icon: Icons.park, subtitle: "Parki")
-    ],
-  )
-];
-
-class ListScreen extends StatelessWidget {
+class ListScreen extends ConsumerWidget {
   const ListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final listofplaces = ref.watch(dreamPlacesProvider);
     return Scaffold(
         appBar: AppBar(
           title: const Text("Wakacyjno Wyzwaniownik"),
@@ -120,9 +76,7 @@ class ListScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: ListTile(
                     onTap: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute<void>(builder: (context) => DreamPlaceScreen(place: e)),
-                      );
+                      await context.push("/${DreamPlaceScreen.route}/${e.id}");
                     },
                     title: Text(
                       e.title,
@@ -147,11 +101,14 @@ class ListScreen extends StatelessWidget {
 }
 
 class DreamPlaceScreen extends ConsumerWidget {
-  const DreamPlaceScreen({super.key, required this.place});
-  final DreamPlace place;
+  const DreamPlaceScreen({super.key, required this.id});
+  final int id;
+
+  static const route = "places";
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorited = ref.watch(favoriteProvider);
+    final place = ref.watch(singleDreamPlaceProvider(id));
 
     const colorAccent = Color.fromARGB(255, 154, 63, 11);
     return Scaffold(
@@ -216,11 +173,11 @@ class DreamPlaceScreen extends ConsumerWidget {
         actions: [
           IconButton(
               onPressed: () {
-                ref.read(favoriteProvider.notifier).toggle();
+                ref.read(dreamPlacesProvider.notifier).toggleFavorite(id);
               },
               icon: Icon(
-                isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                color: isFavorited ? const Color.fromARGB(255, 174, 14, 14) : colorAccent,
+                place.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: place.isFavorite ? const Color.fromARGB(255, 174, 14, 14) : colorAccent,
               ))
         ],
         iconTheme: const IconThemeData(
