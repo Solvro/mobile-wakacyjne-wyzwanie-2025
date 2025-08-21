@@ -33,6 +33,8 @@ migrate_working_dir/
 .pub/
 /build/
 lib/gen/
+lib/features/favorite/favorite_provider.g.dart
+lib/features/places/places_provider.g.dart
 
 # Symbolication related
 app.*.symbols
