@@ -1,7 +1,11 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+//import "features/favorite/favorite_provider.dart";
+//import "features/places/place.dart";
+import "app_router.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -9,25 +13,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: PlacesListScreen(),
+    return MaterialApp.router(
+      routerConfig: appRouter,
     );
   }
 }
 
-class Place {
+/*class Place {
+  final String id;
   final String title;
+  final String description;
+  final bool isFavorite;
   final String subtitle;
   final String imagePath;
-  final String description;
   final Color backgroundColor;
   const Place({
+    required this.id,
     required this.title,
+    required this.description,
+    required this.isFavorite,
     required this.subtitle,
     required this.imagePath,
-    required this.description,
     required this.backgroundColor,
   });
+  Place copyWith({bool? isFavorite}) {
+    return Place(
+      id: id,
+      title: title,
+      description: description,
+      isFavorite: isFavorite ?? this.isFavorite,
+      subtitle: subtitle,
+      imagePath: imagePath,
+      backgroundColor: backgroundColor,
+    );
+  }
 }
 
 class PlacesListScreen extends StatelessWidget {
@@ -37,39 +56,49 @@ class PlacesListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final places = <Place>[
       const Place(
+        id: "1",
         title: "Manchester, Anglia",
         subtitle: "Miasto futbolu",
         imagePath: "assets/images/manchester.jpg",
         description: "• Piłka nożna\n• Architektura",
         backgroundColor: Color.fromARGB(255, 255, 0, 0),
+        isFavorite: false,
       ),
       const Place(
+        id: "2",
         title: "Santorini, Grecja",
         subtitle: "Grecja",
         imagePath: "assets/images/santorini.jpg",
         description: "• Zachody słońca\n• Morze",
         backgroundColor: Color(0xFF1E88E5),
+        isFavorite: false,
       ),
       const Place(
+        id: "3",
         title: "Barcelona, Hiszpania",
         subtitle: "Katalonia",
         imagePath: "assets/images/barcelona.jpg",
         description: "• FcBarcelona\n• Plaże i tapas",
         backgroundColor: Color.fromARGB(255, 255, 123, 0),
+        isFavorite: false,
       ),
       const Place(
+        id: "4",
         title: "Rzym, Włochy",
         subtitle: "Makaron",
         imagePath: "assets/images/rzym.jpg",
         description: "• Koloseum\n• Pizza i espresso",
         backgroundColor: Color.fromARGB(255, 94, 255, 0),
+        isFavorite: false,
       ),
       const Place(
+        id: "5",
         title: "Paryż, Francja",
         subtitle: "Wieża",
         imagePath: "assets/images/paryz.jpg",
         description: "• Wieża Eiffla\n• Korki",
         backgroundColor: Color.fromARGB(255, 0, 17, 255),
+        isFavorite: false,
       ),
     ];
 
@@ -106,7 +135,7 @@ class PlacesListScreen extends StatelessWidget {
   }
 }
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends ConsumerWidget {
   const DreamPlaceScreen({
     super.key,
     required this.title,
@@ -121,28 +150,22 @@ class DreamPlaceScreen extends StatefulWidget {
   final Color backgroundColor;
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorited = ref.watch(favoriteProvider);
 
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool isFavorited = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
         actions: [
           IconButton(
-            onPressed: toggleFavorite,
-            icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+            onPressed: () {
+              ref.read(favoriteProvider.notifier).toggle();
+            },
+            icon: Icon(
+              isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited ? Colors.red : null,
+            ),
           ),
         ],
       ),
@@ -151,7 +174,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: Image.asset(widget.imagePath, fit: BoxFit.cover),
+            child: Image.asset(imagePath, fit: BoxFit.cover),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -159,12 +182,12 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.title,
+                  title,
                   style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  widget.description,
+                  description,
                   style: const TextStyle(fontSize: 16, height: 1.3),
                 ),
               ],
@@ -214,3 +237,4 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
     );
   }
 }
+*/
