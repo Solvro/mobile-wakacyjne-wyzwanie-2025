@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
-import "views/bucket_list_screen.dart";
+import "utils/app_router.dart";
 
 void main() {
   runApp(const ProviderScope(child: TravelApp()));
@@ -12,9 +12,9 @@ class TravelApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
+      routerConfig: goRouter,
       title: "Travel App",
-      home: BucketListScreen(),
     );
   }
 }

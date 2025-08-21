@@ -1,31 +1,23 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
 
-import "../models/place.dart";
-import "../views/dream_place_screen_consumer.dart";
+import "../features/places/places_provider.dart";
+import "../views/dream_place_screen_consumer_router.dart";
 
-class BuildList extends StatelessWidget {
-  final Place place;
+class BuildList extends ConsumerWidget {
+  final String id;
   final int index;
 
-  const BuildList({super.key, required this.place, required this.index});
+  const BuildList({super.key, required this.id, required this.index});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final place = ref.watch(placesProvider).firstWhere((place) => place.id == id);
+
     return GestureDetector(
       onTap: () async {
-        await Navigator.push(
-            context,
-            PageRouteBuilder<void>(
-              pageBuilder: (context, animation, secondaryAnimation) => DreamPlaceScreenConsumer(place: place),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0, 1);
-                const end = Offset.zero;
-                final tween = Tween(begin: begin, end: end);
-                final offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            ));
+        await GoRouter.of(context).push("${DreamPlaceScreenConsumerRouter.route}/${place.id}");
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),

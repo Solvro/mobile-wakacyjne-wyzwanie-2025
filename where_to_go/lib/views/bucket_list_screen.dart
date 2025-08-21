@@ -20,7 +20,7 @@ class BucketListScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           itemBuilder: (context, index) {
             return BuildList(
-              place: placesList[index],
+              id: placesList[index].id,
               index: index,
             );
           },

@@ -2,11 +2,11 @@ import "package:flutter/material.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
 import "../features/favorite/favorite_provider.dart";
-import "../models/place.dart";
 import "../utils/color_palette.dart";
+import "../utils/old/place_old.dart";
 
 class DreamPlaceScreenConsumer extends ConsumerWidget {
-  final Place place;
+  final PlaceOld place;
 
   const DreamPlaceScreenConsumer({super.key, required this.place});
 

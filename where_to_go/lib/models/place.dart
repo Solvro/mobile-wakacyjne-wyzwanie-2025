@@ -1,12 +1,28 @@
 import "attraction.dart";
 
 class Place {
+  final String id;
   final String title;
-  final String text;
+  final String description;
   final String path;
+  final bool isFavorite;
   final List<Attraction> attractionList;
 
-  bool isFavorite = false;
+  const Place(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.path,
+      this.isFavorite = false,
+      required this.attractionList});
 
-  Place(this.title, this.text, this.path, this.attractionList);
+  Place copyWith({bool? isFavorite}) {
+    return Place(
+        id: id,
+        title: title,
+        description: description,
+        path: path,
+        isFavorite: isFavorite ?? this.isFavorite,
+        attractionList: attractionList);
+  }
 }
