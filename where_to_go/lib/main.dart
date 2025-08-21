@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
+
 import "gen/assets.gen.dart";
 
 void main() {
@@ -142,30 +145,18 @@ class ListScreen extends StatelessWidget {
   }
 }
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends HookWidget {
   const DreamPlaceScreen({super.key, required this.place});
   final DreamPlace place;
-
-  @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavorited = false;
-
-  void _toggleFavorite() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isFavorited = useState(false);
+
     const colorAccent = Color.fromARGB(255, 154, 63, 11);
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Image.asset(
-          widget.place.imagePath,
+          place.imagePath,
           fit: BoxFit.cover,
         ),
         Padding(
@@ -174,21 +165,21 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.place.title2,
+                  place.title2,
                   style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  widget.place.description,
+                  place.description,
                   style: const TextStyle(fontSize: 15),
                 ),
               ],
             )),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: widget.place.attractions
+            children: place.attractions
                 .map(
                   (e) => Column(
                     children: [
@@ -214,7 +205,7 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
       ]),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.place.title),
+        title: Text(place.title),
         titleTextStyle: const TextStyle(
           fontSize: 17,
           color: Colors.black,
@@ -223,10 +214,10 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: _toggleFavorite,
+              onPressed: () => isFavorited.value = !isFavorited.value,
               icon: Icon(
-                _isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                color: _isFavorited ? const Color.fromARGB(255, 174, 14, 14) : colorAccent,
+                isFavorited.value ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: isFavorited.value ? const Color.fromARGB(255, 174, 14, 14) : colorAccent,
               ))
         ],
         iconTheme: const IconThemeData(
