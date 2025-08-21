@@ -8,6 +8,6 @@ class Favorite extends _$Favorite {
   bool build() => false;
 
   void toggle() {
-    state = !state; // <- teraz state jest zdefiniowane
+    state = !state;
   }
 }

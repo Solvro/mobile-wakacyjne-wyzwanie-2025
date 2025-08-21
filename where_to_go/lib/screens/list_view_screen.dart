@@ -7,6 +7,11 @@ import 'package:hello_flutter/screens/dream_place_screen.dart';
 import 'package:hello_flutter/screens/hook_widget.dart';
 import 'package:hello_flutter/widgets/appBar_widget.dart';
 import 'package:hello_flutter/screens/inheritance_widget.dart';
+import 'package:hello_flutter/app_router.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hello_flutter/features/favorite/favorite_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hello_flutter/features/places/places_provider.dart';
 
 final List<DreamPlace> dreamPlacesData = [
   DreamPlace(
@@ -98,7 +103,7 @@ final List<DreamPlace> dreamPlacesData = [
   ),
 ];
 
-class ListViewScreen extends StatefulWidget {
+class ListViewScreen extends ConsumerStatefulWidget {
   final Color backgroundColor;
   final String appBarTitle;
   final String appBarText;
@@ -125,16 +130,17 @@ class ListViewScreen extends StatefulWidget {
   });
 
   @override
-  State<ListViewScreen> createState() => _ListViewScreenState();
+  ConsumerState<ListViewScreen> createState() => _ListViewScreenState();
 }
 
-class _ListViewScreenState extends State<ListViewScreen> {
+class _ListViewScreenState extends ConsumerState<ListViewScreen> {
   final List<DreamPlace> places = dreamPlacesData;
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth = screenWidth * 0.95 > 900 ? 900 : screenWidth * 0.95;
+
+    final places = ref.watch(placesProvider);
 
     return Scaffold(
       appBar: AppBarExample(appBarTitle: widget.appBarTitle),
@@ -186,15 +192,9 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
                             onTap: () {
-                              Navigator.push(
+                              GoRouter.of(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DreamPlaceScreen_InheritanceWidget(
-                                        place: place,
-                                      ),
-                                ),
-                              );
+                              ).pushNamed("details", extra: place);
                             },
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(12),
@@ -206,13 +206,26 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              title: Text(
-                                place.title,
-                                style: TextStyle(
-                                  color: widget.listItemTitleColor,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              title: Row(
+                                children: [
+                                  Text(
+                                    place.title,
+                                    style: TextStyle(
+                                      color: widget.listItemTitleColor,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Icon(
+                                    place.isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: place.isFavorite
+                                        ? Colors.red
+                                        : widget.listItemTitleColor,
+                                  ),
+                                ],
                               ),
                               subtitle: Text(
                                 place.imageDescription,

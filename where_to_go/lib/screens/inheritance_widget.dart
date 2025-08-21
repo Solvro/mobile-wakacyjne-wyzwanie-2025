@@ -39,7 +39,7 @@ class DreamPlaceScreen_InheritanceWidget extends HookWidget {
     this.iconColor = Colors.white,
     this.actionButton,
   });
-
+  static const String route = '/inheritance';
   final DreamPlace place;
   final Color backgroundColor;
   final Color iconColor;

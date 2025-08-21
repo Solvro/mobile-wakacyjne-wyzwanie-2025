@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hello_flutter/features/places/places_provider.dart';
 
 import 'package:hello_flutter/gen/assets.gen.dart';
 import 'package:hello_flutter/models/activity_model.dart';
@@ -24,18 +25,27 @@ class DreamPlaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorited = ref.watch(favoriteProvider);
+    final places = ref.watch(placesProvider);
+
+    final currentPlace = places.firstWhere((p) => p.title == place.title);
+
+    final isFavorited = currentPlace.isFavorite;
 
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth = screenWidth > 932 ? 900 : screenWidth * 0.95;
 
     void toggleFavorite() {
-      ref.read(favoriteProvider.notifier).toggle();
+      ref.read(placesProvider.notifier).toggleFavorite(place.title);
 
+      final updatedPlace = ref
+          .read(placesProvider)
+          .firstWhere((p) => p.title == place.title);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            !isFavorited ? 'Dodano do ulubionych' : 'Usunięto z ulubionych',
+            updatedPlace.isFavorite
+                ? 'Dodano do ulubionych'
+                : 'Usunięto z ulubionych',
           ),
         ),
       );
@@ -47,7 +57,7 @@ class DreamPlaceScreen extends ConsumerWidget {
         favoriteButton:
             actionButton ??
             IconButton(
-              icon: isFavorited
+              icon: currentPlace.isFavorite
                   ? const Icon(Icons.favorite, color: Colors.red)
                   : Icon(Icons.favorite_border, color: iconColor),
               tooltip: 'Ulubione',
