@@ -1,6 +1,6 @@
 import "package:riverpod_annotation/riverpod_annotation.dart";
-import "../../data/places.dart";
-import "../../models/dream_place.dart";
+import "../../../data/places.dart";
+import "../../../models/dream_place.dart";
 
 part "places_provider.g.dart";
 

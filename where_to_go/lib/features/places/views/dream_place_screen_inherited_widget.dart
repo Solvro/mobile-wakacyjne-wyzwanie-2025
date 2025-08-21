@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
-import "../app/colors.dart";
-import "../app/ui_config.dart";
-import "../features/places/places_inherited_provider.dart";
+import "../../../app/theme/app_theme.dart";
+import "../../../app/ui_config.dart";
+import "../providers/places_inherited_provider.dart";
 
 class DreamPlaceScreenInheritedWidget extends StatelessWidget {
   const DreamPlaceScreenInheritedWidget({super.key, required this.id});
@@ -26,7 +26,7 @@ class DreamPlaceScreenInheritedWidget extends StatelessWidget {
               ))
         ],
       ),
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: context.colorScheme.surface,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -48,9 +48,9 @@ class DreamPlaceScreenInheritedWidget extends StatelessWidget {
                   width: AppPaddings.small,
                 ),
                 Text(dreamPlace.description,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: DreamPlaceScreenConfig.descriptionFontSize,
-                      color: AppColors.secondaryTextColor,
+                      color: context.colorScheme.secondary,
                     )),
               ],
             ),
