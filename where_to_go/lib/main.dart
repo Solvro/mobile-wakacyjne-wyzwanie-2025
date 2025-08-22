@@ -1,12 +1,16 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:google_fonts/google_fonts.dart";
-
+import "dream_place_screen.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -46,7 +50,7 @@ class Place {
 }
 
 class PlaceScreenList extends StatelessWidget {
-  final List<Place> places = [
+  final places = [
     Place(
       titleText: "Cool place",
       image: Assets.images.snowdin.provider(),
@@ -107,7 +111,6 @@ class PlaceScreenList extends StatelessWidget {
             final place = places[index];
             return InkWell(
                 onTap: () async {
-                  // ignore: discarded_futures
                   await Navigator.push<void>(
                       context, MaterialPageRoute<void>(builder: (_) => DreamPlaceScreen(place: place)));
                 },
@@ -124,62 +127,6 @@ class PlaceScreenList extends StatelessWidget {
                   ),
                 ));
           }),
-    );
-  }
-}
-
-class DreamPlaceScreen extends StatefulWidget {
-  final Place place;
-
-  const DreamPlaceScreen({super.key, required this.place});
-
-  @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavored = false;
-
-  void _toggleFavorite() {
-    setState(() {
-      _isFavored = !_isFavored;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(196, 195, 218, 230),
-      appBar: AppBar(
-        title: Text(widget.place.titleText),
-        actions: [
-          IconButton(
-              onPressed: _toggleFavorite,
-              icon: _isFavored ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border))
-        ],
-      ),
-      body: Column(
-        children: [
-          Image(image: widget.place.image, height: 250, fit: BoxFit.cover),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                widget.place.placeName,
-                const SizedBox(
-                  height: 8,
-                ),
-                widget.place.catchPhrase
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [widget.place.feature1, widget.place.feature2, widget.place.feature3],
-          )
-        ],
-      ),
     );
   }
 }
