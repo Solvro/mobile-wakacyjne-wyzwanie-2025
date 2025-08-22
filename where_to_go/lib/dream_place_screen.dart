@@ -1,15 +1,17 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "features/favorite/favorite_provider.dart";
+
 import "main.dart";
 
-class DreamPlaceScreen extends HookWidget {
+class DreamPlaceScreen extends ConsumerWidget {
   final Place place;
 
   const DreamPlaceScreen({super.key, required this.place});
 
   @override
-  Widget build(BuildContext context) {
-    final isFavorited = useState(false);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorited = ref.watch(favoriteProvider); // obserwujemy stan providera, przy jego zmianie metoda build widgeta uruchomi się jeszcze raz odświerzając nam ui z nowym jej stanem
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(196, 195, 218, 230),
@@ -17,10 +19,12 @@ class DreamPlaceScreen extends HookWidget {
         title: Text(place.titleText),
         actions: [
           IconButton(
-            onPressed: () => isFavorited.value = !isFavorited.value,
+            onPressed: () {
+              ref.read(favoriteProvider.notifier).toggle(); // tutaj odczytujemy jednorazowo stan notifiera ponieważ nie chcemy nasłuchiwać zmian na obiekcie do zarządzania stanem
+            },
             icon: Icon(
-              isFavorited.value ? Icons.favorite : Icons.favorite_border,
-              color: isFavorited.value ? Colors.red : null,
+              isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited ? Colors.red : null,
             ),
           ),
         ],
