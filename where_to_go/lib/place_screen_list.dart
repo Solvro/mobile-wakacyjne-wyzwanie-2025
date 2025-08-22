@@ -24,7 +24,7 @@ class PlaceScreenList extends ConsumerWidget {
               place.isFavorite ? Icons.favorite : Icons.favorite_border,
               color: place.isFavorite ? Colors.red : null,
             ),
-            onTap:() async {
+            onTap: () async {
               await context.push("${DreamPlaceScreen.route}/${place.id}");
             },
           );
