@@ -13,7 +13,7 @@ final goRouter = GoRouter(
       path: "/details/:id",
       builder: (context, state) {
         final id = state.pathParameters["id"]!;
-        return DreamPlaceScreen(id: id);
+        return DreamPlaceScreen(id: int.parse(id));
       },
     ),
   ],
