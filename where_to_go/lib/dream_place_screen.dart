@@ -1,26 +1,26 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "features/favorite/favorite_provider.dart";
-
-import "main.dart";
+import "features/places/places_provider.dart";
 
 class DreamPlaceScreen extends ConsumerWidget {
-  final Place place;
+  static const route = "/details";
+  final String placeId;
 
-  const DreamPlaceScreen({super.key, required this.place});
+  const DreamPlaceScreen({super.key, required this.placeId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorited = ref.watch(favoriteProvider); // obserwujemy stan providera, przy jego zmianie metoda build widgeta uruchomi się jeszcze raz odświerzając nam ui z nowym jej stanem
+    final places = ref.watch(placesProvider);
+    final place = places.firstWhere((p) => p.id == placeId);
+    final isFavorited = place.isFavorite;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(196, 195, 218, 230),
       appBar: AppBar(
-        title: Text(place.titleText),
+        title: Text(place.title),
         actions: [
           IconButton(
             onPressed: () {
-              ref.read(favoriteProvider.notifier).toggle(); // tutaj odczytujemy jednorazowo stan notifiera ponieważ nie chcemy nasłuchiwać zmian na obiekcie do zarządzania stanem
+              ref.read(placesProvider.notifier).toggleFavorite(place.id);
             },
             icon: Icon(
               isFavorited ? Icons.favorite : Icons.favorite_border,
@@ -29,27 +29,9 @@ class DreamPlaceScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Image(image: place.image, height: 250, fit: BoxFit.cover),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                place.placeName,
-                const SizedBox(
-                  height: 8,
-                ),
-                place.catchPhrase
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [place.feature1, place.feature2, place.feature3],
-          )
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(place.description, style: const TextStyle(fontSize: 18)),
       ),
     );
   }

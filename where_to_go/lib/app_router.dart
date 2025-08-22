@@ -1,5 +1,6 @@
 import "package:go_router/go_router.dart";
-import "main.dart";
+import "dream_place_screen.dart";
+import "place_screen_list.dart";
 
 final goRouter = GoRouter(
   initialLocation: "/",
@@ -9,10 +10,10 @@ final goRouter = GoRouter(
       builder: (context, state) => const PlaceScreenList(),
     ),
     GoRoute(
-      path: "${DetailsScreen.route}/:id", // dynamiczny parametr
+      path: "${DreamPlaceScreen.route}/:id",
       builder: (context, state) {
-        final id = state.pathParameters["id"];
-        return DetailsScreen(id: id);
+        final id = state.pathParameters["id"]!;
+        return DreamPlaceScreen(placeId: id);
       },
     ),
   ],
