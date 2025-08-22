@@ -1,5 +1,4 @@
 import "package:drift/drift.dart";
-import "package:drift/native.dart";
 
 class DreamPlaces extends Table {
   IntColumn get id => integer().autoIncrement()();

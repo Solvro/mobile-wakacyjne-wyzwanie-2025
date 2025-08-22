@@ -16,9 +16,9 @@ class DreamPlaceRepository extends _$DreamPlaceRepository {
 
   Future<List<DreamPlace>> getAllDreamPlaces() => select(dreamPlaces).get();
 
-  Future updateDreamPlace(DreamPlace place) => update(dreamPlaces).replace(place);
+  Future<bool> updateDreamPlace(DreamPlace place) => update(dreamPlaces).replace(place);
 
-  Future deleteDreamPlace(int id) => (delete(dreamPlaces)..where((tbl) => tbl.id.equals(id))).go();
+  Future<int> deleteDreamPlace(int id) => (delete(dreamPlaces)..where((tbl) => tbl.id.equals(id))).go();
 
   Future<void> toggleFavourite(int id) async {
     final place = await (select(dreamPlaces)..where((tbl) => tbl.id.equals(id))).getSingle();

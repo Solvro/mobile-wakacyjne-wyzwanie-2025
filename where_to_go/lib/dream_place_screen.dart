@@ -23,7 +23,7 @@ class DreamPlaceScreen extends ConsumerWidget {
         return dreamPlacesAsync.when(
           data: (dreamPlaces) {
             final places = ref.watch(placesProvider);
-            final place = places.firstWhere((p) => p.id == id);
+            final place = places.firstWhere((p) => p.id == id as String);
             final dreamPlace = dreamPlaces.firstWhere((dp) => dp.id == id);
             final isFavourited = dreamPlace.isFavourite;
             final icon = isFavourited ? Icons.favorite : Icons.favorite_border;

@@ -1,12 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
-import "features/places/places_provider.dart";
+import "features/database/dream_place_provider.dart";
 import "features/theme/local_theme_provider.dart";
 import "features/theme/local_theme_repository.dart";
 import "features/theme/theme.dart" show ThemePalette;
-import "features/database/dream_place_provider.dart";
-import "gen/assets.gen.dart";
 
 class HomeScreen extends ConsumerWidget {
   HomeScreen();
