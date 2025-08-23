@@ -7,12 +7,11 @@ part "places_provider.g.dart";
 
 final _initialPlaces = [
   Place(
-    id: "1",
-    title: "Santorini, Grecja",
-    subtitle: "Perła Cyklad na Morzu Egejskim",
-    description: "Odkryj magiczne białe domki zawieszone na klifach i zanurz się w błękicie morza.",
-    image: Assets.images.santorini
-  ),
+      id: "1",
+      title: "Santorini, Grecja",
+      subtitle: "Perła Cyklad na Morzu Egejskim",
+      description: "Odkryj magiczne białe domki zawieszone na klifach i zanurz się w błękicie morza.",
+      image: Assets.images.santorini),
   Place(
     id: "2",
     title: "Kyoto, Japonia",

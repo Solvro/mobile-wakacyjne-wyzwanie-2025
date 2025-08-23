@@ -6,10 +6,10 @@ part "favorite_provider.g.dart";
 class Favorite extends _$Favorite {
   @override
   bool build() {
-    return false; // stan początkowy
+    return false;
   }
 
-  void toggle() { // metoda pozwaląca zmienić stan providera
+  void toggle() {
     state = !state;
   }
 }
