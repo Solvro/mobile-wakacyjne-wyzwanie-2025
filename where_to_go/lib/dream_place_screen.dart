@@ -1,47 +1,38 @@
 import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
 import "feature_icon.dart";
 import "place.dart";
 
-class DreamPlaceScreen extends StatefulWidget {
+class DreamPlaceScreen extends HookWidget {
   final Place place;
 
   const DreamPlaceScreen({super.key, required this.place});
 
   @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  var _isFavorited = false;
-
-  void _toggleFavorite() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isFavorited = useState(false);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.place.title),
+        title: Text(place.title),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: _toggleFavorite,
+            onPressed: () {
+              isFavorited.value = !isFavorited.value;
+            },
             icon: Icon(
-              _isFavorited ? Icons.favorite : Icons.favorite_border,
-              color: _isFavorited ? Colors.red : null,
+              isFavorited.value ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited.value ? Colors.red : null,
             ),
           ),
         ],
       ),
       body: ListView(
         children: [
-          widget.place.image.image(
+          place.image.image(
             fit: BoxFit.cover,
             height: 250,
           ),
@@ -50,9 +41,9 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.place.subtitle, style: textTheme.headlineMedium),
+                Text(place.subtitle, style: textTheme.headlineMedium),
                 const SizedBox(height: 8),
-                Text(widget.place.description, style: textTheme.bodyMedium),
+                Text(place.description, style: textTheme.bodyMedium),
               ],
             ),
           ),
