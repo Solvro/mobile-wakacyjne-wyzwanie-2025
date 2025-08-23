@@ -1,17 +1,18 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "feature_icon.dart";
+import "features/favorite/favorite_provider.dart";
 import "place.dart";
 
-class DreamPlaceScreen extends HookWidget {
+class DreamPlaceScreen extends ConsumerWidget {
   final Place place;
 
   const DreamPlaceScreen({super.key, required this.place});
 
   @override
-  Widget build(BuildContext context) {
-    final isFavorited = useState(false);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorited = ref.watch(favoriteProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -21,11 +22,11 @@ class DreamPlaceScreen extends HookWidget {
         actions: [
           IconButton(
             onPressed: () {
-              isFavorited.value = !isFavorited.value;
+              ref.read(favoriteProvider.notifier).toggle();
             },
             icon: Icon(
-              isFavorited.value ? Icons.favorite : Icons.favorite_border,
-              color: isFavorited.value ? Colors.red : null,
+              isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited ? Colors.red : null,
             ),
           ),
         ],
