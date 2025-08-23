@@ -46,4 +46,4 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
-/lib/gen/assets.gen.dart
+*.gen.dart
