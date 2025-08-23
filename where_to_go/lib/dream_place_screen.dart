@@ -2,17 +2,20 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "feature_icon.dart";
-import "features/favorite/favorite_provider.dart";
-import "features/places/place.dart";
+import "features/places/places_provider.dart";
 
 class DreamPlaceScreen extends ConsumerWidget {
-  final Place place;
+  static const route = "place";
 
-  const DreamPlaceScreen({super.key, required this.place});
+  final String placeId;
+
+  const DreamPlaceScreen({super.key, required this.placeId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorited = ref.watch(favoriteProvider);
+    final places = ref.watch(placesProvider);
+    final place = places.firstWhere((p) => p.id == placeId);
+
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -22,11 +25,11 @@ class DreamPlaceScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              ref.read(favoriteProvider.notifier).toggle();
+              ref.read(placesProvider.notifier).toggleFavorite(place.id);
             },
             icon: Icon(
-              isFavorited ? Icons.favorite : Icons.favorite_border,
-              color: isFavorited ? Colors.red : null,
+              place.isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: place.isFavorite ? Colors.red : null,
             ),
           ),
         ],

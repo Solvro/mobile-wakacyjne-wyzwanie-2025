@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:google_fonts/google_fonts.dart";
-
-import "dream_place_list.dart";
+import "app_router.dart";
 
 final baseTheme = ThemeData.light();
 
@@ -47,16 +46,17 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(goRouterProvider);
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: "Dream Places",
+      routerConfig: router,
       theme: customLightTheme,
-      home: DreamPlaceList(),
     );
   }
 }

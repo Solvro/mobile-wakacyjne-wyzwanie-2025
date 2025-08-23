@@ -1,47 +1,17 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
 import "dream_place_screen.dart";
-import "gen/assets.gen.dart";
-import "features/places/place.dart";
+import "features/places/places_provider.dart";
 
-class DreamPlaceList extends StatelessWidget {
-  DreamPlaceList({super.key});
-
-  final places = <Place>[
-    Place(
-      title: "Santorini, Grecja",
-      subtitle: "Perła Cyklad na Morzu Egejskim",
-      description: "Odkryj magiczne białe domki zawieszone na klifach i zanurz się w błękicie morza.",
-      image: Assets.images.santorini,
-    ),
-    Place(
-      title: "Kyoto, Japonia",
-      subtitle: "Serce tradycyjnej Japonii",
-      description: "Przechadzaj się wśród starożytnych świątyń, bambusowych lasów i ogrodów gejsz.",
-      image: Assets.images.kyoto,
-    ),
-    Place(
-      title: "Malediwy",
-      subtitle: "Rajskie atole na Oceanie Indyjskim",
-      description: "Zamieszkaj w domku na wodzie i ciesz się krystalicznie czystą wodą i białym piaskiem.",
-      image: Assets.images.maldives,
-    ),
-    Place(
-      title: "Islandia",
-      subtitle: "Kraina lodu, ognia i zorzy polarnej",
-      description: "Zobacz potężne wodospady, gejzery i lodowce w jednym z najbardziej epickich krajobrazów.",
-      image: Assets.images.iceland,
-    ),
-    Place(
-      title: "Patagonia, Argentyna",
-      subtitle: "Surowe piękno na końcu świata",
-      description: "Wędruj pośród monumentalnych gór, turkusowych jezior i bezkresnych stepów.",
-      image: Assets.images.patagonia,
-    ),
-  ];
+class DreamPlaceList extends ConsumerWidget {
+  const DreamPlaceList({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final places = ref.watch(placesProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Wymarzone miejsca"),
@@ -68,12 +38,8 @@ class DreamPlaceList extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (context) => DreamPlaceScreen(place: place),
-                  ),
-                );
+              onTap: () {
+                context.go("/${DreamPlaceScreen.route}/${place.id}");
               },
             ),
           );
