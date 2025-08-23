@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
+
+import "feature_icon.dart";
 import "place.dart";
-import 'feature_icon.dart';
 
 class DreamPlaceScreen extends StatefulWidget {
   final Place place;
