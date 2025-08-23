@@ -3,7 +3,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "feature_icon.dart";
 import "features/favorite/favorite_provider.dart";
-import "place.dart";
+import "features/places/place.dart";
 
 class DreamPlaceScreen extends ConsumerWidget {
   final Place place;

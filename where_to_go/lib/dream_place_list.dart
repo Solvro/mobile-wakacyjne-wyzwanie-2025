@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "dream_place_screen.dart";
 import "gen/assets.gen.dart";
-import "place.dart";
+import "features/places/place.dart";
 
 class DreamPlaceList extends StatelessWidget {
   DreamPlaceList({super.key});
