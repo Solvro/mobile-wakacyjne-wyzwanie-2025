@@ -38,6 +38,7 @@ dependencies:
   google_fonts:
   flutter_hooks: 0.21.3
   flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
 
 dev_dependencies:
   flutter_test:
@@ -50,9 +51,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   solvro_config: ^1.0.1
-  build_runner: ^2.6.0
+  build_runner: ^2.5.4
   flutter_gen_runner:
   custom_lint:
+  riverpod_generator: ^2.6.1
   riverpod_lint: ^2.6.5
 
 # For information on the generic Dart part of this file, see the
