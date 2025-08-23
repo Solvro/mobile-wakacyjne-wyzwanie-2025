@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "place.dart";
+import 'feature_icon.dart';
 
 class DreamPlaceScreen extends StatefulWidget {
   final Place place;
@@ -58,33 +59,25 @@ class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Column(
-                children: [
-                  Icon(Icons.wb_sunny, color: Colors.orange, size: 40),
-                  SizedBox(height: 8),
-                  Text("Słońce"),
-                ],
+              FeatureIcon(
+                icon: Icons.wb_sunny,
+                color: Colors.orange,
+                label: "Słońce",
               ),
-              Column(
-                children: [
-                  Icon(Icons.beach_access, color: Colors.blueAccent, size: 40),
-                  SizedBox(height: 8),
-                  Text("Plaże"),
-                ],
+              FeatureIcon(
+                icon: Icons.beach_access,
+                color: Colors.blueAccent,
+                label: "Plaże",
               ),
-              Column(
-                children: [
-                  Icon(Icons.restaurant, color: Colors.red, size: 40),
-                  SizedBox(height: 8),
-                  Text("Jedzenie"),
-                ],
+              FeatureIcon(
+                icon: Icons.restaurant,
+                color: Colors.red,
+                label: "Jedzenie",
               ),
-              Column(
-                children: [
-                  Icon(Icons.landscape, color: Colors.green, size: 40),
-                  SizedBox(height: 8),
-                  Text("Widoki"),
-                ],
+              FeatureIcon(
+                icon: Icons.landscape,
+                color: Colors.green,
+                label: "Widoki",
               ),
             ],
           ),
