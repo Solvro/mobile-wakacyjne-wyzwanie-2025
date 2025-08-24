@@ -1,9 +1,19 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
+import "app_router.dart";
+import "data_classes/place.dart";
+import "dream_places/details_screen.dart";
+import "dream_places/dream_place_screen_consumer_widget.dart";
+import "dream_places/dream_place_screen_hook_widget.dart";
+import "dream_places/dream_place_screen_inherited_widget.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(
+      child: MyApp(),
+    ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -11,36 +21,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
-    );
+    return MaterialApp.router(routerConfig: goRouter);
   }
 }
 
-class Attraction {
-  final IconData icon;
-  final String text;
 
-  const Attraction({required this.icon, required this.text});
-}
-
-class Place {
-  final String placeText;
-  final String image;
-  final String titleText;
-  final String descriptionText;
-  final List<Attraction> attractions;
-
-  const Place(
-      {required this.placeText,
-      required this.image,
-      required this.titleText,
-      required this.descriptionText,
-      required this.attractions});
-}
 
 final List<Place> places = [
   Place(
+    id: "0",
     placeText: "Wrocław, Polska",
     image: Assets.images.wroclaw.path,
     titleText: "Panorama miasta",
@@ -52,6 +41,7 @@ final List<Place> places = [
     ],
   ),
   Place(
+    id: "1",
     placeText: "Paryż, Francja",
     image: Assets.images.paris.path,
     titleText: "Wieża Eiffla",
@@ -63,6 +53,7 @@ final List<Place> places = [
     ],
   ),
   Place(
+    id: "2",
     placeText: "Nowy Jork, USA",
     image: Assets.images.manhattan.path,
     titleText: "Manhattan nocą",
@@ -74,6 +65,7 @@ final List<Place> places = [
     ],
   ),
   Place(
+    id: "3",
     placeText: "Tokio, Japonia",
     image: Assets.images.tokio.path,
     titleText: "Tokio nocą",
@@ -85,6 +77,7 @@ final List<Place> places = [
     ],
   ),
   Place(
+    id: "4",
     placeText: "Sydney, Australia",
     image: Assets.images.sydney.path,
     titleText: "Opera w Sydney",
@@ -108,15 +101,17 @@ class HomeScreen extends StatelessWidget {
           title: const Text("Strona główna", style: TextStyle(color: Color.fromARGB(255, 248, 231, 148))),
           backgroundColor: const Color.fromARGB(255, 40, 65, 57),
         ),
-        //z ListView i ListTiles nie chciało mi działać dlatego poszedłem w column
         body: ListView(
-          children: [
-            ...places.map((place) => GestureDetector(
+          children:
+            places.map((place) => GestureDetector(
                   onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute<dynamic>(builder: (context) => DreamPlaceScreen(place: place)),
-                    );
+                    await GoRouter.of(context).push("/${DetailsScreen.route}/${place.id}");
                   },
+                  //┏━━━┳━━━┓
+                  //┃ | ┃| |┃
+                  //┣━━━╋━━━┫
+                  //┃|| ┃|__┃
+                  //┗━━━┻━━━┛
                   child: Container(
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(16),
@@ -136,77 +131,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ))
-          ],
+                )).toList(),
         ));
-  }
-}
-
-class DreamPlaceScreen extends StatefulWidget {
-  const DreamPlaceScreen({required this.place, super.key});
-
-  final Place place;
-
-  @override
-  State<DreamPlaceScreen> createState() => _DreamPlaceScreenState();
-}
-
-class _DreamPlaceScreenState extends State<DreamPlaceScreen> {
-  bool _isFavorited = false;
-
-  void _toggleFavorite() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 123, 144, 118),
-      appBar: AppBar(
-        title: Text(widget.place.placeText, style: const TextStyle(color: Color.fromARGB(255, 248, 231, 148))),
-        backgroundColor: const Color.fromARGB(255, 40, 65, 57),
-        actions: [
-          IconButton(
-              onPressed: _toggleFavorite,
-              icon: Icon(_isFavorited ? Icons.favorite : Icons.favorite_border),
-              color: const Color.fromARGB(255, 248, 231, 148))
-        ],
-      ),
-      body: Column(
-        children: [
-          Image.asset(
-            widget.place.image,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.place.titleText,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Text(widget.place.descriptionText)
-                //Dodać 4
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ...widget.place.attractions.map((att) => Column(
-                    children: [Icon(att.icon), Text(att.text)],
-                  ))
-            ],
-          )
-        ],
-      ),
-    );
   }
 }
