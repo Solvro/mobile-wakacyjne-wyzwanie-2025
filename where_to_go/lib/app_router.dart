@@ -2,7 +2,6 @@ import "package:go_router/go_router.dart";
 import "dream_places/details_screen.dart";
 import "main.dart";
 
-
 final goRouter = GoRouter(
   initialLocation: "/",
   routes: [

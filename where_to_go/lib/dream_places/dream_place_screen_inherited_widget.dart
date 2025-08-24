@@ -18,29 +18,23 @@ class IsFavorited extends StatefulWidget {
 class IsFavoritedState extends State<IsFavorited> {
   bool isFavorited = false;
 
-  void toggleFavorite(){
+  void toggleFavorite() {
     setState(() {
-       isFavorited = !isFavorited;
+      isFavorited = !isFavorited;
     });
   }
+
   @override
-  Widget build(BuildContext context) => IsFavouritedProvider(
-      isFavorited: isFavorited, 
-      stateWidget: this,
-      child: widget.child
-    );
+  Widget build(BuildContext context) =>
+      IsFavouritedProvider(isFavorited: isFavorited, stateWidget: this, child: widget.child);
 }
 
-class IsFavouritedProvider extends InheritedWidget{
+class IsFavouritedProvider extends InheritedWidget {
   final bool isFavorited;
   final IsFavoritedState stateWidget;
 
-  const IsFavouritedProvider({
-    Key? key,
-    required this.isFavorited,
-    required Widget child,
-    required this.stateWidget
-  }) : super(key: key, child: child);
+  const IsFavouritedProvider({Key? key, required this.isFavorited, required Widget child, required this.stateWidget})
+      : super(key: key, child: child);
 
   static IsFavoritedState of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<IsFavouritedProvider>()!.stateWidget;
@@ -55,12 +49,12 @@ class IsFavouritedProvider extends InheritedWidget{
 class DreamPlaceScreenInherited extends StatelessWidget {
   const DreamPlaceScreenInherited({required this.place, super.key});
   final Place place;
-  
+
   @override
   Widget build(BuildContext context) {
     final isFavorited = IsFavouritedProvider.of(context).isFavorited;
 
-    void toggleFavorite(){
+    void toggleFavorite() {
       final provider = IsFavouritedProvider.of(context);
       provider.toggleFavorite();
     }
@@ -102,9 +96,11 @@ class DreamPlaceScreenInherited extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: place.attractions.map((att) => Column(
-                    children: [Icon(att.icon), Text(att.text)],
-                  )).toList(),
+            children: place.attractions
+                .map((att) => Column(
+                      children: [Icon(att.icon), Text(att.text)],
+                    ))
+                .toList(),
           )
         ],
       ),

@@ -11,9 +11,11 @@ import "dream_places/dream_place_screen_inherited_widget.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const ProviderScope(
+  runApp(
+    const ProviderScope(
       child: MyApp(),
-    ),);
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,8 +26,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(routerConfig: goRouter);
   }
 }
-
-
 
 final List<Place> places = [
   Place(
@@ -102,36 +102,37 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 40, 65, 57),
         ),
         body: ListView(
-          children:
-            places.map((place) => GestureDetector(
-                  onTap: () async {
-                    await GoRouter.of(context).push("/${DetailsScreen.route}/${place.id}");
-                  },
-                  //┏━━━┳━━━┓
-                  //┃ | ┃| |┃
-                  //┣━━━╋━━━┫
-                  //┃|| ┃|__┃
-                  //┗━━━┻━━━┛
-                  child: Container(
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 40, 65, 57), borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          place.image,
-                          fit: BoxFit.fill,
-                        ),
-                        Text(
-                          place.placeText,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 248, 231, 148)),
-                        ),
-                      ],
+          children: places
+              .map((place) => GestureDetector(
+                    onTap: () async {
+                      await GoRouter.of(context).push("/${DetailsScreen.route}/${place.id}");
+                    },
+                    //┏━━━┳━━━┓
+                    //┃ | ┃| |┃
+                    //┣━━━╋━━━┫
+                    //┃|| ┃|__┃
+                    //┗━━━┻━━━┛
+                    child: Container(
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 40, 65, 57), borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            place.image,
+                            fit: BoxFit.fill,
+                          ),
+                          Text(
+                            place.placeText,
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 248, 231, 148)),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )).toList(),
+                  ))
+              .toList(),
         ));
   }
 }

@@ -9,7 +9,6 @@ class DreamPlaceScreenHook extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final isFavorited = useState<bool>(false);
 
     void toggleFavorite() {
@@ -25,7 +24,8 @@ class DreamPlaceScreenHook extends HookWidget {
           IconButton(
               onPressed: toggleFavorite,
               icon: Icon(isFavorited.value ? Icons.favorite : Icons.favorite_border),
-              color: isFavorited.value ? const Color.fromARGB(255, 255, 0, 0) : const Color.fromARGB(255, 248, 231, 148))
+              color:
+                  isFavorited.value ? const Color.fromARGB(255, 255, 0, 0) : const Color.fromARGB(255, 248, 231, 148))
         ],
       ),
       body: Column(
@@ -53,9 +53,11 @@ class DreamPlaceScreenHook extends HookWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: place.attractions.map((att) => Column(
-                    children: [Icon(att.icon), Text(att.text)],
-                  )).toList(),
+            children: place.attractions
+                .map((att) => Column(
+                      children: [Icon(att.icon), Text(att.text)],
+                    ))
+                .toList(),
           )
         ],
       ),

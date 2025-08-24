@@ -5,7 +5,6 @@ import "../data_classes/place.dart";
 import "../gen/assets.gen.dart";
 import "../providers/favorite_provider.dart";
 
-
 class DreamPlaceScreenConsumer extends ConsumerWidget {
   const DreamPlaceScreenConsumer({required this.place, super.key});
   final Place place;
@@ -20,7 +19,7 @@ class DreamPlaceScreenConsumer extends ConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 40, 65, 57),
         actions: [
           IconButton(
-              onPressed: (){
+              onPressed: () {
                 ref.read(favoriteProvider.notifier).toggle();
               },
               icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
@@ -51,9 +50,11 @@ class DreamPlaceScreenConsumer extends ConsumerWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: place.attractions.map((att) => Column(
-                    children: [Icon(att.icon), Text(att.text)],
-                  )).toList(),
+            children: place.attractions
+                .map((att) => Column(
+                      children: [Icon(att.icon), Text(att.text)],
+                    ))
+                .toList(),
           )
         ],
       ),

@@ -24,7 +24,7 @@ class Place {
       required this.descriptionText,
       this.isFavorite = false,
       required this.attractions});
-  
+
   Place copyWith({bool? isFavorite}) {
     return Place(
       id: id,

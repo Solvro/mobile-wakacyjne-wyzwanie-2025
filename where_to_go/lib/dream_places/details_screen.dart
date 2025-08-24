@@ -6,13 +6,12 @@ import "../gen/assets.gen.dart";
 import "../providers/favorite_provider.dart";
 import "../providers/places_provider.dart";
 
-
 class DetailsScreen extends ConsumerWidget {
   const DetailsScreen({required this.id, super.key});
   final String id;
 
   static String get route => "DetailsScreen";
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final place = ref.watch(placesProvider)[int.parse(id)];
@@ -23,7 +22,7 @@ class DetailsScreen extends ConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 40, 65, 57),
         actions: [
           IconButton(
-              onPressed: (){
+              onPressed: () {
                 ref.read(placesProvider.notifier).toggleFavorite(id);
               },
               icon: Icon(place.isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -54,9 +53,11 @@ class DetailsScreen extends ConsumerWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: place.attractions.map((att) => Column(
-                    children: [Icon(att.icon), Text(att.text)],
-                  )).toList(),
+            children: place.attractions
+                .map((att) => Column(
+                      children: [Icon(att.icon), Text(att.text)],
+                    ))
+                .toList(),
           )
         ],
       ),
