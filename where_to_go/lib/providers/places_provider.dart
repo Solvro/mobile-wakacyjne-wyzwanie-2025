@@ -3,7 +3,7 @@ import "package:riverpod_annotation/riverpod_annotation.dart";
 import "../data_classes/place.dart";
 import "../gen/assets.gen.dart";
 
-part './places_provider.g.dart';
+part "./places_provider.g.dart";
 
 final List<Place> _initialPlaces = [
   Place(

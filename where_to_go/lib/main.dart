@@ -5,9 +5,6 @@ import "package:go_router/go_router.dart";
 import "app_router.dart";
 import "data_classes/place.dart";
 import "dream_places/details_screen.dart";
-import "dream_places/dream_place_screen_consumer_widget.dart";
-import "dream_places/dream_place_screen_hook_widget.dart";
-import "dream_places/dream_place_screen_inherited_widget.dart";
 import "gen/assets.gen.dart";
 
 void main() {
@@ -27,6 +24,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// ignore: unreachable_from_main
 final List<Place> places = [
   Place(
     id: "0",
@@ -90,7 +88,10 @@ final List<Place> places = [
   ),
 ];
 
+// ignore: unreachable_from_main
 class HomeScreen extends StatelessWidget {
+
+  // ignore: unreachable_from_main
   const HomeScreen({super.key});
 
   @override

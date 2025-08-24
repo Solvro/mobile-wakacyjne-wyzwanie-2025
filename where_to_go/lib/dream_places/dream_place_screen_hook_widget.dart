@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "../data_classes/place.dart";
-import "../gen/assets.gen.dart";
 
 class DreamPlaceScreenHook extends HookWidget {
   const DreamPlaceScreenHook({required this.place, super.key});

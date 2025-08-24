@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "../data_classes/place.dart";
-import "../gen/assets.gen.dart";
 import "../providers/favorite_provider.dart";
 
 class DreamPlaceScreenConsumer extends ConsumerWidget {

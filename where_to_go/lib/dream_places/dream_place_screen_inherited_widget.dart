@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
 import "../data_classes/place.dart";
-import "../gen/assets.gen.dart";
 
 class IsFavorited extends StatefulWidget {
   final Widget child;
@@ -33,8 +31,7 @@ class IsFavouritedProvider extends InheritedWidget {
   final bool isFavorited;
   final IsFavoritedState stateWidget;
 
-  const IsFavouritedProvider({Key? key, required this.isFavorited, required Widget child, required this.stateWidget})
-      : super(key: key, child: child);
+  const IsFavouritedProvider({super.key, required this.isFavorited, required super.child, required this.stateWidget});
 
   static IsFavoritedState of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<IsFavouritedProvider>()!.stateWidget;
