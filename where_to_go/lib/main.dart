@@ -90,7 +90,6 @@ final List<Place> places = [
 
 // ignore: unreachable_from_main
 class HomeScreen extends StatelessWidget {
-
   // ignore: unreachable_from_main
   const HomeScreen({super.key});
 
