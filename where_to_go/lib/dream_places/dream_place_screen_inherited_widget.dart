@@ -1,0 +1,106 @@
+import "package:flutter/material.dart";
+import "../data_classes/place.dart";
+
+class IsFavorited extends StatefulWidget {
+  final Widget child;
+
+  const IsFavorited({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  State<IsFavorited> createState() => IsFavoritedState();
+}
+
+class IsFavoritedState extends State<IsFavorited> {
+  bool isFavorited = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorited = !isFavorited;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      IsFavouritedProvider(isFavorited: isFavorited, stateWidget: this, child: widget.child);
+}
+
+class IsFavouritedProvider extends InheritedWidget {
+  final bool isFavorited;
+  final IsFavoritedState stateWidget;
+
+  const IsFavouritedProvider({super.key, required this.isFavorited, required super.child, required this.stateWidget});
+
+  static IsFavoritedState of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<IsFavouritedProvider>()!.stateWidget;
+  }
+
+  @override
+  bool updateShouldNotify(covariant IsFavouritedProvider oldWidget) {
+    return isFavorited != oldWidget.isFavorited;
+  }
+}
+
+class DreamPlaceScreenInherited extends StatelessWidget {
+  const DreamPlaceScreenInherited({required this.place, super.key});
+  final Place place;
+
+  @override
+  Widget build(BuildContext context) {
+    final isFavorited = IsFavouritedProvider.of(context).isFavorited;
+
+    void toggleFavorite() {
+      final provider = IsFavouritedProvider.of(context);
+      provider.toggleFavorite();
+    }
+
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 123, 144, 118),
+      appBar: AppBar(
+        title: Text(place.placeText, style: const TextStyle(color: Color.fromARGB(255, 248, 231, 148))),
+        backgroundColor: const Color.fromARGB(255, 40, 65, 57),
+        actions: [
+          IconButton(
+              onPressed: toggleFavorite,
+              icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+              color: isFavorited ? const Color.fromARGB(255, 255, 0, 0) : const Color.fromARGB(255, 248, 231, 148))
+        ],
+      ),
+      body: Column(
+        children: [
+          Image.asset(
+            place.image,
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  place.titleText,
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(place.descriptionText)
+                //Dodać 4
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: place.attractions
+                .map((att) => Column(
+                      children: [Icon(att.icon), Text(att.text)],
+                    ))
+                .toList(),
+          )
+        ],
+      ),
+    );
+  }
+}
