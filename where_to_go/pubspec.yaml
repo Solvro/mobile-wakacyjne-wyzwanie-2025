@@ -34,6 +34,8 @@ dependencies:
   flutter_gen: ^5.11.0
   cupertino_icons: ^1.0.8
   flutter_hooks: ^0.21.3+1
+  flutter_riverpod: ^2.5.0
+  riverpod_annotation: ^2.3.0
 
 
 flutter_gen:
@@ -49,8 +51,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   solvro_config: ^1.0.1
-  build_runner: ^2.6.0
+  build_runner: ^2.4.6
   flutter_gen_runner: ^5.11.0
+  riverpod_generator: ^2.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
