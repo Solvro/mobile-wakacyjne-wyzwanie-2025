@@ -1,6 +1,6 @@
 {
-    "name": "where_to_go",
-    "short_name": "where_to_go",
+    "name": "hello_flutter",
+    "short_name": "hello_flutter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
