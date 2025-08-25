@@ -31,7 +31,20 @@ class DreamPlaceScreen extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Text(place.description, style: const TextStyle(fontSize: 18)),
+        child: Column(children: [
+          Text(place.description, style: const TextStyle(fontSize: 18)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: place.features
+                .map((f) => Column(
+                      children: [
+                        Icon(f.icon),
+                        Text(f.label),
+                      ],
+                    ))
+                .toList(),
+          )
+        ]),
       ),
     );
   }
