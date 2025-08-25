@@ -1,11 +1,9 @@
 import "package:flutter/material.dart";
-//import "package:flutter_hooks/flutter_hooks.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "features/favorite/favorite_provider.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "gen/assets.gen.dart";
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -55,12 +53,12 @@ final placesData = [
   },
 ];
 
-class DreamPlaceScreen extends ConsumerWidget {
+class DreamPlaceScreen extends HookWidget {
   const DreamPlaceScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorited = ref.watch(favoriteProvider);
+  Widget build(BuildContext context) {
+    final isFavorited = useState(false);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFCF8DD),
@@ -69,13 +67,10 @@ class DreamPlaceScreen extends ConsumerWidget {
         backgroundColor: Colors.amber[200],
         actions: [
           IconButton(
-            onPressed: () {
-              ref.read(favoriteProvider.notifier).toggle();
-            },
-            icon: Icon(
-              isFavorited ? Icons.favorite : Icons.favorite_border,
-              color: isFavorited ? Colors.red : Colors.white,
-            ),
+            icon: isFavorited.value ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+            color: isFavorited.value ? Colors.red : Colors.white,
+            onPressed: () => {isFavorited.value = !isFavorited.value},
+            tooltip: isFavorited.value ? "Usuń z ulubionych" : "Dodaj do ulubionych",
           ),
         ],
       ),
