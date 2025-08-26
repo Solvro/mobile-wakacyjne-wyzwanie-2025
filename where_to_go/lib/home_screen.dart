@@ -1,8 +1,11 @@
+// home_screen.dart
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 import "details_screen.dart";
 import "features/places/places_provider.dart";
+import "features/themes/local_theme_repository.dart";
+import "features/themes/theme_notifier.dart";
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -10,20 +13,36 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final places = ref.watch(placesProvider);
+    final themeAsync = ref.watch(themeNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Moje wymarzone miejsca")),
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
+      appBar: AppBar(
+        title: const Text("Moje wymarzone miejsca"),
+        actions: [
+          themeAsync.when(
+            data: (currentTheme) => IconButton(
+              icon: Icon(currentTheme == AppTheme.light
+                  ? Icons.light_mode
+                  : currentTheme == AppTheme.dark
+                      ? Icons.dark_mode
+                      : Icons.auto_mode),
+              onPressed: () => ref.read(themeNotifierProvider.notifier).toggleTheme(),
+            ),
+            loading: () => const CircularProgressIndicator(),
+            error: (error, stack) => IconButton(
+              icon: const Icon(Icons.error),
+              onPressed: () => ref.invalidate(themeNotifierProvider),
+            ),
+          ),
+        ],
+      ),
       body: ListView.separated(
         itemCount: places.length,
         separatorBuilder: (_, __) => const Divider(height: 4),
         itemBuilder: (context, index) {
           final place = places[index];
           return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 3,
             child: ListTile(
               horizontalTitleGap: 12,
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

@@ -16,7 +16,7 @@ class DetailsScreen extends ConsumerWidget {
     final place = places.firstWhere((p) => p.id == id);
 
     return Scaffold(
-      backgroundColor: Colors.pink[300],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(place.title),
         actions: [
