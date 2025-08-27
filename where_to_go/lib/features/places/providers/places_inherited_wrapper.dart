@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "../../../data/places.dart";
 import "../../../data/models/dream_place.dart";
+import "../../../data/places.dart";
 import "places_inherited_provider.dart";
 
 class PlacesInheritedWrapper extends StatefulWidget {

@@ -1,5 +1,9 @@
+import "dart:async";
+
 import "package:flutter/material.dart" hide ThemeMode;
 import "package:hooks_riverpod/hooks_riverpod.dart";
+import "app/persistance/database/drift_database.dart";
+import "app/persistance/database/helpers/seeder.dart";
 import "app/router.dart";
 import "app/theme/app_theme.dart";
 import "app/theme/theme_mode.dart";
@@ -19,6 +23,9 @@ class MyApp extends ConsumerWidget {
     final themeToSet = (currentTheme == ThemeMode.system)
         ? (MediaQuery.platformBrightnessOf(context) == Brightness.light ? ThemeMode.light : ThemeMode.dark)
         : currentTheme;
+
+    final db = ref.read(appDatabaseProvider);
+    Future.microtask(db.seedIfEmpty);
 
     return MaterialApp.router(
       title: "Where to Go",

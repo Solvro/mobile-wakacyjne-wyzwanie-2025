@@ -1,18 +1,19 @@
+import "dart:async";
 import "package:riverpod_annotation/riverpod_annotation.dart";
-import "../../../data/places.dart";
+
 import "../../../data/models/dream_place.dart";
+import "../../../repository/implementation/dream_place_repository_impl.dart";
 
 part "places_provider.g.dart";
 
 @riverpod
 class Places extends _$Places {
   @override
-  List<DreamPlace> build() => dreamPlacesList;
+  List<DreamPlace> build() {
+    return ref.watch(dreamPlaceRepositoryImplProvider).value ?? [];
+  }
 
-  void toggleFavorite(String id) {
-    state = [
-      for (final p in state)
-        if (p.id == id) p.copyWith(isFavorited: !p.isFavorited) else p
-    ];
+  Future<void> toggleFavorite(String id) {
+    return ref.read(dreamPlaceRepositoryImplProvider.notifier).toggleFavorite(id);
   }
 }
