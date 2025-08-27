@@ -25,7 +25,10 @@ class MyApp extends ConsumerWidget {
         : currentTheme;
 
     final db = ref.read(appDatabaseProvider);
-    Future.microtask(db.seedIfEmpty);
+    // This gets fired twice, because at first on of the providers is null and the it gets set, so to avoid
+    // seeding twice, I would have to convert this to a stateful widget and use initState
+    // but this seems like too big of a hassle for just seeding
+    unawaited(db.seedIfEmpty());
 
     return MaterialApp.router(
       title: "Where to Go",
