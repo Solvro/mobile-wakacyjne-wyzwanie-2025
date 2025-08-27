@@ -4,7 +4,6 @@ class Place {
   final String description;
   final String image;
   final bool isFavorite;
-  
 
   const Place({
     required this.id,
@@ -12,8 +11,6 @@ class Place {
     required this.description,
     required this.image,
     this.isFavorite = false,
-    
-
   });
 
   Place copyWith({bool? isFavorite}) {
@@ -23,7 +20,6 @@ class Place {
       description: description,
       image: image,
       isFavorite: isFavorite ?? this.isFavorite,
-      
     );
   }
 }

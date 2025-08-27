@@ -4,26 +4,18 @@ import "classes/dreamPlaceScreen.dart";
 import "classes/placeListScreen.dart";
 
 final goRouterProvider = Provider<GoRouter>((ref) {
-return GoRouter(
-  initialLocation: "/",
-  routes: [
-    GoRoute(
-      path: "/",
-      builder: (context, state) => const PlaceListScreen(),
-    ),
+  return GoRouter(
+    initialLocation: "/",
+    routes: [
+      GoRoute(path: "/", builder: (context, state) => const PlaceListScreen()),
 
-    GoRoute(
-      path: "${DreamPlaceScreen.route}/:id",
-      builder: (context, state) {
-        final id = state.pathParameters["id"]!;
-        return DreamPlaceScreen(id: id);
-      },
-    ),
-  ],
-);
-}
-);
-
-
-
-
+      GoRoute(
+        path: "${DreamPlaceScreen.route}/:id",
+        builder: (context, state) {
+          final id = state.pathParameters["id"]!;
+          return DreamPlaceScreen(id: id);
+        },
+      ),
+    ],
+  );
+});
