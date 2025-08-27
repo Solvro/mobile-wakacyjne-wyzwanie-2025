@@ -197,12 +197,11 @@ class DreamPlaceScreen extends ConsumerWidget {
           if (constraints.maxWidth > 500) {
             return Row(
               children: [
-                Expanded(flex: 1, child: Image.asset(place.image, fit: BoxFit.cover)),
+                Expanded(child: Image.asset(place.image, fit: BoxFit.cover)),
 
                 const SizedBox(width: 16),
 
                 Expanded(
-                  flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
