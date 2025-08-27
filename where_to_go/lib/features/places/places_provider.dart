@@ -1,9 +1,8 @@
-import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 import "/gen/assets.gen.dart";
 import "../../classes/place.dart";
 
-part 'places_provider.g.dart';
+part "places_provider.g.dart";
 
 final _initialPlaces = [
   Place(

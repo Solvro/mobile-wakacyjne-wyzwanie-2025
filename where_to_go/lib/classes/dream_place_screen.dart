@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 //import "package:flutter_hooks/flutter_hooks.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "../features/places/places_provider.dart";
-import "placeListScreen.dart";
+import "place_list_screen.dart";
 
 /*class DreamPlaceScreen extends HookWidget {
 
@@ -172,9 +172,6 @@ class DreamPlaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final Favorite = ref.watch(favoriteProvider);
-    // final _isFavorited = places.firstWhere((p) => p.id == id);
-    //bool isFavorited = place.isFavorite;
     final places = ref.watch(placesProvider);
     final place = places.firstWhere((p) => p.id == id);
 

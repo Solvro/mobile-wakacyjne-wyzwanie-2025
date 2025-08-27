@@ -23,8 +23,8 @@ class PlaceListScreen extends ConsumerWidget {
           final place = places[index];
 
           return InkWell(
-            onTap: () {
-              GoRouter.of(context).push("/dreamPlace/${place.id}");
+            onTap: () async {
+              await GoRouter.of(context).push("/dreamPlace/${place.id}");
             },
 
             child: Card(

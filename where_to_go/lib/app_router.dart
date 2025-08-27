@@ -1,7 +1,7 @@
 import "package:go_router/go_router.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
-import "classes/dreamPlaceScreen.dart";
-import "classes/placeListScreen.dart";
+import "classes/dream_place_screen.dart";
+import "classes/place_list_screen.dart";
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
