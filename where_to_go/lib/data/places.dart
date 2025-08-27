@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
 import "../app/assets/assets.gen.dart";
-import "../models/attraction.dart";
-import "../models/dream_place.dart";
+import "models/attraction.dart";
+import "models/dream_place.dart";
 
 List<DreamPlace> dreamPlacesList = [
   DreamPlace(

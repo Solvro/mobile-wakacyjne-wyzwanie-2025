@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "../../../models/dream_place.dart";
+import "../../../data/models/dream_place.dart";
 
 class DreamPlacesInheritedProvider extends InheritedWidget {
   final List<DreamPlace> places;

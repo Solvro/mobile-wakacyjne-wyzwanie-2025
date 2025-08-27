@@ -2,18 +2,14 @@ import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-import "../persistance/shared_preferences.dart";
-import "../theme/theme_mode.dart";
+import "../../app/persistance/shared_preferences.dart";
+import "../../app/theme/theme_mode.dart";
+import "../local_theme_repository.dart";
 
-part "local_theme_repository.g.dart";
+part "local_theme_repository_impl.g.dart";
 
-abstract class ThemeRepository {
-  Future<void> saveThemeMode(ThemeMode themeMode);
-  Future<ThemeMode> getThemeMode();
-}
-
-class LocalThemeRepository implements ThemeRepository {
-  const LocalThemeRepository(this._sharedPreferences);
+class LocalThemeRepositoryImpl implements LocalThemeRepository {
+  const LocalThemeRepositoryImpl(this._sharedPreferences);
 
   static const _themeKey = "themeMode";
   final SharedPreferencesWithCache _sharedPreferences;
@@ -31,7 +27,7 @@ class LocalThemeRepository implements ThemeRepository {
 }
 
 @riverpod
-Future<ThemeRepository> localThemeRepository(Ref ref) async {
+Future<LocalThemeRepository> localThemeRepository(Ref ref) async {
   final sharedPreferences = await ref.read(sharedPreferencesWithCacheProvider.future);
-  return LocalThemeRepository(sharedPreferences);
+  return LocalThemeRepositoryImpl(sharedPreferences);
 }

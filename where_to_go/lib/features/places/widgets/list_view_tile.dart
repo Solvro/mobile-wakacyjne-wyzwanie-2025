@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
-import "../../../models/dream_place.dart";
+import "../../../data/models/dream_place.dart";
 
 class ListViewTile extends StatelessWidget {
   const ListViewTile({

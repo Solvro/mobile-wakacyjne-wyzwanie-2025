@@ -3,7 +3,7 @@ import "package:flutter_hooks/flutter_hooks.dart";
 
 import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
-import "../../../models/dream_place.dart";
+import "../../../data/models/dream_place.dart";
 
 class DreamPlaceScreenHookWidget extends HookWidget {
   const DreamPlaceScreenHookWidget({super.key, required this.dreamPlace});

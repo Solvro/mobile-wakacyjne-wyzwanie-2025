@@ -15,7 +15,6 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeAsync = ref.watch(themeNotifierProvider);
-    debugPrint("Current theme mode: ${themeAsync.value}");
     final currentTheme = themeAsync.value ?? ThemeMode.system;
     final themeToSet = (currentTheme == ThemeMode.system)
         ? (MediaQuery.platformBrightnessOf(context) == Brightness.light ? ThemeMode.light : ThemeMode.dark)
