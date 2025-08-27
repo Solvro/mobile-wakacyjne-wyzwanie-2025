@@ -1,17 +1,18 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
-import "../features/favorite/favorite_provider.dart";
+import "../features/places/places_provider.dart";
 import "../models/dream_place.dart";
 
 class DreamPlaceScreen extends ConsumerWidget {
-  final DreamPlace place;
+  const DreamPlaceScreen({super.key, required this.placeId});
 
-  const DreamPlaceScreen({super.key, required this.place});
+  static const route = "/places";
+  final String placeId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorited = ref.watch(favoriteProvider);
+    final place = ref.watch(placesProvider).firstWhere((place) => place.id == placeId);
 
     return Scaffold(
         backgroundColor: const Color(0xFFFAFAFA),
@@ -20,12 +21,12 @@ class DreamPlaceScreen extends ConsumerWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  ref.read(favoriteProvider.notifier).toggle();
+                  ref.read(placesProvider.notifier).toggleFavorite(placeId);
                 },
                 icon: Icon(
-                  isFavorited ? Icons.favorite : Icons.favorite_border,
+                  place.isFavorited ? Icons.favorite : Icons.favorite_border,
                 ),
-                color: isFavorited ? Colors.red : const Color(0xFF141414))
+                color: place.isFavorited ? Colors.red : const Color(0xFF141414))
           ],
         ),
         body: Column(children: [

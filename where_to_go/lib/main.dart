@@ -1,9 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
+import "app_router.dart";
 import "gen/fonts.gen.dart";
-import "models/dream_place.dart";
-import "ui/dream_place_list_screen.dart";
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -14,10 +13,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: "Where2Go",
       theme: ThemeData(fontFamily: FontFamily.plusJakartaSans),
-      home: DreamPlaceListScreen(places: exampleDreamPlaces),
+      routerConfig: goRouter,
     );
   }
 }

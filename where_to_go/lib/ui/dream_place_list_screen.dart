@@ -1,15 +1,18 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
+import "../features/places/places_provider.dart";
 import "../models/dream_place.dart";
 import "dream_place_screen.dart";
 
-class DreamPlaceListScreen extends StatelessWidget {
-  final List<DreamPlace> places;
-
-  const DreamPlaceListScreen({super.key, required this.places});
+class DreamPlaceListScreen extends ConsumerWidget {
+  const DreamPlaceListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<DreamPlace> places = ref.watch(placesProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Where2Go"),
@@ -28,20 +31,14 @@ class DreamPlaceListScreen extends StatelessWidget {
 }
 
 class DreamPlaceListTile extends StatelessWidget {
-  final DreamPlace place;
-
   const DreamPlaceListTile({super.key, required this.place});
+
+  final DreamPlace place;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute<DreamPlaceScreen>(
-            builder: (context) => DreamPlaceScreen(place: place),
-          ),
-        );
-      },
+      onTap: () => GoRouter.of(context).push("${DreamPlaceScreen.route}/${place.id}"),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +54,18 @@ class DreamPlaceListTile extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(place.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(place.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 4),
+                  Icon(
+                    place.isFavorited ? Icons.favorite : Icons.favorite_border,
+                    size: 16,
+                    color: place.isFavorited ? Colors.red : const Color(0xFF141414),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
