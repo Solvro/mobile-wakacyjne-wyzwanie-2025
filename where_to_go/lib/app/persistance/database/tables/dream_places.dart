@@ -6,5 +6,5 @@ class DreamPlaces extends Table {
   late final description = text().withLength(max: 255)();
   late final location = text().withLength(max: 50)();
   late final imageUrl = text().withLength(max: 255)();
-  late final isFavourited = boolean().withDefault(const Constant(false))();
+  late final isFavorited = boolean().withDefault(const Constant(false))();
 }

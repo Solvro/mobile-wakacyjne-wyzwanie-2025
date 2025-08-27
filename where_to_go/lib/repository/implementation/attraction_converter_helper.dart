@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "../../data/models/attraction.dart";
 import "../../app/persistance/database/tables/attractions.dart";
+import "../../data/models/attraction.dart";
 
 Attraction attractionFromValue(AttractionValue value) {
   switch (value) {

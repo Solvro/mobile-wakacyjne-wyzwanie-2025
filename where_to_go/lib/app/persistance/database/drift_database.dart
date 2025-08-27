@@ -120,10 +120,10 @@ class AppDatabase extends _$AppDatabase {
     return getSingleDreamPlace(id);
   }
 
-  Future<void> setFavourite(int id, {required bool isFavourite}) {
+  Future<void> setFavourite(int id, {required bool isFavorite}) {
     return (update(dreamPlaces)..where((p) => p.id.equals(id))).write(
       DreamPlacesCompanion(
-        isFavourited: Value(isFavourite),
+        isFavorited: Value(isFavorite),
       ),
     );
   }
