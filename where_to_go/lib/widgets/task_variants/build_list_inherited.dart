@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
-import "../utils/places_widget_inherited.dart";
-import "../views/dream_place_screen_inherited.dart";
+import "../../utils/task_variants/places_widget_inherited.dart";
+import "../../views/task_variants/dream_place_screen_inherited.dart";
 
 class BuildListInherited extends StatelessWidget {
   final String id;

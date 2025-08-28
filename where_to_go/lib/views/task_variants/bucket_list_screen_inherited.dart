@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
-import "../utils/color_palette.dart";
-import "../utils/places_widget_inherited.dart";
-import "../widgets/build_list_inherited.dart";
+import "../../themes/color_palette.dart";
+import "../../utils/task_variants/places_widget_inherited.dart";
+import "../../widgets/task_variants/build_list_inherited.dart";
 
 class BucketListScreenInherited extends StatelessWidget {
   const BucketListScreenInherited({super.key});

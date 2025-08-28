@@ -1,17 +1,18 @@
 import "package:flutter/material.dart";
-import "package:flutter_hooks/flutter_hooks.dart";
 
-import "../utils/color_palette.dart";
-import "../utils/old/place_old.dart";
+import "../../themes/color_palette.dart";
+import "../../utils/task_variants/places_widget_inherited.dart";
 
-class DreamPlaceScreenHook extends HookWidget {
-  final PlaceOld place;
+class DreamPlaceScreenInherited extends StatelessWidget {
+  final String id;
+  static String route = "/dream_place";
 
-  const DreamPlaceScreenHook({super.key, required this.place});
+  const DreamPlaceScreenInherited({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    final isFavorite = useState(place.isFavorite);
+    final places = PlacesWidgetInherited.of(context);
+    final place = places.places.firstWhere((place) => place.id == id);
 
     return Scaffold(
         backgroundColor: ColorPalette.iceBlueLight,
@@ -21,11 +22,10 @@ class DreamPlaceScreenHook extends HookWidget {
           actions: [
             IconButton(
               onPressed: () {
-                isFavorite.value = !isFavorite.value;
-                place.isFavorite = isFavorite.value;
+                places.toggleFavorite(id);
               },
-              icon: isFavorite.value ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-              color: isFavorite.value ? Colors.red : null,
+              icon: place.isFavorite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+              color: place.isFavorite ? Colors.red : null,
             )
           ],
         ),
@@ -48,7 +48,7 @@ class DreamPlaceScreenHook extends HookWidget {
               children: [
                 Text(place.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text(place.text)
+                Text(place.description)
               ],
             ),
           ),

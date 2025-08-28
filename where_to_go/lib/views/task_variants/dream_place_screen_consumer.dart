@@ -1,18 +1,19 @@
 import "package:flutter/material.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
 
-import "../utils/color_palette.dart";
-import "../utils/places_widget_inherited.dart";
+import "../../features/favorite/favorite_provider.dart";
+import "../../themes/color_palette.dart";
+import "../../utils/old/place_old.dart";
 
-class DreamPlaceScreenInherited extends StatelessWidget {
-  final String id;
-  static String route = "/dream_place";
+class DreamPlaceScreenConsumer extends ConsumerWidget {
+  final PlaceOld place;
 
-  const DreamPlaceScreenInherited({super.key, required this.id});
+  const DreamPlaceScreenConsumer({super.key, required this.place});
 
   @override
-  Widget build(BuildContext context) {
-    final places = PlacesWidgetInherited.of(context);
-    final place = places.places.firstWhere((place) => place.id == id);
+  Widget build(BuildContext context, WidgetRef ref) {
+    //final isFavorite = ref.watch(favoriteProvider(place));
+    final isFavorite = ref.watch(favoriteProvider);
 
     return Scaffold(
         backgroundColor: ColorPalette.iceBlueLight,
@@ -22,10 +23,12 @@ class DreamPlaceScreenInherited extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                places.toggleFavorite(id);
+                /*ref.read(favoriteProvider(place).notifier).toggle();
+                place.isFavorite = !place.isFavorite;*/
+                ref.read(favoriteProvider.notifier).toggle();
               },
-              icon: place.isFavorite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-              color: place.isFavorite ? Colors.red : null,
+              icon: isFavorite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+              color: isFavorite ? Colors.red : null,
             )
           ],
         ),
@@ -48,7 +51,7 @@ class DreamPlaceScreenInherited extends StatelessWidget {
               children: [
                 Text(place.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text(place.description)
+                Text(place.text)
               ],
             ),
           ),
