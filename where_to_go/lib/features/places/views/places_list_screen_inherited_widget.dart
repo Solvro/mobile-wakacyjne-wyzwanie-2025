@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
-import "../app/colors.dart";
-import "../app/ui_config.dart";
-import "../features/places/places_inherited_provider.dart";
+import "../../../app/theme/app_theme.dart";
+import "../../../app/ui_config.dart";
+import "../providers/places_inherited_provider.dart";
 import "dream_place_screen_inherited_widget.dart";
 
 class PlacesListScreenInheritedWidget extends StatelessWidget {
@@ -13,7 +13,7 @@ class PlacesListScreenInheritedWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final dreamPlacesList = DreamPlacesInheritedProvider.of(context).places;
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: context.colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text("Przeglądaj piękne miejsca"),
@@ -26,7 +26,7 @@ class PlacesListScreenInheritedWidget extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.all(AppPaddings.tiny),
             decoration: BoxDecoration(
-              color: AppColors.shadow,
+              color: context.colorScheme.shadow,
               borderRadius: BorderRadius.circular(PlacesListScreenConfig.radius),
             ),
             child: Row(

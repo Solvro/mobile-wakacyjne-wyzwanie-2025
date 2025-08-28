@@ -1,33 +1,30 @@
 import "package:flutter/material.dart";
-import "package:hooks_riverpod/hooks_riverpod.dart";
-import "../app/colors.dart";
-import "../app/ui_config.dart";
-import "../features/places/places_provider.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
-class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
-  const DreamPlaceScreenConsumerWidget({super.key, required this.id});
+import "../../../app/theme/app_theme.dart";
+import "../../../app/ui_config.dart";
+import "../../../data/models/dream_place.dart";
 
-  static String route = "/dream_place";
-  final String id;
+class DreamPlaceScreenHookWidget extends HookWidget {
+  const DreamPlaceScreenHookWidget({super.key, required this.dreamPlace});
+
+  final DreamPlace dreamPlace;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dreamPlace = ref.watch(placesProvider.select((places) => places.firstWhere((place) => place.id == id)));
-
+  Widget build(BuildContext context) {
+    final isFavorited = useState(false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(dreamPlace.location),
         actions: [
           IconButton(
-              onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(id),
-              icon: Icon(
-                dreamPlace.isFavorited ? Icons.favorite : Icons.favorite_border,
-                color: dreamPlace.isFavorited ? Colors.red : null,
-              ))
+              onPressed: () => isFavorited.value = !isFavorited.value,
+              icon: Icon(isFavorited.value ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorited.value ? Colors.red : null))
         ],
       ),
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: context.colorScheme.surface,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -49,9 +46,9 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
                   width: AppPaddings.small,
                 ),
                 Text(dreamPlace.description,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: DreamPlaceScreenConfig.descriptionFontSize,
-                      color: AppColors.secondaryTextColor,
+                      color: context.colorScheme.secondary,
                     )),
               ],
             ),

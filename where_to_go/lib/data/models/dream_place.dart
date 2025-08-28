@@ -1,3 +1,5 @@
+import "../../app/persistance/database/helpers/dream_place_attraction.dart";
+import "../../repository/implementation/attraction_converter_helper.dart";
 import "attraction.dart";
 
 class DreamPlace {
@@ -27,6 +29,21 @@ class DreamPlace {
       imagePath: imagePath,
       attractions: attractions,
       isFavorited: isFavorited ?? this.isFavorited,
+    );
+  }
+
+  factory DreamPlace.fromDbModel(DreamPlaceWithAttractions dbModel) {
+    final place = dbModel.place;
+    final attractions = dbModel.attractions.map(attractionFromValue).toList();
+
+    return DreamPlace(
+      id: place.id.toString(),
+      title: place.name,
+      description: place.description,
+      location: place.location,
+      imagePath: place.imageUrl,
+      attractions: attractions,
+      isFavorited: place.isFavorited,
     );
   }
 }

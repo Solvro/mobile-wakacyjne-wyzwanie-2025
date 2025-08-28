@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
 import "../app/assets/assets.gen.dart";
-import "../models/attraction.dart";
-import "../models/dream_place.dart";
+import "models/attraction.dart";
+import "models/dream_place.dart";
 
 List<DreamPlace> dreamPlacesList = [
   DreamPlace(
@@ -12,9 +12,9 @@ List<DreamPlace> dreamPlacesList = [
     location: "Teneryfa, Hiszpania",
     imagePath: Assets.images.teide.path,
     attractions: [
-      const Attraction("Góry", Icons.landscape),
-      const Attraction("Słońce", Icons.wb_sunny),
-      const Attraction("Spacery", Icons.nordic_walking),
+      const Attraction("mountains", Icons.landscape),
+      const Attraction("sunsets", Icons.wb_sunny),
+      const Attraction("walks", Icons.nordic_walking),
     ],
   ),
   DreamPlace(
@@ -24,8 +24,8 @@ List<DreamPlace> dreamPlacesList = [
     location: "Santorini, Grecja",
     imagePath: Assets.images.santorini.path,
     attractions: [
-      const Attraction("Zachody słońca", Icons.wb_sunny),
-      const Attraction("Plaże", Icons.beach_access),
+      const Attraction("sunsets", Icons.wb_sunny),
+      const Attraction("beach", Icons.beach_access),
     ],
   ),
   DreamPlace(
@@ -35,8 +35,8 @@ List<DreamPlace> dreamPlacesList = [
     location: "Machu Picchu, Peru",
     imagePath: Assets.images.machuPiccu.path,
     attractions: [
-      const Attraction("Historia", Icons.history),
-      const Attraction("Góry", Icons.landscape),
+      const Attraction("history", Icons.history),
+      const Attraction("mountains", Icons.landscape),
     ],
   ),
   DreamPlace(
@@ -46,8 +46,8 @@ List<DreamPlace> dreamPlacesList = [
     location: "Arizona, USA",
     imagePath: Assets.images.canyon.path,
     attractions: [
-      const Attraction("Widoki", Icons.visibility),
-      const Attraction("Szlaki turystyczne", Icons.directions_walk),
+      const Attraction("views", Icons.visibility),
+      const Attraction("landscapes", Icons.directions_walk),
     ],
   ),
   DreamPlace(
@@ -57,8 +57,9 @@ List<DreamPlace> dreamPlacesList = [
     location: "Australia",
     imagePath: Assets.images.reef.path,
     attractions: [
-      const Attraction("Woda", Icons.water),
-      const Attraction("Różnorodność biologiczna", Icons.eco),
+      const Attraction("water", Icons.water),
+      const Attraction("culture", Icons.eco),
+      const Attraction("food", Icons.eco),
     ],
   ),
 ];

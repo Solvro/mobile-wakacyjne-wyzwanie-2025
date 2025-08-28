@@ -1,22 +1,35 @@
-import "package:flutter/material.dart";
+import "dart:async";
+
+import "package:flutter/material.dart" hide ThemeMode;
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
+import "app/persistance/database/drift_database.dart";
+import "app/persistance/database/helpers/seeder.dart";
 import "app/router.dart";
+import "app/theme/app_theme.dart";
+import "app/theme/theme_extension.dart";
+import "app/theme/theme_mode.dart";
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeToSet = context.setTheme(ref);
+    final db = ref.read(appDatabaseProvider);
+
+    useEffect(() {
+      unawaited(db.seedIfEmpty());
+      return null;
+    }, const []);
+
     return MaterialApp.router(
       title: "Where to Go",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
+      theme: themeToSet == ThemeMode.light ? AppTheme().light : AppTheme().dark,
       routerConfig: goRouter,
     );
   }
