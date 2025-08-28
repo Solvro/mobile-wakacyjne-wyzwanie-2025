@@ -7,7 +7,7 @@ on:
     paths:
       - 'where_to_go/**'
   pull_request:
-    branches: [ "**" ]
+    branches: ["**"]
     paths:
       - 'where_to_go/**'
 
@@ -20,29 +20,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
-          channel: "stable"
-          flutter-version-file: where_to_go/pubspec.yaml
-          
+          channel: stable
+          flutter-version: '3.35.2'   # twoja lokalna wersja
+          cache: true
+
       - run: flutter --version
 
       - name: Install dependencies
         run: flutter pub get
-        
-      # - name: Remove lib/l10n directory
-      #   run: rm -rf lib/l10n/*.dart
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
-      
-      # - name: Regenerate the localization files
-      #   run: flutter gen-l10n
 
       - name: Example .env
         run: cp example.env .env
 
-      - name: generate files
+      - name: Generate files
         run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Analyze project source
@@ -53,4 +49,3 @@ jobs:
 
       # - name: Flutter tests
       #   run: flutter test
-  
