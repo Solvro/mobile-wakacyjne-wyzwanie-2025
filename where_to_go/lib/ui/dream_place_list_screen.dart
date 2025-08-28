@@ -11,7 +11,7 @@ class DreamPlaceListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<DreamPlace> places = ref.watch(placesProvider);
+    final places = ref.watch(placesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +38,7 @@ class DreamPlaceListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => GoRouter.of(context).push("${DreamPlaceScreen.route}/${place.id}"),
+      onTap: () => context.push("${DreamPlaceScreen.route}/${place.id}"),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
