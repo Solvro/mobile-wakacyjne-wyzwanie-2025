@@ -1,34 +1,31 @@
 import "dart:async";
 
 import "package:flutter/material.dart" hide ThemeMode;
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "app/persistance/database/drift_database.dart";
 import "app/persistance/database/helpers/seeder.dart";
 import "app/router.dart";
 import "app/theme/app_theme.dart";
+import "app/theme/theme_extension.dart";
 import "app/theme/theme_mode.dart";
-import "app/theme/theme_notifier.dart";
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeAsync = ref.watch(themeNotifierProvider);
-    final currentTheme = themeAsync.value ?? ThemeMode.system;
-    final themeToSet = (currentTheme == ThemeMode.system)
-        ? (MediaQuery.platformBrightnessOf(context) == Brightness.light ? ThemeMode.light : ThemeMode.dark)
-        : currentTheme;
-
+    final themeToSet = context.setTheme(ref);
     final db = ref.read(appDatabaseProvider);
-    // This gets fired twice, because at first on of the providers is null and the it gets set, so to avoid
-    // seeding twice, I would have to convert this to a stateful widget and use initState
-    // but this seems like too big of a hassle for just seeding
-    unawaited(db.seedIfEmpty());
+
+    useEffect(() {
+      unawaited(db.seedIfEmpty());
+      return null;
+    }, const []);
 
     return MaterialApp.router(
       title: "Where to Go",

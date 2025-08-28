@@ -5,13 +5,9 @@ import "../../../app/ui_config.dart";
 import "../../../data/models/dream_place.dart";
 
 class ListViewTile extends StatelessWidget {
-  const ListViewTile({
-    required this.index,
-    required this.dreamPlacesList,
-  });
+  const ListViewTile({required this.dreamPlace});
 
-  final int index;
-  final List<DreamPlace> dreamPlacesList;
+  final DreamPlace dreamPlace;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +25,7 @@ class ListViewTile extends StatelessWidget {
               bottomLeft: Radius.circular(PlacesListScreenConfig.radius),
             ),
             child: Image.asset(
-              dreamPlacesList[index].imagePath,
+              dreamPlace.imagePath,
               width: PlacesListScreenConfig.imageSize,
               height: PlacesListScreenConfig.imageSize,
               fit: BoxFit.cover,
@@ -40,12 +36,12 @@ class ListViewTile extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppPaddings.medium),
               child: Text(
-                dreamPlacesList[index].title,
+                dreamPlace.title,
                 style: const TextStyle(fontSize: PlacesListScreenConfig.titleFontSize, fontWeight: FontWeight.w500),
               ),
             ),
           ),
-          if (dreamPlacesList[index].isFavorited)
+          if (dreamPlace.isFavorited)
             const Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: AppPaddings.large), child: Icon(Icons.favorite)),
         ],

@@ -26,10 +26,7 @@ class PlacesListScreen extends ConsumerWidget {
         itemBuilder: (context, index) => GestureDetector(
           onTap: () =>
               GoRouter.of(context).push("${DreamPlaceScreenConsumerWidget.route}/${dreamPlacesList[index].id}"),
-          child: ListViewTile(
-            index: index,
-            dreamPlacesList: dreamPlacesList,
-          ),
+          child: ListViewTile(dreamPlace: dreamPlacesList[index]),
         ),
       ),
     );

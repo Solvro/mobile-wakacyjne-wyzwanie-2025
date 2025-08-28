@@ -1,7 +1,6 @@
 import "package:drift/drift.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 import "../../app/persistance/database/drift_database.dart" hide Attraction, DreamPlace;
-import "../../app/persistance/database/helpers/dream_place_attraction.dart";
 import "../../data/models/attraction.dart";
 import "../../data/models/dream_place.dart";
 import "../dream_place_repository.dart";
@@ -13,39 +12,24 @@ part "dream_place_repository_impl.g.dart";
 class DreamPlaceRepositoryImpl extends _$DreamPlaceRepositoryImpl implements DreamPlaceRepository {
   late final AppDatabase _db = ref.read(appDatabaseProvider);
 
-  DreamPlace _fromDbModel(DreamPlaceWithAttractions dbModel) {
-    final place = dbModel.place;
-    final attractions = dbModel.attractions.map(attractionFromValue).toList();
-
-    return DreamPlace(
-      id: place.id.toString(),
-      title: place.name,
-      description: place.description,
-      location: place.location,
-      imagePath: place.imageUrl,
-      attractions: attractions,
-      isFavorited: place.isFavorited,
-    );
-  }
-
   @override
   Stream<List<DreamPlace>> build() {
     return _db.watchDreamPlacesWithAttractions().map(
-          (dbList) => dbList.map(_fromDbModel).toList(),
+          (dbList) => dbList.map(DreamPlace.fromDbModel).toList(),
         );
   }
 
   @override
   Future<List<DreamPlace>> getAll() async {
     final dbList = await _db.getDreamPlacesWithAttractions();
-    return dbList.map(_fromDbModel).toList();
+    return dbList.map(DreamPlace.fromDbModel).toList();
   }
 
   @override
   Future<DreamPlace> get(String id) async {
     final intId = int.parse(id);
     final dbPlace = await _db.getSingleDreamPlace(intId);
-    return _fromDbModel(dbPlace);
+    return DreamPlace.fromDbModel(dbPlace);
   }
 
   @override
@@ -76,7 +60,7 @@ class DreamPlaceRepositoryImpl extends _$DreamPlaceRepositoryImpl implements Dre
       placeCompanion: companion,
       attractionsList: attractionValues,
     );
-    return _fromDbModel(inserted);
+    return DreamPlace.fromDbModel(inserted);
   }
 
   @override
@@ -103,7 +87,7 @@ class DreamPlaceRepositoryImpl extends _$DreamPlaceRepositoryImpl implements Dre
       placeCompanion: companion,
       attractionsList: attractionValues,
     );
-    return _fromDbModel(updated);
+    return DreamPlace.fromDbModel(updated);
   }
 
   @override
