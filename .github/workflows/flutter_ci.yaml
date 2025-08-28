@@ -20,11 +20,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-       - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          channel: stable
-          flutter-version: '3.35.2'   # twoja lokalna wersja
-          cache: true
+          channel: "stable"
+          flutter-version-file: where_to_go/pubspec.yaml
           
       - run: flutter --version
 
