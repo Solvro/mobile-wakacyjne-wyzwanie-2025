@@ -2,7 +2,7 @@ class DreamPlace {
   final String id;
   final String name;
   final String description;
-  final String assetPath;   
+  final String assetPath;
   final bool isFavourite;
 
   const DreamPlace({

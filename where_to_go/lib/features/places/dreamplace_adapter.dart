@@ -12,11 +12,11 @@ class DreamPlaceAdapter extends TypeAdapter<DreamPlace> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return DreamPlace(
-      id:         fields[0] as String,
-      name:       fields[1] as String,
-      description:fields[2] as String,
-      assetPath:  fields[3] as String, 
-      isFavourite:fields[4] as bool,
+      id: fields[0] as String,
+      name: fields[1] as String,
+      description: fields[2] as String,
+      assetPath: fields[3] as String,
+      isFavourite: fields[4] as bool,
     );
   }
 
@@ -24,10 +24,15 @@ class DreamPlaceAdapter extends TypeAdapter<DreamPlace> {
   void write(BinaryWriter writer, DreamPlace obj) {
     writer
       ..writeByte(5)
-      ..writeByte(0)..write(obj.id)
-      ..writeByte(1)..write(obj.name)
-      ..writeByte(2)..write(obj.description)
-      ..writeByte(3)..write(obj.assetPath)
-      ..writeByte(4)..write(obj.isFavourite);
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.description)
+      ..writeByte(3)
+      ..write(obj.assetPath)
+      ..writeByte(4)
+      ..write(obj.isFavourite);
   }
 }

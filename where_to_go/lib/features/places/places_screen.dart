@@ -10,7 +10,6 @@ import 'details_screen.dart';
 import 'dreamplace.dart';
 import 'dreamplace_providers.dart';
 
-
 class PlacesScreen extends ConsumerWidget {
   const PlacesScreen({super.key});
 
@@ -43,15 +42,15 @@ class PlacesScreen extends ConsumerWidget {
             itemBuilder: (context, i) {
               final p = places[i];
               return ListTile(
-               leading: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.asset(
-                  p.assetPath,
-                  width: 56,
-                  height: 56,
-                  fit: BoxFit.cover,
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.asset(
+                    p.assetPath,
+                    width: 56,
+                    height: 56,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
                 title: Text(p.name),
                 subtitle: Text(p.description),
                 trailing: IconButton(

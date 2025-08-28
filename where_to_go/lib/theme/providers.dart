@@ -21,8 +21,7 @@ class ThemeChoiceController extends AsyncNotifier<AppThemeChoice> {
   }
 }
 
-final themeChoiceProvider =
-    AsyncNotifierProvider<ThemeChoiceController, AppThemeChoice>(
+final themeChoiceProvider = AsyncNotifierProvider<ThemeChoiceController, AppThemeChoice>(
   ThemeChoiceController.new,
 );
 
