@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'local_theme.dart';
-import 'providers.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "local_theme.dart";
+import "providers.dart";
 
 class ThemeSelector extends ConsumerWidget {
   const ThemeSelector({super.key});
@@ -13,7 +13,7 @@ class ThemeSelector extends ConsumerWidget {
 
     return themeChoiceAsync.when(
       loading: () => const CircularProgressIndicator(),
-      error: (e, _) => Text('Błąd: $e'),
+      error: (e, _) => Text("Błąd: $e"),
       data: (choice) {
         return DropdownButton<AppThemeChoice>(
           value: choice,
@@ -31,9 +31,9 @@ class ThemeSelector extends ConsumerWidget {
               child: Text("Ciemny"),
             ),
           ],
-          onChanged: (newChoice) {
+          onChanged: (newChoice) async {
             if (newChoice != null) {
-              controller.setChoice(newChoice);
+              await controller.setChoice(newChoice);
             }
           },
         );

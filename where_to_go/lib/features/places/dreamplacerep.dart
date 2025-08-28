@@ -1,5 +1,5 @@
-import 'package:hive/hive.dart';
-import 'dreamplace.dart';
+import "package:hive/hive.dart";
+import "dreamplace.dart";
 
 abstract class DreamPlacesRepository {
   Stream<List<DreamPlace>> watchAll();
@@ -14,7 +14,7 @@ abstract class DreamPlacesRepository {
 }
 
 class DreamPlacesRepositoryHive implements DreamPlacesRepository {
-  static const boxName = 'dream_places';
+  static const boxName = "dream_places";
 
   final Box<DreamPlace> box;
   DreamPlacesRepositoryHive(this.box);
@@ -28,13 +28,13 @@ class DreamPlacesRepositoryHive implements DreamPlacesRepository {
   Future<List<DreamPlace>> getAll() async => box.values.toList();
 
   @override
-  Future<void> add(DreamPlace place) async => box.put(place.id, place);
+  Future<void> add(DreamPlace place) => box.put(place.id, place);
 
   @override
-  Future<void> update(DreamPlace place) async => box.put(place.id, place);
+  Future<void> update(DreamPlace place) => box.put(place.id, place);
 
   @override
-  Future<void> delete(String id) async => box.delete(id);
+  Future<void> delete(String id) => box.delete(id);
 
   @override
   Future<void> toggleFavourite(String id) async {
@@ -48,37 +48,37 @@ class DreamPlacesRepositoryHive implements DreamPlacesRepository {
     if (box.isNotEmpty) return;
 
     final sample = <DreamPlace>[
-      DreamPlace(
-        id: '1',
-        name: 'Manchester, Anglia',
-        description: 'Miasto futbolu',
-        assetPath: 'assets/images/manchester.jpg',
+      const DreamPlace(
+        id: "1",
+        name: "Manchester, Anglia",
+        description: "Miasto futbolu",
+        assetPath: "assets/images/manchester.jpg",
         isFavourite: true,
       ),
-      DreamPlace(
-        id: '2',
-        name: 'Santorini, Grecja',
-        description: 'Grecja',
-        assetPath: 'assets/images/santorini.jpg',
+      const DreamPlace(
+        id: "2",
+        name: "Santorini, Grecja",
+        description: "Grecja",
+        assetPath: "assets/images/santorini.jpg",
       ),
-      DreamPlace(
-        id: '3',
-        name: 'Barcelona, Hiszpania',
-        description: 'Katalonia',
-        assetPath: 'assets/images/barcelona.jpg',
+      const DreamPlace(
+        id: "3",
+        name: "Barcelona, Hiszpania",
+        description: "Katalonia",
+        assetPath: "assets/images/barcelona.jpg",
         isFavourite: true,
       ),
-      DreamPlace(
-        id: '4',
-        name: 'Rzym, Włochy',
-        description: 'Makaron',
-        assetPath: 'assets/images/rome.jpg',
+      const DreamPlace(
+        id: "4",
+        name: "Rzym, Włochy",
+        description: "Makaron",
+        assetPath: "assets/images/rome.jpg",
       ),
-      DreamPlace(
-        id: '5',
-        name: 'Paryż, Francja',
-        description: 'Wieża',
-        assetPath: 'assets/images/paris.jpg',
+      const DreamPlace(
+        id: "5",
+        name: "Paryż, Francja",
+        description: "Wieża",
+        assetPath: "assets/images/paris.jpg",
       ),
     ];
 

@@ -1,14 +1,14 @@
-import 'dart:async';
+import "dart:async";
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
-import 'package:where_to_go/theme/selector.dart';
+import "../../theme/selector.dart";
 
-import 'details_screen.dart';
-import 'dreamplace.dart';
-import 'dreamplace_providers.dart';
+import "details_screen.dart";
+import "dreamplace.dart";
+import "dreamplace_providers.dart";
 
 class PlacesScreen extends ConsumerWidget {
   const PlacesScreen({super.key});
@@ -23,14 +23,14 @@ class PlacesScreen extends ConsumerWidget {
         body: Center(child: CircularProgressIndicator()),
       ),
       error: (err, _) => Scaffold(
-        body: Center(child: Text('Błąd: $err')),
+        body: Center(child: Text("Błąd: $err")),
       ),
       data: (List<DreamPlace> places) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Dream Place'),
-            actions: [
-              const Padding(
+            title: const Text("Dream Place"),
+            actions: const [
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: ThemeSelector(),
               ),
@@ -61,7 +61,7 @@ class PlacesScreen extends ConsumerWidget {
                   onPressed: () => repo.toggleFavourite(p.id),
                 ),
                 onTap: () {
-                  unawaited(context.push('${DetailsScreen.route}/${p.id}'));
+                  unawaited(context.push("${DetailsScreen.route}/${p.id}"));
                 },
               );
             },

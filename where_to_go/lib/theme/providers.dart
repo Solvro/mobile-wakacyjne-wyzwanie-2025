@@ -1,6 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
-import 'local_theme.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+
+import "local_theme.dart";
 
 final localThemeRepositoryProvider = Provider<LocalThemeRepository>((ref) {
   return LocalThemeRepositoryPrefs();

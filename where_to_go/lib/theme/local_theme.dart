@@ -1,4 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import "package:shared_preferences/shared_preferences.dart";
 
 enum AppThemeChoice { system, light, dark }
 
@@ -8,7 +8,7 @@ abstract class LocalThemeRepository {
 }
 
 class LocalThemeRepositoryPrefs implements LocalThemeRepository {
-  static const _key = 'app_theme_choice';
+  static const _key = "app_theme_choice";
 
   @override
   Future<AppThemeChoice?> readThemeChoice() async {
