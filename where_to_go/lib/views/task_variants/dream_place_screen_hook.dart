@@ -1,19 +1,17 @@
 import "package:flutter/material.dart";
-import "package:hooks_riverpod/hooks_riverpod.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
-import "../features/favorite/favorite_provider.dart";
-import "../utils/color_palette.dart";
-import "../utils/old/place_old.dart";
+import "../../themes/color_palette.dart";
+import "../../utils/old/place_old.dart";
 
-class DreamPlaceScreenConsumer extends ConsumerWidget {
+class DreamPlaceScreenHook extends HookWidget {
   final PlaceOld place;
 
-  const DreamPlaceScreenConsumer({super.key, required this.place});
+  const DreamPlaceScreenHook({super.key, required this.place});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    //final isFavorite = ref.watch(favoriteProvider(place));
-    final isFavorite = ref.watch(favoriteProvider);
+  Widget build(BuildContext context) {
+    final isFavorite = useState(place.isFavorite);
 
     return Scaffold(
         backgroundColor: ColorPalette.iceBlueLight,
@@ -23,12 +21,11 @@ class DreamPlaceScreenConsumer extends ConsumerWidget {
           actions: [
             IconButton(
               onPressed: () {
-                /*ref.read(favoriteProvider(place).notifier).toggle();
-                place.isFavorite = !place.isFavorite;*/
-                ref.read(favoriteProvider.notifier).toggle();
+                isFavorite.value = !isFavorite.value;
+                place.isFavorite = isFavorite.value;
               },
-              icon: isFavorite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-              color: isFavorite ? Colors.red : null,
+              icon: isFavorite.value ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+              color: isFavorite.value ? Colors.red : null,
             )
           ],
         ),

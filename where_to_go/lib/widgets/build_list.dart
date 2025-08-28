@@ -2,19 +2,16 @@ import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
-import "../features/places/places_provider.dart";
+import "../models/place.dart";
 import "../views/dream_place_screen_consumer_router.dart";
 
 class BuildList extends ConsumerWidget {
-  final String id;
-  final int index;
+  final Place place;
 
-  const BuildList({super.key, required this.id, required this.index});
+  const BuildList({super.key, required this.place});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final place = ref.watch(placesProvider).firstWhere((place) => place.id == id);
-
     return GestureDetector(
       onTap: () async {
         await GoRouter.of(context).push("${DreamPlaceScreenConsumerRouter.route}/${place.id}");

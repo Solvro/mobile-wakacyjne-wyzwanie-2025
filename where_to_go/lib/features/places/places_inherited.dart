@@ -2,7 +2,7 @@ import "package:flutter/widgets.dart";
 
 import "../../models/place.dart";
 import "../../utils/place_list.dart";
-import "../../utils/places_widget_inherited.dart";
+import "../../utils/task_variants/places_widget_inherited.dart";
 
 class PlacesInherited extends StatefulWidget {
   final Widget child;

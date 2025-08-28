@@ -8,5 +8,5 @@ class PlaceOld {
 
   bool isFavorite = false;
 
-  PlaceOld(this.title, this.text, this.path, this.attractionList);
+  PlaceOld({required this.title, required this.text, required this.path, required this.attractionList});
 }

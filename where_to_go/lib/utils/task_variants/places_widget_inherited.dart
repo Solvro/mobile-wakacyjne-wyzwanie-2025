@@ -1,6 +1,6 @@
 import "package:flutter/widgets.dart";
 
-import "../models/place.dart";
+import "../../models/place.dart";
 
 class PlacesWidgetInherited extends InheritedWidget {
   final List<Place> places;

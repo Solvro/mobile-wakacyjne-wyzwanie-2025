@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
-import "../views/bucket_list_screen_inherited.dart";
-import "../views/dream_place_screen_inherited.dart";
+import "../../views/task_variants/bucket_list_screen_inherited.dart";
+import "../../views/task_variants/dream_place_screen_inherited.dart";
 
 final goRouterInherited = GoRouter(
   initialLocation: "/",
