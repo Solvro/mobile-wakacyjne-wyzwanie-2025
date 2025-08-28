@@ -29,7 +29,7 @@ Możesz to zaimplementować za pomocą nullable flagi `bool?` (nullable boolean)
 4.1 Wybierz bazę danych swojego wyboru:
     - [isar](https://pub.dev/packages/isar) - NoSQLowa baza danych
     - [hive](https://pub.dev/packages/hive) - poprzednia baza twórcy isara, ale nadal dość szeroko używana.
-    - [drif](https://pub.dev/packages/drift) - popularna baza SQL
+    - [drift](https://pub.dev/packages/drift) - popularna baza SQL
     Są też inne. Polecam wybrać jakąś wersję z generacją kodu (ale nie jest to wymóg) i która wam pasuje wizulanie i filozoficznie do tego zastosowania (np. NoSQL vs SQL)
 4.2 Dodaj kolekcję/tabelę/model `DreamPlace` który będzie przechowywać następujące dane:
     - id
