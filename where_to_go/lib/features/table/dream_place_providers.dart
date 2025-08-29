@@ -11,8 +11,7 @@ final dreamPlacesRepositoryProvider = Provider<DreamPlaceRepository>((ref) {
   return DreamPlaceRepository(db);
 });
 
-final dreamPlacesProvider =
-    StreamProvider<List<DreamPlaceTableData>>((ref) {
+final dreamPlacesProvider = StreamProvider<List<DreamPlaceTableData>>((ref) {
   final repo = ref.watch(dreamPlacesRepositoryProvider);
   return repo.watchAllPlaces();
 });

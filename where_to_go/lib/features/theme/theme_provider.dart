@@ -10,11 +10,11 @@ part "theme_provider.g.dart";
 class ThemeNotifier extends _$ThemeNotifier {
   late final LocalThemeRepository _repo;
 
-  @override 
+  @override
   ThemeMode build() {
     _repo = LocalThemeRepository();
 
-  unawaited(_loadTheme());
+    unawaited(_loadTheme());
 
     return ThemeMode.system;
   }

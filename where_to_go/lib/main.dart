@@ -20,7 +20,7 @@ void main() async {
         databaseProvider.overrideWithValue(db),
         dreamPlacesRepositoryProvider.overrideWithValue(repo),
       ],
-      child:const MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -29,7 +29,7 @@ class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {        
+  Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeNotifierProvider);
 
     return MaterialApp.router(

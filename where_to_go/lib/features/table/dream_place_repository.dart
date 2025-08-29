@@ -7,15 +7,15 @@ class DreamPlaceRepository {
 
   DreamPlaceRepository(this.db);
 
-  Future<int> addPlace(DreamPlaceTableCompanion place){
+  Future<int> addPlace(DreamPlaceTableCompanion place) {
     return db.into(db.dreamPlaceTable).insert(place);
   }
 
-  Future<List<DreamPlaceTableData>> getAllPlaces(){
+  Future<List<DreamPlaceTableData>> getAllPlaces() {
     return db.select(db.dreamPlaceTable).get();
   }
 
-  Future<DreamPlaceTableData> getPlace(int id){
+  Future<DreamPlaceTableData> getPlace(int id) {
     return (db.select(db.dreamPlaceTable)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
@@ -28,14 +28,15 @@ class DreamPlaceRepository {
   }
 
   Future<int> updateIsFavorite(int id, {required bool isFavorite}) {
-    return (db.update(db.dreamPlaceTable)..where((tbl) => tbl.id.equals(id))).write(DreamPlaceTableCompanion(isFavorite: Value(isFavorite)));
+    return (db.update(db.dreamPlaceTable)..where((tbl) => tbl.id.equals(id)))
+        .write(DreamPlaceTableCompanion(isFavorite: Value(isFavorite)));
   }
 
-  Future<int> deletePlace(int id){
+  Future<int> deletePlace(int id) {
     return (db.delete(db.dreamPlaceTable)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-   Future<void> seedDatabase() async {
+  Future<void> seedDatabase() async {
     final existing = await getAllPlaces();
     if (existing.isNotEmpty) return;
 
@@ -52,17 +53,15 @@ class DreamPlaceRepository {
         imageUrl: "https://example.com/tokyo.jpg",
       ),
       DreamPlaceTableCompanion.insert(
-        name: "Nowy Jork",
-        isFavorite: const Value(true),
-        imageUrl: "https://example.com/nyc.jpg",
-        description: "Jork New"
-      ),
+          name: "Nowy Jork",
+          isFavorite: const Value(true),
+          imageUrl: "https://example.com/nyc.jpg",
+          description: "Jork New"),
       DreamPlaceTableCompanion.insert(
-        name: "Rzym",
-        isFavorite: const Value(false),
-        imageUrl: "https://example.com/rome.jpg",
-        description: "Papyrus got better pasta"
-      ),
+          name: "Rzym",
+          isFavorite: const Value(false),
+          imageUrl: "https://example.com/rome.jpg",
+          description: "Papyrus got better pasta"),
     ];
 
     await db.batch((batch) {

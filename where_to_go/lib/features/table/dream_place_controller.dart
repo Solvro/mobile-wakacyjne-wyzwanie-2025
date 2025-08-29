@@ -21,7 +21,6 @@ class DreamPlaceController extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final dreamPlaceControllerProvider =
-    StateNotifierProvider<DreamPlaceController, AsyncValue<void>>(
-      DreamPlaceController.new,
-    );
+final dreamPlaceControllerProvider = StateNotifierProvider<DreamPlaceController, AsyncValue<void>>(
+  DreamPlaceController.new,
+);

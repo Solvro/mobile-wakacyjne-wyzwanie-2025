@@ -17,7 +17,6 @@ class DreamPlaceTable extends Table {
 
 @DriftDatabase(tables: [DreamPlaceTable])
 class AppDatabase extends _$AppDatabase {
-  
   AppDatabase() : super(_openConnection());
 
   @override
