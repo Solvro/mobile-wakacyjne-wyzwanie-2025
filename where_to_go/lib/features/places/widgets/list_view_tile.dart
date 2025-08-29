@@ -25,7 +25,7 @@ class ListViewTile extends StatelessWidget {
               bottomLeft: Radius.circular(PlacesListScreenConfig.radius),
             ),
             child: Image.asset(
-              dreamPlace.imagePath,
+              dreamPlace.imageUrl,
               width: PlacesListScreenConfig.imageSize,
               height: PlacesListScreenConfig.imageSize,
               fit: BoxFit.cover,
@@ -36,12 +36,12 @@ class ListViewTile extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppPaddings.medium),
               child: Text(
-                dreamPlace.title,
+                dreamPlace.name,
                 style: const TextStyle(fontSize: PlacesListScreenConfig.titleFontSize, fontWeight: FontWeight.w500),
               ),
             ),
           ),
-          if (dreamPlace.isFavorited)
+          if (dreamPlace.isFavourite)
             const Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: AppPaddings.large), child: Icon(Icons.favorite)),
         ],

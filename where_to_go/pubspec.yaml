@@ -44,7 +44,12 @@ dependencies:
   drift_flutter: ^0.2.5
   path_provider: ^2.1.5
 
+  retrofit: ^4.6.0
+
   shared_preferences: ^2.5.3
+  flutter_secure_storage: ^9.2.4
+  json_annotation: ^4.9.0
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +66,8 @@ dev_dependencies:
   flutter_gen_runner: ^5.11.0
   riverpod_generator: ^2.6.5
   drift_dev: ^2.28.0
+  retrofit_generator: ^9.7.0
+  json_serializable: ^6.9.5
 
 flutter_gen:
   output: lib/app/assets/

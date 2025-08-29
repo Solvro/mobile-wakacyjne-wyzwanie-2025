@@ -17,13 +17,14 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(dreamPlace.location),
+        title: Text(dreamPlace.name),
         actions: [
           IconButton(
-              onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(id),
+              // onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(id),
+              onPressed: () {},
               icon: Icon(
-                dreamPlace.isFavorited ? Icons.favorite : Icons.favorite_border,
-                color: dreamPlace.isFavorited ? context.colorScheme.tertiary : null,
+                dreamPlace.isFavourite ? Icons.favorite : Icons.favorite_border,
+                color: dreamPlace.isFavourite ? context.colorScheme.tertiary : null,
               ))
         ],
       ),
@@ -32,14 +33,14 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(fit: BoxFit.fitWidth, dreamPlace.imagePath, width: double.infinity),
+          Image.asset(fit: BoxFit.fitWidth, dreamPlace.imageUrl, width: double.infinity),
           Padding(
             padding: const EdgeInsets.all(AppPaddings.large),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  dreamPlace.title,
+                  dreamPlace.name,
                   style: const TextStyle(
                     fontSize: DreamPlaceScreenConfig.titleFontSize,
                     fontWeight: FontWeight.bold,
@@ -56,16 +57,16 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
               ],
             ),
           ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: dreamPlace.attractions.map((attraction) {
-                return Column(
-                  children: [
-                    Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),
-                    Text(attraction.title),
-                  ],
-                );
-              }).toList())
+          // Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: dreamPlace.attractions.map((attraction) {
+          //       return Column(
+          //         children: [
+          //           Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),
+          //           Text(attraction.title),
+          //         ],
+          //       );
+          //     }).toList())
         ],
       ),
     );

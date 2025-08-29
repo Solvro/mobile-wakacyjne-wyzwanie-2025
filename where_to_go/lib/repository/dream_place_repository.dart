@@ -1,4 +1,3 @@
-import "../data/models/attraction.dart";
 import "../data/models/dream_place.dart";
 
 abstract class DreamPlaceRepository {
@@ -13,20 +12,18 @@ abstract class DreamPlaceRepository {
   Future<DreamPlace> save({
     required String name,
     required String description,
-    required String location,
     required String imageUrl,
+    required String ownerEmail,
     bool isFavorited = false,
-    List<Attraction> attractions = const [],
   });
 
   Future<DreamPlace> updatePlace(
     String id, {
     String? name,
     String? description,
-    String? location,
     String? imageUrl,
+    String? ownerEmail,
     bool? isFavorited,
-    List<Attraction>? attractions,
   });
 
   Future<void> toggleFavorite(String id);
