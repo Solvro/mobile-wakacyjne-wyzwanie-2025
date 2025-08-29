@@ -1,6 +1,7 @@
 import "package:flutter/widgets.dart";
 
 import "../../../app/theme/app_theme.dart";
+import "../../../app/ui_config.dart";
 
 class AuthScreenTitle extends StatelessWidget {
   final String title;
@@ -15,12 +16,12 @@ class AuthScreenTitle extends StatelessWidget {
         title,
         style: context.textTheme.headlineLarge,
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: AuthViewsConfig.fieldGap),
       Text(
         helper,
         style: context.textTheme.bodyMedium,
       ),
-      const SizedBox(height: 60),
+      const SizedBox(height: AuthViewsConfig.titleGap),
     ]);
   }
 }

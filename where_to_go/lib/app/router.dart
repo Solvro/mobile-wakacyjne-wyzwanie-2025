@@ -16,7 +16,7 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     initialLocation: "/",
     redirect: (context, state) {
-      final loggedIn = auth != null;
+      final loggedIn = auth.value != null;
       final loggingIn = state.fullPath == LoginPage.route || state.fullPath == RegisterPage.route;
 
       if (!loggedIn && !loggingIn) {

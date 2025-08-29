@@ -7,13 +7,19 @@ part "auth_notifier.g.dart";
 class AuthNotifier extends _$AuthNotifier {
   @override
   Future<String?> build() {
-    final repository = ref.read(authenticationRepositoryProvider);
+    final repository = ref.watch(authenticationRepositoryProvider);
     return repository.getToken();
   }
 
   Future<void> login(String email, String password) async {
     final repository = ref.read(authenticationRepositoryProvider);
     await repository.login(email: email, password: password);
+    state = AsyncData(await repository.getToken());
+  }
+
+  Future<void> register(String email, String password) async {
+    final repository = ref.read(authenticationRepositoryProvider);
+    await repository.register(email: email, password: password);
     state = AsyncData(await repository.getToken());
   }
 

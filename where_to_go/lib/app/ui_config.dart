@@ -17,3 +17,9 @@ abstract final class AppPaddings {
   static const small = 8.0;
   static const tiny = 4.0;
 }
+
+abstract final class AuthViewsConfig {
+  static const fieldGap = 10.0;
+  static const buttonGap = 20.0;
+  static const titleGap = 30.0;
+}
