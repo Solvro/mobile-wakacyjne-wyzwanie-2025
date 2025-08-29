@@ -20,7 +20,9 @@ class DetailsScreen extends ConsumerWidget {
         backgroundColor: theme.primary,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                await ref.read(placesProvider.notifier).toggleFavorite(id);
+              },
               icon: Icon(place.isFavorite ? Icons.favorite : Icons.favorite_border),
               color: place.isFavorite ? theme.red : theme.color)
         ],
@@ -53,7 +55,10 @@ class DetailsScreen extends ConsumerWidget {
                 .map((att) => Column(
                       children: [
                         Icon(
-                          att.icon,
+                          IconData(
+                            att.icon,
+                            fontFamily: "MaterialIcons", // usually this is the font family for Flutter Material icons
+                          ),
                           color: theme.black,
                         ),
                         Text(att.text, style: TextStyle(color: theme.black))

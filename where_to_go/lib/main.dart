@@ -1,22 +1,31 @@
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
-import "package:provider/provider.dart";
+import "package:hive_ce_flutter/hive_flutter.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
+
 import "app_router.dart";
-import "data/data.dart";
-import "data_classes/place.dart";
 import "dream_places/details_screen.dart";
-import "gen/assets.gen.dart";
+import "hive/boxes.dart";
+import "hive/dream_place.dart";
+import "hive/seed_box.dart";
 import "providers/places_provider.dart";
 import "providers/theme_provider.dart";
 import "theme_preference/theme_preference.dart";
-import "package:hooks_riverpod/hooks_riverpod.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await ThemePreference.init();
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(DreamPlaceAdapter());
+  Hive.registerAdapter(AttractionAdapter());
+  boxDreamPlaces = await Hive.openBox<DreamPlace>("dreamPlaceBox");
+
+  if (boxDreamPlaces.isEmpty) {
+    await seedBox(boxDreamPlaces);
+  }
 
   runApp(
     const ProviderScope(
@@ -41,9 +50,6 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themesProvider);
-    final places;
-
     bool getTheme() {
       final bool? theme = ThemePreference.getTheme();
       if (theme != null) {
@@ -54,6 +60,7 @@ class HomeScreen extends HookConsumerWidget {
       }
     }
 
+    final theme = ref.watch(themesProvider);
     final isDark = useState<bool>(getTheme());
 
     useEffect(() {
@@ -62,6 +69,8 @@ class HomeScreen extends HookConsumerWidget {
       });
       return null;
     }, [isDark.value]);
+
+    final places = ref.watch(placesProvider);
 
     Future<void> toggleTheme() async {
       isDark.value = !isDark.value;
