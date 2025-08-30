@@ -1,16 +1,20 @@
+import "dart:io";
+
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
+import "../../../data/models/create_place_dto.dart";
 import "../../../data/models/dream_place.dart";
 import "../../../repository/implementation/dream_place_repository_impl.dart";
+import "../../../repository/implementation/photo_repository_impl.dart";
 
-part "places_provider.g.dart";
+part "dream_place_service.g.dart";
 
 @riverpod
-class Places extends _$Places {
+class DreamPlaceService extends _$DreamPlaceService {
   @override
   Future<List<DreamPlace>> build() async {
-    final repo = await ref.watch(dreamPlaceRepositoryProvider.future);
+    final repo = await ref.read(dreamPlaceRepositoryProvider.future);
     return repo.getAll();
   }
 
@@ -22,10 +26,21 @@ class Places extends _$Places {
     final newList = currentState.map((place) => (place.id == updated.id) ? updated : place).toList();
     state = AsyncValue.data(newList);
   }
+
+  Future<DreamPlace> createDreamPlaceWithPhoto(CreatePlaceDTO place, File file) async {
+    final placeRepo = await ref.read(dreamPlaceRepositoryProvider.future);
+    final photoRepo = await ref.read(photoRepositoryProvider.future);
+    final path = await photoRepo.uploadImage(file);
+    final newPlace = await placeRepo.save(
+        name: place.name!, description: place.description!, imageUrl: path, isFavourite: place.isFavourite!);
+
+    state = AsyncData(await placeRepo.getAll());
+    return newPlace;
+  }
 }
 
 @riverpod
 DreamPlace? placeById(Ref ref, int id) {
-  final placesAsync = ref.watch(placesProvider);
+  final placesAsync = ref.watch(dreamPlaceServiceProvider);
   return placesAsync.whenData((places) => places.firstWhere((p) => p.id == id)).value;
 }

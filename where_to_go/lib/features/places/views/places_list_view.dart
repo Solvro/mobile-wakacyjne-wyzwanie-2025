@@ -6,7 +6,7 @@ import "../../../app/theme/app_theme.dart";
 import "../../auth/auth_notifier.dart";
 import "../../common/widgets/theme_selector_button.dart";
 import "../pages/create_place_page.dart";
-import "../providers/places_provider.dart";
+import "../service/dream_place_service.dart";
 import "../widgets/list_view_tile.dart";
 import "dream_place_screen_consumer_widget.dart";
 
@@ -16,7 +16,7 @@ class PlacesListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dreamPlacesList = ref.watch(placesProvider);
+    final dreamPlacesList = ref.watch(dreamPlaceServiceProvider);
 
     return Scaffold(
         backgroundColor: context.colorScheme.surface,

@@ -1,21 +1,21 @@
 import "package:json_annotation/json_annotation.dart";
 
-part "create_place.g.dart";
+part "create_place_dto.g.dart";
 
 @JsonSerializable(includeIfNull: false)
-class CreatePlace {
+class CreatePlaceDTO {
   final String? name;
   final String? description;
   final String? imageUrl;
   final bool? isFavourite;
 
-  CreatePlace({
+  CreatePlaceDTO({
     this.name,
     this.description,
     this.imageUrl,
     this.isFavourite,
   });
 
-  factory CreatePlace.fromJson(Map<String, dynamic> json) => _$CreatePlaceFromJson(json);
-  Map<String, dynamic> toJson() => _$CreatePlaceToJson(this);
+  factory CreatePlaceDTO.fromJson(Map<String, dynamic> json) => _$CreatePlaceDTOFromJson(json);
+  Map<String, dynamic> toJson() => _$CreatePlaceDTOToJson(this);
 }

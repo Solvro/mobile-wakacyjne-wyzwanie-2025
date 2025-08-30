@@ -1,10 +1,13 @@
+import "dart:io";
+
 import "package:dio/dio.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:retrofit/retrofit.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
-import "../../data/models/create_place.dart";
+import "../../data/models/create_place_dto.dart";
 import "../../data/models/dream_place.dart";
+import "../../data/models/image_dto.dart";
 import "../../data/models/paginated_dream_places.dart";
 import "../../data/models/refresh_request.dart";
 import "../../data/models/refresh_response.dart";
@@ -37,10 +40,14 @@ abstract class RestClient {
   Future<DreamPlace> deletePlace(@Path() int id);
 
   @PUT("/places/{id}")
-  Future<DreamPlace> updatePlace(@Path() int id, @Body() CreatePlace place);
+  Future<DreamPlace> updatePlace(@Path() int id, @Body() CreatePlaceDTO place);
 
   @POST("/places")
-  Future<DreamPlace> postPlace(@Body() CreatePlace place);
+  Future<DreamPlace> postPlace(@Body() CreatePlaceDTO place);
+
+  @POST("/photos/upload")
+  @MultiPart()
+  Future<ImageDTO> postImage(@Part(name: "file") File file);
 }
 
 @riverpod

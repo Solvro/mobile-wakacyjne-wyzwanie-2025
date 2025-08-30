@@ -3,7 +3,7 @@ import "package:riverpod_annotation/riverpod_annotation.dart";
 
 import "../../app/remote/authed_client.dart";
 import "../../app/remote/retrofit_client.dart";
-import "../../data/models/create_place.dart";
+import "../../data/models/create_place_dto.dart";
 import "../../data/models/dream_place.dart";
 import "../dream_place_repository.dart";
 
@@ -37,7 +37,7 @@ class DreamPlaceRepositoryImpl implements DreamPlaceRepository {
     required String imageUrl,
     bool isFavourite = false,
   }) async {
-    final createPlace = CreatePlace(
+    final createPlace = CreatePlaceDTO(
       name: name,
       description: description,
       imageUrl: imageUrl,
@@ -54,7 +54,7 @@ class DreamPlaceRepositoryImpl implements DreamPlaceRepository {
     String? imageUrl,
     bool? isFavourite,
   }) async {
-    final createPlace = CreatePlace(
+    final createPlace = CreatePlaceDTO(
       name: name,
       description: description,
       imageUrl: imageUrl,
@@ -65,7 +65,7 @@ class DreamPlaceRepositoryImpl implements DreamPlaceRepository {
 
   @override
   Future<DreamPlace> toggleFavorite(int id, {required bool newValue}) async {
-    final updatedPlace = CreatePlace(isFavourite: newValue);
+    final updatedPlace = CreatePlaceDTO(isFavourite: newValue);
     return _client.updatePlace(id, updatedPlace);
   }
 }

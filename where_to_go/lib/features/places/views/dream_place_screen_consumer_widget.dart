@@ -3,7 +3,7 @@ import "package:hooks_riverpod/hooks_riverpod.dart";
 import "../../../app/remote/paths.dart";
 import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
-import "../providers/places_provider.dart";
+import "../service/dream_place_service.dart";
 
 class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
   const DreamPlaceScreenConsumerWidget({super.key, required this.id});
@@ -21,7 +21,7 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
         title: Text(place.name),
         actions: [
           IconButton(
-              onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(place.id),
+              onPressed: () => ref.read(dreamPlaceServiceProvider.notifier).toggleFavorite(place.id),
               icon: Icon(
                 place.isFavourite ? Icons.favorite : Icons.favorite_border,
                 color: place.isFavourite ? context.colorScheme.tertiary : null,
