@@ -9,7 +9,8 @@ import "../widgets/list_view_tile.dart";
 import "dream_place_screen_consumer_widget.dart";
 
 class PlacesListScreen extends ConsumerWidget {
-  const PlacesListScreen({super.key});
+  final void Function() onLogout;
+  const PlacesListScreen({super.key, required this.onLogout});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,6 +20,7 @@ class PlacesListScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text("Przeglądaj piękne miejsca"),
+        leading: IconButton(onPressed: onLogout, icon: const Icon(Icons.exit_to_app)),
         actions: [ThemeSelectorButton()],
       ),
       body: ListView.builder(

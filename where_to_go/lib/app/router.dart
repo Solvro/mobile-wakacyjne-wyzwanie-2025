@@ -5,8 +5,8 @@ import "package:riverpod_annotation/riverpod_annotation.dart";
 import "../features/auth/auth_notifier.dart";
 import "../features/auth/pages/login_page.dart";
 import "../features/auth/pages/register_page.dart";
+import "../features/places/pages/home_page.dart";
 import "../features/places/views/dream_place_screen_consumer_widget.dart";
-import "../features/places/views/places_list_screen.dart";
 
 part "router.g.dart";
 
@@ -14,25 +14,23 @@ part "router.g.dart";
 GoRouter goRouter(Ref ref) {
   final auth = ref.watch(authNotifierProvider);
   return GoRouter(
-    initialLocation: "/",
     redirect: (context, state) {
-      final loggedIn = auth.value != null;
-      final loggingIn = state.fullPath == LoginPage.route || state.fullPath == RegisterPage.route;
-
+      final loggedIn = auth.value == AuthState.authed;
+      final loggingIn = state.matchedLocation == LoginPage.route || state.matchedLocation == RegisterPage.route;
       if (!loggedIn && !loggingIn) {
         return LoginPage.route;
       }
 
       if (loggedIn && loggingIn) {
-        return "/";
+        return HomePage.route;
       }
 
       return null;
     },
     routes: [
       GoRoute(
-        path: "/",
-        builder: (context, state) => const PlacesListScreen(),
+        path: HomePage.route,
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
         path: "${DreamPlaceScreenConsumerWidget.route}/:id",

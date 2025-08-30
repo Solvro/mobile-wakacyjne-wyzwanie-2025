@@ -28,6 +28,5 @@ abstract class RestClient {
 RestClient client(Ref ref, {String? token}) {
   final dio = Dio();
   dio.options.headers["Authorization"] = (token != null) ? "Bearer $token" : null;
-  print("Creating client");
   return RestClient(dio);
 }

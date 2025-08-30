@@ -17,7 +17,7 @@ class RegisterPage extends ConsumerWidget {
     return RegisterView(redirectToLogin: () async {
       await GoRouter.of(context).push(LoginPage.route);
     }, onRegister: (email, password) async {
-      await ref.read(authNotifierProvider.notifier).register(email, password);
+      return ref.read(authNotifierProvider.notifier).register(email, password);
     });
   }
 }

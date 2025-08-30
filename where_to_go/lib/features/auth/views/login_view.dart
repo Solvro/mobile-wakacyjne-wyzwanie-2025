@@ -1,12 +1,13 @@
 import "package:flutter/material.dart";
 
 import "../../../app/ui_config.dart";
+import "../../common/widgets/error_snack_bar.dart";
 import "../widgets/auth_screen_footer.dart";
 import "../widgets/auth_screen_title.dart";
 
 class LoginView extends StatefulWidget {
   final void Function() redirectToRegister;
-  final void Function(String email, String passoword) onLogin;
+  final Future<bool> Function(String email, String passoword) onLogin;
   const LoginView({super.key, required this.redirectToRegister, required this.onLogin});
 
   @override
@@ -71,12 +72,17 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: AuthViewsConfig.buttonGap),
               AuthScreenFooter(
                 isLogin: true,
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    widget.onLogin(
+                    final success = await widget.onLogin(
                       _emailController.text.trim(),
                       _passwordController.text,
                     );
+                    if (!success) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        context.showErrorSnackBar("Could not log in. Wrong email or password.");
+                      });
+                    }
                   }
                 },
                 onRedirect: () {

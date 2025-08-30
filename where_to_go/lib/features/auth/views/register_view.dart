@@ -1,12 +1,13 @@
 import "package:flutter/material.dart";
 
 import "../../../app/ui_config.dart";
+import "../../common/widgets/error_snack_bar.dart";
 import "../widgets/auth_screen_footer.dart";
 import "../widgets/auth_screen_title.dart";
 
 class RegisterView extends StatefulWidget {
   final void Function() redirectToLogin;
-  final void Function(String email, String passoword) onRegister;
+  final Future<bool> Function(String email, String passoword) onRegister;
   const RegisterView({super.key, required this.redirectToLogin, required this.onRegister});
 
   @override
@@ -100,12 +101,17 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: AuthViewsConfig.buttonGap),
               AuthScreenFooter(
                 isLogin: false,
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    widget.onRegister(
+                    final success = await widget.onRegister(
                       _emailController.text.trim(),
                       _passwordController.text,
                     );
+                    if (!success) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        context.showErrorSnackBar("Could not register in. Try again.");
+                      });
+                    }
                   }
                 },
                 onRedirect: () {

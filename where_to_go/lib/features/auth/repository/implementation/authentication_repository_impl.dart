@@ -56,7 +56,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
 @riverpod
 AuthenticationRepository authenticationRepository(Ref ref) {
-  print("creating auth repo");
   return AuthenticationRepositoryImpl(
       localAuth: LocalAuthenticationRepositoryImpl(const FlutterSecureStorage()),
       remoteAuth: RemoteAuthenticationRepositoryImpl(ref.watch(clientProvider())));

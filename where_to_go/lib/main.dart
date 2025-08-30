@@ -4,7 +4,6 @@ import "app/router.dart";
 import "app/theme/app_theme.dart";
 import "app/theme/theme_extension.dart";
 import "app/theme/theme_mode.dart";
-import "features/auth/auth_notifier.dart";
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -17,7 +16,6 @@ class MyApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeToSet = context.setTheme(ref);
     final router = ref.watch(goRouterProvider);
-    // ref.read(authNotifierProvider.notifier).logout();
 
     return MaterialApp.router(
       title: "Where to Go",

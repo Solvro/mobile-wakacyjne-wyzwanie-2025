@@ -7,7 +7,7 @@ import "retrofit_client.dart";
 part "authed_client.g.dart";
 
 @riverpod
-RestClient authedClient(Ref ref) {
-  final auth = ref.watch(authNotifierProvider);
-  return ref.watch(clientProvider(token: auth.value));
+Future<RestClient> authedClient(Ref ref) async {
+  final token = await ref.watch(authNotifierProvider.notifier).getToken();
+  return ref.watch(clientProvider(token: token));
 }

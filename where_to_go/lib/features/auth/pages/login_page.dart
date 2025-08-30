@@ -13,13 +13,10 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return LoginView(
-      redirectToRegister: () async {
-        await GoRouter.of(context).push(RegisterPage.route);
-      },
-      onLogin: (email, password) async {
-        await ref.read(authNotifierProvider.notifier).login(email, password);
-      },
-    );
+    return LoginView(redirectToRegister: () async {
+      await GoRouter.of(context).push(RegisterPage.route);
+    }, onLogin: (email, password) async {
+      return ref.read(authNotifierProvider.notifier).login(email, password);
+    });
   }
 }
