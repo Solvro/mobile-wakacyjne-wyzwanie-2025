@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "../../../app/remote/paths.dart";
 import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
 import "../../../data/models/dream_place.dart";
@@ -24,8 +25,8 @@ class ListViewTile extends StatelessWidget {
               topLeft: Radius.circular(PlacesListScreenConfig.radius),
               bottomLeft: Radius.circular(PlacesListScreenConfig.radius),
             ),
-            child: Image.asset(
-              dreamPlace.imageUrl,
+            child: Image.network(
+              imagePath + dreamPlace.imageUrl,
               width: PlacesListScreenConfig.imageSize,
               height: PlacesListScreenConfig.imageSize,
               fit: BoxFit.cover,

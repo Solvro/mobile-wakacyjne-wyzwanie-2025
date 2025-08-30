@@ -9,5 +9,5 @@ part "authed_client.g.dart";
 @riverpod
 Future<RestClient> authedClient(Ref ref) async {
   final token = await ref.watch(authNotifierProvider.notifier).getToken();
-  return ref.watch(clientProvider(token: token));
+  return ref.read(clientProvider(token: token));
 }

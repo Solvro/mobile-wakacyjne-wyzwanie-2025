@@ -36,7 +36,7 @@ GoRouter goRouter(Ref ref) {
         path: "${DreamPlaceScreenConsumerWidget.route}/:id",
         builder: (context, state) {
           final id = state.pathParameters["id"]!;
-          return DreamPlaceScreenConsumerWidget(id: id);
+          return DreamPlaceScreenConsumerWidget(id: int.parse(id));
         },
       ),
       GoRoute(

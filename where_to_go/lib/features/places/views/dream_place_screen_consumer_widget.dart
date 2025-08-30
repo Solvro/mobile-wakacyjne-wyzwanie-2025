@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
+import "../../../app/remote/paths.dart";
 import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
 import "../providers/places_provider.dart";
@@ -8,23 +9,22 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
   const DreamPlaceScreenConsumerWidget({super.key, required this.id});
 
   static String route = "/dream_place";
-  final String id;
+  final int id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dreamPlace = ref.watch(placesProvider.select((places) => places.firstWhere((place) => place.id == id)));
-
+    final place = ref.watch(placeByIdProvider(id));
+    if (place == null) return const Text("Not found");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(dreamPlace.name),
+        title: Text(place.name),
         actions: [
           IconButton(
-              // onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(id),
-              onPressed: () {},
+              onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(place.id),
               icon: Icon(
-                dreamPlace.isFavourite ? Icons.favorite : Icons.favorite_border,
-                color: dreamPlace.isFavourite ? context.colorScheme.tertiary : null,
+                place.isFavourite ? Icons.favorite : Icons.favorite_border,
+                color: place.isFavourite ? context.colorScheme.tertiary : null,
               ))
         ],
       ),
@@ -33,14 +33,18 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(fit: BoxFit.fitWidth, dreamPlace.imageUrl, width: double.infinity),
+          Image.network(
+            imagePath + place.imageUrl,
+            fit: BoxFit.fitWidth,
+            width: double.infinity,
+          ),
           Padding(
             padding: const EdgeInsets.all(AppPaddings.large),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  dreamPlace.name,
+                  place.name,
                   style: const TextStyle(
                     fontSize: DreamPlaceScreenConfig.titleFontSize,
                     fontWeight: FontWeight.bold,
@@ -49,7 +53,7 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
                 const SizedBox(
                   width: AppPaddings.small,
                 ),
-                Text(dreamPlace.description,
+                Text(place.description,
                     style: TextStyle(
                       fontSize: DreamPlaceScreenConfig.descriptionFontSize,
                       color: context.colorScheme.secondary,
@@ -57,16 +61,6 @@ class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
               ],
             ),
           ),
-          // Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: dreamPlace.attractions.map((attraction) {
-          //       return Column(
-          //         children: [
-          //           Icon(attraction.icon, size: DreamPlaceScreenConfig.iconSize),
-          //           Text(attraction.title),
-          //         ],
-          //       );
-          //     }).toList())
         ],
       ),
     );

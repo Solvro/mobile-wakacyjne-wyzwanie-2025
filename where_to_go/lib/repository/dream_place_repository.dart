@@ -5,26 +5,26 @@ abstract class DreamPlaceRepository {
 
   Future<List<DreamPlace>> getAll();
 
-  Future<DreamPlace> get(String id);
+  Future<DreamPlace> get(int id);
 
-  Future<void> delete(String id);
+  Future<void> delete(int id);
 
   Future<DreamPlace> save({
     required String name,
     required String description,
     required String imageUrl,
     required String ownerEmail,
-    bool isFavorited = false,
+    bool isFavourite = false,
   });
 
   Future<DreamPlace> updatePlace(
-    String id, {
+    int id, {
     String? name,
     String? description,
     String? imageUrl,
     String? ownerEmail,
-    bool? isFavorited,
+    bool? isFavourite,
   });
 
-  Future<void> toggleFavorite(String id);
+  Future<DreamPlace> toggleFavorite(int id, {required bool newValue});
 }
