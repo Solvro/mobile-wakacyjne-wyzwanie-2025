@@ -5,6 +5,7 @@ import "package:riverpod_annotation/riverpod_annotation.dart";
 import "../features/auth/auth_notifier.dart";
 import "../features/auth/pages/login_page.dart";
 import "../features/auth/pages/register_page.dart";
+import "../features/places/pages/create_place_page.dart";
 import "../features/places/pages/home_page.dart";
 import "../features/places/views/dream_place_screen_consumer_widget.dart";
 
@@ -31,6 +32,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: HomePage.route,
         builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: CreatePlacePage.route,
+        builder: (context, state) => const CreatePlacePage(),
       ),
       GoRoute(
         path: "${DreamPlaceScreenConsumerWidget.route}/:id",

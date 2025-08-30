@@ -23,3 +23,9 @@ abstract final class AuthViewsConfig {
   static const buttonGap = 20.0;
   static const titleGap = 30.0;
 }
+
+abstract final class CreatePlaceViewConfig {
+  static const fieldGap = 10.0;
+  static const imageFieldHeight = 150.0;
+  static const radius = 10.0;
+}

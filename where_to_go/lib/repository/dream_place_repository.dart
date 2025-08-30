@@ -13,7 +13,6 @@ abstract class DreamPlaceRepository {
     required String name,
     required String description,
     required String imageUrl,
-    required String ownerEmail,
     bool isFavourite = false,
   });
 
@@ -22,7 +21,6 @@ abstract class DreamPlaceRepository {
     String? name,
     String? description,
     String? imageUrl,
-    String? ownerEmail,
     bool? isFavourite,
   });
 

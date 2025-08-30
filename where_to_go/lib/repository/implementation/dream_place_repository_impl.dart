@@ -35,7 +35,6 @@ class DreamPlaceRepositoryImpl implements DreamPlaceRepository {
     required String name,
     required String description,
     required String imageUrl,
-    required String ownerEmail,
     bool isFavourite = false,
   }) async {
     final createPlace = CreatePlace(
@@ -53,7 +52,6 @@ class DreamPlaceRepositoryImpl implements DreamPlaceRepository {
     String? name,
     String? description,
     String? imageUrl,
-    String? ownerEmail,
     bool? isFavourite,
   }) async {
     final createPlace = CreatePlace(
