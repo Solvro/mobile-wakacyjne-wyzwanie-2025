@@ -1,4 +1,12 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
+
+import "gen/assets.gen.dart";
+
+const Color greenIcons = Color.fromARGB(255, 26, 89, 48);
+const Color greenBackground = Color.fromARGB(255, 109, 197, 112);
 
 void main() {
   runApp(const MyApp());
@@ -7,119 +15,274 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Flutter Demo",
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        textTheme: GoogleFonts.redHatTextTextTheme(),
       ),
-      home: const MyHomePage(title: "Flutter Demo Home Page"),
+      home: const DreamPlaceScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class DreamPlaceScreen extends StatelessWidget {
+  const DreamPlaceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        backgroundColor: greenBackground,
+        appBar: AppBar(
+          title: const Text("Rzucam wszystko, jadę w Bieszczady",
+              textAlign: TextAlign.right, style: TextStyle(fontSize: 18)),
+          backgroundColor: greenBackground,
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(8),
+          children: [
+            introHomePage(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _placeButton(context, Icons.filter_hdr, "Skorodne", skorodnePage()),
+                _placeButton(context, Icons.beach_access_rounded, "Solina", solinaPage()),
+                _placeButton(context, Icons.castle_outlined, "Zagórz", zagorzPage()),
+                _placeButton(context, Icons.bakery_dining_rounded, "Słodki Domek", slodkiDomekPage()),
+              ],
+            ), //end of Row
+            skorodneImage(),
+            solinaImage(),
+            zagorzImage(),
+            slodkiDomekImage(),
+          ], //end of this page
+        ));
+  }
+
+  Widget _placeButton(BuildContext context, IconData icon, String label, SinglePlaceView page) {
+    return ElevatedButton(
+      onPressed: () {
+        unawaited(
+          Navigator.push(
+            context,
+            MaterialPageRoute<Widget>(builder: (context) => page),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              "You have pushed the button this many times:",
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 30, color: greenIcons),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 14)),
+        ],
+      ),
+    );
+  }
+
+  SingleImageView introHomePage() {
+    return SingleImageView(
+      imagePath: Assets.images.bieszczadyLaka.path,
+      imageTitle: "Cudze chwalicie,\nswego nie znacie",
+      imageDesc:
+          "Bieszczady to nie tylko góry i nużące wędrowanie kotlinami, bo na zdobywanie szczytów nam brakuje siły. To także odpoczynek od szumu miejskiego na łące, nad jeziorem, rekreacja na nadzalewowej plaży czy sporo zwiedzania dla tych, którzy lubią posłuchać o architekturze i historii.",
+    );
+  }
+
+  SingleImageView zagorzImage() =>
+      SingleImageView(imagePath: Assets.images.zagorz.path, imageTitle: "Zagórz", imageDesc: "");
+
+  SingleImageView slodkiDomekImage() =>
+      SingleImageView(imagePath: Assets.images.slodkiDomek.path, imageTitle: "Słodki Domek, Lesko", imageDesc: "");
+
+  SingleImageView solinaImage() =>
+      SingleImageView(imagePath: Assets.images.solina.path, imageTitle: "Solina", imageDesc: "");
+
+  SingleImageView skorodneImage() =>
+      SingleImageView(imagePath: Assets.images.skorodneJezioro.path, imageTitle: "Skorodne", imageDesc: "");
+
+  SinglePlaceView skorodnePage() {
+    return SinglePlaceView(
+        imagePath: Assets.images.skorodneJezioro.path,
+        imageTitle: "Skorodne",
+        imageDesc:
+            "Za górami, za lasami, gdzie zasięg nie dosięga, znajduje się ostatnia ostoja cywilizacji... Digital detox, walka z muchami końskimi i piękne widoki. Cóż mam ci więcej mówić.",
+        icon1: Icons.forest,
+        icon1Desc: "miejsce zalesione",
+        icon2: Icons.emoji_nature,
+        icon2Desc: "lokalna fauna",
+        icon3: Icons.gps_off,
+        icon3Desc: "5km od zasięgu");
+  }
+
+  SinglePlaceView solinaPage() {
+    return SinglePlaceView(
+        imagePath: Assets.images.solina.path,
+        imageTitle: "Solina",
+        imageDesc: "Wakacje w Bieszczadach bez Soliny to skandal. Kłóć się ze ścianą.",
+        icon1: Icons.bed_outlined,
+        icon1Desc: "noclegi",
+        icon2: Icons.local_attraction,
+        icon2Desc: "https://pklsolina.pl/",
+        icon3: Icons.beach_access_rounded,
+        icon3Desc: "plaża");
+  }
+
+  SinglePlaceView slodkiDomekPage() {
+    return SinglePlaceView(
+        imagePath: Assets.images.slodkiDomek.path,
+        imageTitle: "Słodki Domek, Lesko",
+        imageDesc:
+            "Skuś się na serniczka... albo na pucharek lodowy... a może jakaś kawa? Obiecuję, że lepsza niż z automatów na PWr.",
+        icon1: Icons.bakery_dining_rounded,
+        icon1Desc: "cukiernia",
+        icon2: Icons.coffee,
+        icon2Desc: "kawiarnia",
+        icon3: Icons.icecream,
+        icon3Desc: "lodziarnia");
+  }
+
+  SinglePlaceView zagorzPage() {
+    return SinglePlaceView(
+        imagePath: Assets.images.zagorz.path,
+        imageTitle: "Zagórz",
+        imageDesc:
+            "Jak już dotrzesz na samą górę wzniesienia, nie zniechęcaj się hasłem muzeum - nieźle tu zmodernizowali. Ah, i jest zakonnik jumpscare na VR.",
+        icon1: Icons.castle_outlined,
+        icon1Desc: "interaktywne muzeum",
+        icon2: Icons.local_movies,
+        icon2Desc: "sala VR",
+        icon3: Icons.hiking,
+        icon3Desc: "miejsce na wzniesieniu");
+  }
+}
+
+class SingleImageView extends StatelessWidget {
+  const SingleImageView({
+    required this.imagePath,
+    required this.imageTitle,
+    required this.imageDesc,
+    super.key,
+  });
+
+  final String imagePath;
+  final String imageTitle;
+  final String imageDesc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ClipRect(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxHeight: 300,
+              minWidth: double.infinity, // pełna szerokość
             ),
-            Text(
-              "$_counter",
-              style: Theme.of(context).textTheme.headlineMedium,
+            child: Image.asset(
+              imagePath,
+              width: double.infinity,
+              fit: BoxFit.cover, // wypełnia szerokość, przycina wysokość
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                  child: Text(
+                imageTitle,
+                style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+              )),
+              const SizedBox(height: 4),
+              Text(
+                imageDesc,
+                textAlign: TextAlign.justify,
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SinglePlaceView extends StatefulWidget {
+  const SinglePlaceView({
+    required this.imagePath,
+    required this.imageTitle,
+    required this.imageDesc,
+    required this.icon1,
+    required this.icon1Desc,
+    required this.icon2,
+    required this.icon2Desc,
+    required this.icon3,
+    required this.icon3Desc,
+    super.key,
+  });
+
+  final String imagePath;
+  final String imageTitle;
+  final String imageDesc;
+  final IconData icon1;
+  final IconData icon2;
+  final IconData icon3;
+  final String icon1Desc;
+  final String icon2Desc;
+  final String icon3Desc;
+
+  @override
+  State<SinglePlaceView> createState() => _SinglePlaceViewState();
+}
+
+class _SinglePlaceViewState extends State<SinglePlaceView> {
+  bool _isSaved = false;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: greenBackground,
+      appBar: AppBar(
+        //"zapisz" [Icon(Icons.bookmark_added), Icon(Icons.bookmark_add_outlined)]
+        title: Text(widget.imageTitle, textAlign: TextAlign.right, style: const TextStyle(fontSize: 18)),
+        backgroundColor: greenBackground,
+        actions: [
+          IconButton(
+            onPressed: _toggleSaved,
+            icon: Icon(
+              _isSaved ? Icons.bookmark_added : Icons.bookmark_add_outlined,
+            ),
+            color: _isSaved ? greenIcons : const Color(0xFF141414),
+          )
+        ],
+      ),
+      body: Column(children: [
+        SingleImageView(imagePath: widget.imagePath, imageTitle: widget.imageTitle, imageDesc: widget.imageDesc),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(children: [Icon(widget.icon1, color: greenIcons), Text(widget.icon1Desc)]),
+            Column(children: [Icon(widget.icon2, color: greenIcons), Text(widget.icon2Desc)]),
+            Column(children: [Icon(widget.icon3, color: greenIcons), Text(widget.icon3Desc)]),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: "Increment",
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ]),
     );
+  }
+
+  void _toggleSaved() {
+    setState(() {
+      _isSaved = !_isSaved;
+    });
   }
 }
