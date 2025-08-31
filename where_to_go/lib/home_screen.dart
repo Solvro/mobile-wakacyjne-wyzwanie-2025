@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
+import "features/auth/authentication_repository_provider.dart";
+import "features/auth/tokens_provider.dart";
 import "features/database/dream_place_provider.dart";
 import "features/theme/local_theme_provider.dart";
 import "features/theme/local_theme_repository.dart";
@@ -27,6 +29,20 @@ class HomeScreen extends ConsumerWidget {
                     key: ValueKey(currentTheme),
                     backgroundColor: palette.getPrimaryColor(currentTheme, context),
                     appBar: AppBar(
+                      leading: IconButton(
+                        icon: Icon(
+                          Icons.logout,
+                          color: palette.getSecondaryColor(currentTheme, context),
+                          size: 28,
+                        ),
+                        onPressed: () async {
+                          await ref.read(authenticationRepositoryProvider).deleteTokens();
+                          ref.invalidate(tokensProvider);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: palette.getPrimaryColor(currentTheme, context),
+                        ),
+                      ),
                       title: Text("My Favorite Places",
                           style: TextStyle(
                               fontSize: 32,
