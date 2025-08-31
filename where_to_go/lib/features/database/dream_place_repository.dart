@@ -42,10 +42,8 @@ class DreamPlaceRepository extends _$DreamPlaceRepository {
 
   Future<void> initDatabase() async {
     final existing = await getAllDreamPlaces();
-    print(existing);
     if (existing.isEmpty) {
       await batch((batch) {
-        print("Inserting initial dream places");
         batch.insertAll(dreamPlaces, [
           DreamPlacesCompanion.insert(
             name: "Auckland, New Zealand",

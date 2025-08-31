@@ -45,7 +45,6 @@ class DreamPlaceScreen extends ConsumerWidget {
                       size: 28,
                     ),
                     onPressed: () async {
-                      print("clicking favourite button");
                       await ref.read(toggleDreamPlaceFavouriteProvider(dreamPlace.id).future);
                       ref.invalidate(toggleDreamPlaceFavouriteProvider(id));
                     },
