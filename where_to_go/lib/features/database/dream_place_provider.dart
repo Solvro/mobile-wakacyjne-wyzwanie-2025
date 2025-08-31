@@ -13,6 +13,9 @@ final dreamPlacesProvider = FutureProvider((ref) async {
 });
 
 final toggleDreamPlaceFavouriteProvider = FutureProvider.family<void, int>((ref, id) async {
+  print("toggling favourite");
   final repo = await ref.watch(dreamPlaceRepositoryProvider.future);
-  await repo.toggleFavourite(id);
+  final isFavourite = await repo.toggleFavourite(id);
+  print("isFavourite: $isFavourite");
+  ref.invalidate(dreamPlacesProvider);
 });

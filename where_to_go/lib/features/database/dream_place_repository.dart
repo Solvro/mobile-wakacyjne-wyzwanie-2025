@@ -1,13 +1,25 @@
+import "dart:io";
 import "package:drift/drift.dart";
 import "package:drift/native.dart";
-import "../../gen/assets.gen.dart"; // <-- Import your assets
+import "package:path/path.dart" as p;
+import "package:path_provider/path_provider.dart";
+import "../../gen/assets.gen.dart";
 import "dream_place.dart";
 
 part "dream_place_repository.g.dart";
 
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, "dream_places.sqlite"));
+    return NativeDatabase(file);
+  });
+}
+
 @DriftDatabase(tables: [DreamPlaces])
 class DreamPlaceRepository extends _$DreamPlaceRepository {
-  DreamPlaceRepository() : super(NativeDatabase.memory());
+  // Use a file-backed DB instead of in-memory so data persists across restarts
+  DreamPlaceRepository() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -20,17 +32,20 @@ class DreamPlaceRepository extends _$DreamPlaceRepository {
 
   Future<int> deleteDreamPlace(int id) => (delete(dreamPlaces)..where((tbl) => tbl.id.equals(id))).go();
 
-  Future<void> toggleFavourite(int id) async {
+  Future<bool> toggleFavourite(int id) async {
     final place = await (select(dreamPlaces)..where((tbl) => tbl.id.equals(id))).getSingle();
     await update(dreamPlaces).replace(
       place.copyWith(isFavourite: !place.isFavourite),
     );
+    return !place.isFavourite;
   }
 
   Future<void> initDatabase() async {
     final existing = await getAllDreamPlaces();
+    print(existing);
     if (existing.isEmpty) {
       await batch((batch) {
+        print("Inserting initial dream places");
         batch.insertAll(dreamPlaces, [
           DreamPlacesCompanion.insert(
             name: "Auckland, New Zealand",

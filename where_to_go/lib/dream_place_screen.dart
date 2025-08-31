@@ -23,7 +23,7 @@ class DreamPlaceScreen extends ConsumerWidget {
         return dreamPlacesAsync.when(
           data: (dreamPlaces) {
             final places = ref.watch(placesProvider);
-            final place = places.firstWhere((p) => p.id == id as String);
+            final place = places.firstWhere((p) => p.id == id.toString());
             final dreamPlace = dreamPlaces.firstWhere((dp) => dp.id == id);
             final isFavourited = dreamPlace.isFavourite;
             final icon = isFavourited ? Icons.favorite : Icons.favorite_border;
@@ -45,8 +45,9 @@ class DreamPlaceScreen extends ConsumerWidget {
                       size: 28,
                     ),
                     onPressed: () async {
+                      print("clicking favourite button");
                       await ref.read(toggleDreamPlaceFavouriteProvider(dreamPlace.id).future);
-                      ref.invalidate(dreamPlacesProvider);
+                      ref.invalidate(toggleDreamPlaceFavouriteProvider(id));
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: themePalette.getPrimaryColor(currentTheme, context),
