@@ -8,9 +8,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeControllerProvider); // globalny ThemeMode
+    final themeMode = ref.watch(themeControllerProvider);
 
-    // własne tematy – możesz je dowolnie dopieścić
     final light = ThemeData(
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
@@ -29,7 +28,7 @@ class MyApp extends ConsumerWidget {
       title: "Dream Places",
       theme: light,
       darkTheme: dark,
-      themeMode: themeMode, // <-- najważniejsze
+      themeMode: themeMode,
       routerConfig: goRouter,
     );
   }

@@ -1,47 +1,47 @@
 name: dream_places
-description: A Flutter app with Riverpod and GoRouter.
+description: A Flutter app with Riverpod, GoRouter and Hive.
 publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
-  flutter: "3.32.7"
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # Riverpod do zarządzania stanem
+  # Riverpod
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
 
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
+  # Hive (baza danych)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   path_provider: ^2.1.3
 
   # GoRouter do nawigacji
   go_router: ^16.2.1
 
-  # Obsługa wygenerowanych assetów
-  flutter_gen: ^5.5.0
+  # Obsługa assetów
+  flutter_gen: ^5.3.1
 
   cupertino_icons: ^1.0.8
   flutter_hooks: ^0.21.3+1
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^6.0.0
+  flutter_lints: ^3.0.0
 
-  #generator kodu dla Riverpoda
+  # Generatory
   build_runner: ^2.4.6
   riverpod_generator: ^2.3.5
-
-  solvro_config: ^1.0.1
-  flutter_gen_runner: ^5.11.0
+  hive_generator: ^2.0.1
+  flutter_gen_runner: ^5.3.1
 
 flutter_gen:
   output: lib/gen/
