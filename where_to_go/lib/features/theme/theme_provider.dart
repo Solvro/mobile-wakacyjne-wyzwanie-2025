@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
@@ -13,7 +15,7 @@ final themeControllerProvider = StateNotifierProvider<ThemeController, ThemeMode
 
 class ThemeController extends StateNotifier<ThemeMode> {
   ThemeController(this._repo) : super(ThemeMode.system) {
-    _init();
+    unawaited(_init());
   }
 
   final LocalThemeRepository _repo;

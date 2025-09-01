@@ -50,3 +50,5 @@ app.*.map.json
 
 *.gen.dart
 .swift
+.cc
+.cmake
