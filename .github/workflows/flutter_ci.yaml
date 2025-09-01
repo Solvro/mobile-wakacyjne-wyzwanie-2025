@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'where_to_go/**'
+      - "where_to_go/**"
   pull_request:
-    branches: [ "**" ]
+    branches: ["**"]
     paths:
-      - 'where_to_go/**'
+      - "where_to_go/**"
 
 jobs:
   build:
@@ -20,22 +20,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # POPRAWIONA LINIA - usuń flutter-version-file LUB popraw ścieżkę
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          flutter-version-file: where_to_go/pubspec.yaml
-          
+          # flutter-version-file: where_to_go/pubspec.yaml # USUŃ TĄ LINIĘ LUB:
+          # flutter-version-file: ./pubspec.yaml # ALBO ZMIEŃ NA TĘ ŚCIEŻKĘ
+
       - run: flutter --version
 
       - name: Install dependencies
         run: flutter pub get
-        
+
       # - name: Remove lib/l10n directory
       #   run: rm -rf lib/l10n/*.dart
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
-      
+
       # - name: Regenerate the localization files
       #   run: flutter gen-l10n
 
@@ -53,4 +56,3 @@ jobs:
 
       # - name: Flutter tests
       #   run: flutter test
-  
