@@ -1,3 +1,4 @@
+import "package:dio/dio.dart";
 import "package:flutter/material.dart";
 
 import "../../../app/ui_config.dart";
@@ -7,7 +8,7 @@ import "../widgets/auth_screen_title.dart";
 
 class RegisterView extends StatefulWidget {
   final void Function() redirectToLogin;
-  final Future<bool> Function(String email, String passoword) onRegister;
+  final Future<void> Function(String email, String passoword) onRegister;
   const RegisterView({super.key, required this.redirectToLogin, required this.onRegister});
 
   @override
@@ -103,13 +104,27 @@ class _RegisterViewState extends State<RegisterView> {
                 isLogin: false,
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    final success = await widget.onRegister(
-                      _emailController.text.trim(),
-                      _passwordController.text,
-                    );
-                    if (!success) {
+                    try {
+                      await widget.onRegister(
+                        _emailController.text.trim(),
+                        _passwordController.text,
+                      );
+                    } on DioException catch (e) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.showErrorSnackBar("Could not register in. Try again.");
+                        final errorData = e.response?.data;
+                        String detailedMessage = "";
+                        if (errorData is Map &&
+                            errorData["message"] is List &&
+                            (errorData["message"] as List).isNotEmpty &&
+                            (errorData["message"] as List)[0] is Map &&
+                            ((errorData["message"] as List)[0] as Map)["message"] is String) {
+                          detailedMessage = ((errorData["message"] as List)[0] as Map)["message"] as String;
+                        }
+                        if (errorData is Map && errorData["message"] is String) {
+                          detailedMessage = errorData["message"] as String;
+                        }
+
+                        context.showErrorSnackBar("Could not log in. $detailedMessage");
                       });
                     }
                   }

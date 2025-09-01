@@ -1,3 +1,4 @@
+import "package:dio/dio.dart";
 import "package:flutter/material.dart";
 
 import "../../../app/ui_config.dart";
@@ -7,7 +8,7 @@ import "../widgets/auth_screen_title.dart";
 
 class LoginView extends StatefulWidget {
   final void Function() redirectToRegister;
-  final Future<bool> Function(String email, String passoword) onLogin;
+  final Future<void> Function(String email, String passoword) onLogin;
   const LoginView({super.key, required this.redirectToRegister, required this.onLogin});
 
   @override
@@ -74,13 +75,28 @@ class _LoginViewState extends State<LoginView> {
                 isLogin: true,
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    final success = await widget.onLogin(
-                      _emailController.text.trim(),
-                      _passwordController.text,
-                    );
-                    if (!success) {
+                    try {
+                      await widget.onLogin(
+                        _emailController.text.trim(),
+                        _passwordController.text,
+                      );
+                    } on DioException catch (e) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.showErrorSnackBar("Could not log in. Wrong email or password.");
+                        final errorData = e.response?.data;
+                        String detailedMessage = "";
+
+                        if (errorData is Map &&
+                            errorData["message"] is List &&
+                            (errorData["message"] as List).isNotEmpty &&
+                            (errorData["message"] as List)[0] is Map &&
+                            ((errorData["message"] as List)[0] as Map)["message"] is String) {
+                          detailedMessage = ((errorData["message"] as List)[0] as Map)["message"] as String;
+                        }
+                        if (errorData is Map && errorData["message"] is String) {
+                          detailedMessage = errorData["message"] as String;
+                        }
+
+                        context.showErrorSnackBar("Could not log in. $detailedMessage");
                       });
                     }
                   }

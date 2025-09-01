@@ -16,7 +16,6 @@ class MyApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeToSet = context.setTheme(ref);
     final router = ref.watch(goRouterProvider);
-
     return MaterialApp.router(
       title: "Where to Go",
       theme: themeToSet == ThemeMode.light ? AppTheme().light : AppTheme().dark,

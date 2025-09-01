@@ -1,4 +1,3 @@
-import "package:dio/dio.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
 import "../../app/remote/repository/user_repository_impl.dart";
@@ -39,26 +38,16 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<String?> getToken() => ref.read(authenticationRepositoryProvider).getToken();
 
-  Future<bool> login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     final repository = ref.read(authenticationRepositoryProvider);
-    try {
-      final token = await repository.login(email: email, password: password);
-      state = AsyncData(AuthState(isAuthed: true, token: token));
-      return true;
-    } on DioException {
-      return false;
-    }
+    final token = await repository.login(email: email, password: password);
+    state = AsyncData(AuthState(isAuthed: true, token: token));
   }
 
-  Future<bool> register(String email, String password) async {
+  Future<void> register(String email, String password) async {
     final repository = ref.read(authenticationRepositoryProvider);
-    try {
-      final token = await repository.register(email: email, password: password);
-      state = AsyncData(AuthState(isAuthed: true, token: token));
-      return true;
-    } on DioException {
-      return false;
-    }
+    final token = await repository.register(email: email, password: password);
+    state = AsyncData(AuthState(isAuthed: true, token: token));
   }
 
   Future<void> logout() async {
