@@ -8,6 +8,16 @@ part "authed_client.g.dart";
 
 @riverpod
 Future<RestClient> authedClient(Ref ref) async {
+  print("creating new authed client");
   final state = ref.watch(authNotifierProvider);
-  return ref.read(clientProvider(token: state.value?.token));
+  return ref.read(clientProvider(
+    token: state.value?.token,
+    onError: (error, handler) async {
+      print("oh no, got error: $error");
+      if (error.response?.statusCode == 401) {
+        await ref.read(authNotifierProvider.notifier).attemptRefreshToken();
+      }
+      handler.next(error);
+    },
+  ));
 }

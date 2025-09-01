@@ -55,9 +55,14 @@ abstract class RestClient {
 }
 
 @riverpod
-RestClient client(Ref ref, {String? token}) {
+RestClient client(
+  Ref ref, {
+  String? token,
+  Future<void> Function(DioException error, ErrorInterceptorHandler handler)? onError,
+}) {
   final dio = Dio();
   dio.options.headers["Authorization"] = (token != null) ? "Bearer $token" : null;
+  dio.interceptors.add(InterceptorsWrapper(onError: onError));
 
   return RestClient(dio);
 }

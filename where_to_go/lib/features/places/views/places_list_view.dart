@@ -11,8 +11,7 @@ import "../widgets/dream_place_list_tile.dart";
 import "place_detail_view.dart";
 
 class PlacesListView extends ConsumerWidget {
-  final void Function() onError;
-  const PlacesListView({super.key, required this.onError});
+  const PlacesListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,8 +28,7 @@ class PlacesListView extends ConsumerWidget {
         body: dreamPlacesList.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) {
-            print("got error: $error");
-            onError();
+            Text("Sorry, an error occured: $error");
             return null;
           },
           data: (places) => ListView.builder(
