@@ -16,7 +16,7 @@ GoRouter goRouter(Ref ref) {
   final auth = ref.watch(authNotifierProvider);
   return GoRouter(
     redirect: (context, state) {
-      final loggedIn = auth.value == AuthState.authed;
+      final loggedIn = auth.value?.isAuthed ?? false;
       final loggingIn = state.matchedLocation == LoginPage.route || state.matchedLocation == RegisterPage.route;
       if (!loggedIn && !loggingIn) {
         return LoginPage.route;

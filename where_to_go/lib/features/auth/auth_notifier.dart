@@ -1,13 +1,29 @@
 import "package:dio/dio.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
+
 import "../../app/remote/repository/user_repository_impl.dart";
 import "repository/implementation/authentication_repository_impl.dart";
 
 part "auth_notifier.g.dart";
 
-enum AuthState {
-  authed,
-  unauthed,
+class AuthState {
+  final bool isAuthed;
+  final String? token;
+
+  const AuthState({
+    required this.isAuthed,
+    this.token,
+  });
+
+  AuthState copyWith({
+    bool? isAuthed,
+    String? token,
+  }) {
+    return AuthState(
+      isAuthed: isAuthed ?? this.isAuthed,
+      token: token ?? this.token,
+    );
+  }
 }
 
 @riverpod
@@ -15,49 +31,52 @@ class AuthNotifier extends _$AuthNotifier {
   @override
   Future<AuthState> build() async {
     final token = await ref.read(authenticationRepositoryProvider).getToken();
-    return token == null ? AuthState.unauthed : AuthState.authed;
+    return AuthState(
+      isAuthed: token != null,
+      token: token,
+    );
   }
 
-  Future<String?> getToken() => ref.watch(authenticationRepositoryProvider).getToken();
+  Future<String?> getToken() => ref.read(authenticationRepositoryProvider).getToken();
 
   Future<bool> login(String email, String password) async {
     final repository = ref.read(authenticationRepositoryProvider);
     try {
-      await repository.login(email: email, password: password);
-      state = const AsyncData(AuthState.authed);
+      final token = await repository.login(email: email, password: password);
+      state = AsyncData(AuthState(isAuthed: true, token: token));
+      return true;
     } on DioException catch (e) {
       print(e.response);
       return false;
     }
-    return true;
   }
 
   Future<bool> register(String email, String password) async {
     final repository = ref.read(authenticationRepositoryProvider);
     try {
-      await repository.register(email: email, password: password);
-      state = const AsyncData(AuthState.authed);
+      final token = await repository.register(email: email, password: password);
+      state = AsyncData(AuthState(isAuthed: true, token: token));
+      return true;
     } on DioException catch (e) {
       print(e.response);
       return false;
     }
-    return true;
   }
 
   Future<void> logout() async {
     final repository = ref.read(authenticationRepositoryProvider);
     await repository.logout();
-    state = const AsyncData(AuthState.unauthed);
+    state = const AsyncData(AuthState(isAuthed: false));
   }
 
   Future<void> attemptRefreshToken() async {
-    print("refreshing!");
     final repository = ref.read(authenticationRepositoryProvider);
-    await repository.refreshToken();
+    final newToken = await repository.refreshToken();
+    final current = await future;
+    state = AsyncData(current.copyWith(token: newToken, isAuthed: true));
   }
 
   Future<String> getUserEmail() async {
-    print("Asking");
     final repository = await ref.read(userRepositoryProvider.future);
     return repository.getUserEmail();
   }

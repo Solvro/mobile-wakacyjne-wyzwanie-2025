@@ -18,15 +18,17 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   const AuthenticationRepositoryImpl({required this.localAuth, required this.remoteAuth});
 
   @override
-  Future<void> login({required String email, required String password}) async {
+  Future<String> login({required String email, required String password}) async {
     final (accessToken, refreshToken) = await remoteAuth.login(email: email, password: password);
     await localAuth.saveTokens(accessToken: accessToken, refreshToken: refreshToken);
+    return accessToken;
   }
 
   @override
-  Future<void> register({required String email, required String password}) async {
+  Future<String> register({required String email, required String password}) async {
     final (accessToken, refreshToken) = await remoteAuth.register(email: email, password: password);
     await localAuth.saveTokens(accessToken: accessToken, refreshToken: refreshToken);
+    return accessToken;
   }
 
   @override
