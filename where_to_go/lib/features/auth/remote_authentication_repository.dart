@@ -1,9 +1,9 @@
 import "package:dio/dio.dart";
 
 abstract class RemoteAuthenticationRepository {
-  Future<void> logIn(String email, String password);
-  Future<void> signIn(String email, String password);
-  Future<void> refreshToken(String refreshToken);
+  Future<(String, String)> logIn(String email, String password);
+  Future<(String, String)> signIn(String email, String password);
+  Future<dynamic> refreshToken(String refreshToken);
 }
 
 class RemoteAuthenticationRepositoryImpl implements RemoteAuthenticationRepository {
@@ -43,13 +43,14 @@ class RemoteAuthenticationRepositoryImpl implements RemoteAuthenticationReposito
   }
 
   @override
-  Future<String?> refreshToken(String refreshToken) async {
-    final response = await dio.post<Map<String, String>>("/auth/refresh", data: {"refreshToken": refreshToken});
-
-    if (response.statusCode == 200) {
-      return response.data?["accessToken"];
-    } else {
-      throw Exception("Token refresh failed");
+  Future<dynamic> refreshToken(String refreshToken) async {
+    var response;
+    try {
+      final response = await dio.post("/auth/refresh", data: {"refreshToken": refreshToken});
+      return response.data["accessToken"];
+    } catch (e) {
+      print("Response from refreshToken: $response");
+      print("Error during token refresh: $e");
     }
   }
 }

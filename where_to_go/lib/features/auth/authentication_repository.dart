@@ -7,6 +7,7 @@ abstract class AuthenticationRepository {
   Future<(String, String)> logIn(String email, String password);
   Future<(String, String)> signIn(String email, String password);
   Future<void> deleteTokens();
+  Future<dynamic> refreshToken(String refreshToken);
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -27,4 +28,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<void> saveTokens(String accessToken, String refreshToken) => _local.saveTokens(accessToken, refreshToken);
+
+  @override
+  Future<dynamic> refreshToken(String refreshToken) => _remote.refreshToken(refreshToken);
 }
