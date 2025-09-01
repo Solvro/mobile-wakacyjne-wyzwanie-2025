@@ -19,7 +19,8 @@ class MyApp extends ConsumerWidget {
 
     final dark = ThemeData(
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber, brightness: Brightness.dark),
+      colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.amber, brightness: Brightness.dark),
       appBarTheme: const AppBarTheme(centerTitle: false),
       useMaterial3: true,
     );
