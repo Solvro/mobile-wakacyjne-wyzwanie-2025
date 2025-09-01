@@ -1,6 +1,9 @@
+import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
+import "features/auth/authentication_repository_provider.dart";
+import "features/auth/tokens_provider.dart";
 import "features/database/dream_place_provider.dart";
 import "features/theme/local_theme_provider.dart";
 import "features/theme/local_theme_repository.dart";
@@ -16,66 +19,113 @@ class HomeScreen extends ConsumerWidget {
     final themeAsync = ref.watch(localThemeNotifierProvider);
     final dreamPlacesAsync = ref.watch(dreamPlacesProvider);
 
-    return themeAsync.when(
-      data: (currentTheme) {
-        final icon = currentTheme == LocalTheme.light ? Icons.light_mode : Icons.dark_mode;
-        return dreamPlacesAsync.when(
-          data: (dreamPlaces) {
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: Scaffold(
-                    key: ValueKey(currentTheme),
-                    backgroundColor: palette.getPrimaryColor(currentTheme, context),
-                    appBar: AppBar(
-                      title: Text("My Favorite Places",
-                          style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: palette.getSecondaryColor(currentTheme, context))),
-                      actions: [
-                        IconButton(
+    return dreamPlacesAsync.when(
+      data: (data) {
+        final results = (data.first as Map<String, dynamic>)["results"] as List<dynamic>;
+        final dreamPlaces = results.cast<Map<String, dynamic>>();
+        return themeAsync.when(
+            data: (currentTheme) {
+              final icon = currentTheme == LocalTheme.light ? Icons.light_mode : Icons.dark_mode;
+              return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Scaffold(
+                      key: ValueKey(currentTheme),
+                      backgroundColor: palette.getPrimaryColor(currentTheme, context),
+                      appBar: AppBar(
+                        leading: IconButton(
                           icon: Icon(
-                            icon,
+                            Icons.logout,
                             color: palette.getSecondaryColor(currentTheme, context),
                             size: 28,
                           ),
                           onPressed: () async {
-                            await ref.read(localThemeNotifierProvider.notifier).toggleTheme();
+                            await ref.read(authenticationRepositoryProvider).deleteTokens();
+                            ref.invalidate(tokensProvider);
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: palette.getPrimaryColor(currentTheme, context),
                           ),
                         ),
-                      ],
-                      backgroundColor: palette.getPrimaryColor(currentTheme, context),
-                    ),
-                    body: GridView.count(
+                        title: Text("My Favorite Places",
+                            style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: palette.getSecondaryColor(currentTheme, context))),
+                        actions: [
+                          IconButton(
+                            icon: Icon(
+                              icon,
+                              color: palette.getSecondaryColor(currentTheme, context),
+                              size: 28,
+                            ),
+                            onPressed: () async {
+                              await ref.read(localThemeNotifierProvider.notifier).toggleTheme();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: palette.getPrimaryColor(currentTheme, context),
+                            ),
+                          ),
+                        ],
+                        backgroundColor: palette.getPrimaryColor(currentTheme, context),
+                      ),
+                      body: GridView.count(
                         primary: false,
                         padding: const EdgeInsets.all(20),
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                         crossAxisCount: 2,
                         children: [
-                          for (final place in dreamPlaces)
-                            GestureDetector(
-                              onTap: () async {
-                                await context.push("/details/${place.id}");
-                              },
+                          // Add tile
+                          GestureDetector(
+                            onTap: () => context.push("/add"),
+                            child: Card(
+                              color: palette.getPrimaryColor(currentTheme, context),
+                              shadowColor: palette.getSecondaryColor(currentTheme, context),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              child: Center(
+                                child:
+                                    Icon(Icons.add, size: 64, color: palette.getSecondaryColor(currentTheme, context)),
+                              ),
+                            ),
+                          ),
+                          // One grid item per place, stable key per place
+                          ...dreamPlaces.map((place) {
+                            final id = place["id"] as int;
+                            return GestureDetector(
+                              key: ValueKey("place_$id"),
+                              onTap: () => context.push("/details/$id"),
                               child: Card(
                                 color: palette.getPrimaryColor(currentTheme, context),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: ClipRRect(
                                         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                                        child: Image.asset(
-                                          place.image,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
+                                        child: FutureBuilder<Uint8List?>(
+                                          future: (() async {
+                                            final repo = await ref.read(dreamPlaceRepositoryProvider.future);
+                                            final tokens = await ref.read(tokensProvider.future);
+                                            final access = tokens.$1; // nullable
+                                            final imageUrl = place["imageUrl"] as String?;
+                                            return repo.getPhotoBytes(imageUrl, access);
+                                          })(),
+                                          builder: (context, snap) {
+                                            if (snap.connectionState == ConnectionState.waiting) {
+                                              return const Center(child: CircularProgressIndicator());
+                                            }
+                                            final bytes = snap.data;
+                                            if (bytes == null || bytes.isEmpty) {
+                                              return Container(color: Colors.grey[200]); // placeholder
+                                            }
+                                            return Image.memory(
+                                              bytes,
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                              gaplessPlayback: true,
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -85,7 +135,7 @@ class HomeScreen extends ConsumerWidget {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              place.name,
+                                              place["name"] as String,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: palette.getSecondaryColor(currentTheme, context),
@@ -95,8 +145,8 @@ class HomeScreen extends ConsumerWidget {
                                             ),
                                           ),
                                           Icon(
-                                            place.isFavourite ? Icons.favorite : Icons.favorite_border,
-                                            color: place.isFavourite
+                                            place["isFavourite"] as bool ? Icons.favorite : Icons.favorite_border,
+                                            color: place["isFavourite"] as bool
                                                 ? Colors.red
                                                 : palette.getSecondaryColor(currentTheme, context),
                                             size: 20,
@@ -107,15 +157,16 @@ class HomeScreen extends ConsumerWidget {
                                   ],
                                 ),
                               ),
-                            )
-                        ].toList())));
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => const Center(child: Text("Error loading database")),
-        );
+                            );
+                          }),
+                        ],
+                      )));
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (err, stack) => Text("Error: $err"));
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => const Center(child: Text("Error loading theme")),
+      error: (err, stack) => const Center(child: Text("Error loading dreamPlaces")),
     );
   }
 }

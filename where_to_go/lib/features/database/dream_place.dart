@@ -1,9 +1,15 @@
-import "package:drift/drift.dart";
+class DreamPlace {
+  final int? id;
+  final String name;
+  final String description;
+  final String imageUrl;
+  final bool isFavourite;
 
-class DreamPlaces extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
-  TextColumn get description => text()();
-  TextColumn get image => text()();
-  BoolColumn get isFavourite => boolean().withDefault(const Constant(false))();
+  const DreamPlace({
+    this.id,
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    this.isFavourite = false,
+  });
 }

@@ -1,17 +1,21 @@
-import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:riverpod_annotation/riverpod_annotation.dart";
 import "dream_place_repository.dart";
 
-final dreamPlaceRepositoryProvider = FutureProvider<DreamPlaceRepository>((ref) async {
+@riverpod
+final dreamPlaceRepositoryProvider = FutureProvider<DreamPlaceRepository>((ref) {
   final repo = DreamPlaceRepository();
-  await repo.initDatabase();
+
   return repo;
 });
 
+@riverpod
 final dreamPlacesProvider = FutureProvider((ref) async {
   final repo = await ref.watch(dreamPlaceRepositoryProvider.future);
-  return repo.getAllDreamPlaces();
+  final dreamPlaces = await repo.getAllDreamPlaces(ref);
+  return dreamPlaces;
 });
 
+@riverpod
 final toggleDreamPlaceFavouriteProvider = FutureProvider.family<void, int>((ref, id) async {
   final repo = await ref.watch(dreamPlaceRepositoryProvider.future);
   await repo.toggleFavourite(id);
