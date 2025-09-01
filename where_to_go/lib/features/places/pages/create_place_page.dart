@@ -21,17 +21,15 @@ class CreatePlacePage extends ConsumerWidget {
       onSubmit: (Map<String, Object?> values) async {
         final name = values["name"]! as String;
         final description = values["description"]! as String;
-        print("fav: ${values["isFavourite"]}");
         final isFavourite = values["isFavourite"] != null && values["isFavourite"]! as bool;
         final file = values["image"]! as File;
-        final p = await ref.read(dreamPlaceServiceProvider.notifier).createDreamPlaceWithPhoto(
+        await ref.read(dreamPlaceServiceProvider.notifier).createDreamPlaceWithPhoto(
             CreatePlaceDTO(
               name: name,
               description: description,
               isFavourite: isFavourite,
             ),
             file);
-        print(p);
         if (context.mounted) await GoRouter.of(context).push(HomePage.route);
       },
     );

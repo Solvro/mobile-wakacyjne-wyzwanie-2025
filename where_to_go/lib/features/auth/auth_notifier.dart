@@ -46,6 +46,8 @@ class AuthNotifier extends _$AuthNotifier {
       state = AsyncData(AuthState(isAuthed: true, token: token));
       return true;
     } on DioException catch (e) {
+      print("hate you");
+      print(e.message);
       print(e.response);
       return false;
     }
@@ -57,8 +59,7 @@ class AuthNotifier extends _$AuthNotifier {
       final token = await repository.register(email: email, password: password);
       state = AsyncData(AuthState(isAuthed: true, token: token));
       return true;
-    } on DioException catch (e) {
-      print(e.response);
+    } on DioException {
       return false;
     }
   }

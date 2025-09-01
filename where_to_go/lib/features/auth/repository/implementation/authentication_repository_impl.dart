@@ -48,7 +48,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (refreshToken == null) return null;
     final newToken = await remoteAuth.refreshAccessToken(refreshToken: refreshToken);
     await localAuth.saveTokens(accessToken: newToken, refreshToken: refreshToken);
-    print("new: $newToken");
     return newToken;
   }
 

@@ -41,7 +41,7 @@ abstract class RestClient {
   Future<DreamPlace> getPlace(@Path() int id);
 
   @DELETE("/places/{id}")
-  Future<DreamPlace> deletePlace(@Path() int id);
+  Future<void> deletePlace(@Path() int id);
 
   @PUT("/places/{id}")
   Future<DreamPlace> updatePlace(@Path() int id, @Body() CreatePlaceDTO place);
@@ -62,7 +62,7 @@ RestClient client(
 }) {
   final dio = Dio();
   dio.options.headers["Authorization"] = (token != null) ? "Bearer $token" : null;
-  dio.interceptors.add(InterceptorsWrapper(onError: onError));
+  onError ?? dio.interceptors.add(InterceptorsWrapper(onError: onError));
 
   return RestClient(dio);
 }

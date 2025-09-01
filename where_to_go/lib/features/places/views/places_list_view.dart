@@ -7,6 +7,7 @@ import "../../common/widgets/profile_button.dart";
 import "../../common/widgets/theme_selector_button.dart";
 import "../pages/create_place_page.dart";
 import "../service/dream_place_service.dart";
+import "../utils/show_actions_menu.dart";
 import "../widgets/dream_place_list_tile.dart";
 import "place_detail_view.dart";
 
@@ -34,6 +35,14 @@ class PlacesListView extends ConsumerWidget {
           data: (places) => ListView.builder(
             itemCount: places.length,
             itemBuilder: (context, index) => GestureDetector(
+              onLongPressStart: (details) async {
+                await showDeleteMenu(
+                  context: context,
+                  position: details.globalPosition,
+                  ref: ref,
+                  placeId: places[index].id,
+                );
+              },
               onTap: () => GoRouter.of(context).push("${PlaceDetailView.route}/${places[index].id}"),
               child: DreamPlaceListTile(dreamPlace: places[index]),
             ),

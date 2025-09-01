@@ -33,9 +33,16 @@ class DreamPlaceService extends _$DreamPlaceService {
     final path = await photoRepo.uploadImage(file);
     final newPlace = await placeRepo.save(
         name: place.name!, description: place.description!, imageUrl: path, isFavourite: place.isFavourite!);
-
     state = AsyncData(await placeRepo.getAll());
     return newPlace;
+  }
+
+  Future<void> deleteDreamPlace(int id) async {
+    final placeRepo = await ref.read(dreamPlaceRepositoryProvider.future);
+    await placeRepo.delete(id);
+    final currentState = await future;
+    currentState.removeWhere((place) => place.id == id);
+    state = AsyncValue.data(currentState);
   }
 }
 
