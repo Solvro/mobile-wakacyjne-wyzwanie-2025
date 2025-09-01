@@ -10,7 +10,6 @@ class ThemeSelectorButton extends ConsumerWidget {
     return PopupMenuButton<ThemeMode>(
       icon: const Icon(Icons.color_lens),
       onSelected: (ThemeMode mode) async {
-        debugPrint("Selected theme mode: $mode");
         await ref.read(themeNotifierProvider.notifier).setThemeMode(mode);
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<ThemeMode>>[

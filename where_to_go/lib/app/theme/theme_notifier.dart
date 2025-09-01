@@ -1,5 +1,5 @@
 import "package:riverpod_annotation/riverpod_annotation.dart";
-import "../../repository/implementation/local_theme_repository_impl.dart";
+import "../persistance/repository/local_theme_repository_impl.dart";
 import "theme_mode.dart";
 
 part "theme_notifier.g.dart";

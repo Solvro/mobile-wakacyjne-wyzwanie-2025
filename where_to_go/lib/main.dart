@@ -1,10 +1,5 @@
-import "dart:async";
-
 import "package:flutter/material.dart" hide ThemeMode;
-import "package:flutter_hooks/flutter_hooks.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
-import "app/persistance/database/drift_database.dart";
-import "app/persistance/database/helpers/seeder.dart";
 import "app/router.dart";
 import "app/theme/app_theme.dart";
 import "app/theme/theme_extension.dart";
@@ -20,17 +15,11 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeToSet = context.setTheme(ref);
-    final db = ref.read(appDatabaseProvider);
-
-    useEffect(() {
-      unawaited(db.seedIfEmpty());
-      return null;
-    }, const []);
-
+    final router = ref.watch(goRouterProvider);
     return MaterialApp.router(
       title: "Where to Go",
       theme: themeToSet == ThemeMode.light ? AppTheme().light : AppTheme().dark,
-      routerConfig: goRouter,
+      routerConfig: router,
     );
   }
 }

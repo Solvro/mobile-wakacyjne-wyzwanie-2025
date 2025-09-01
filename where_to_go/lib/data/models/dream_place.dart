@@ -1,49 +1,25 @@
-import "../../app/persistance/database/helpers/dream_place_attraction.dart";
-import "../../repository/implementation/attraction_converter_helper.dart";
-import "attraction.dart";
+import "package:json_annotation/json_annotation.dart";
 
+part "dream_place.g.dart";
+
+@JsonSerializable()
 class DreamPlace {
-  final String id;
-  final String title;
+  final int id;
+  final String name;
   final String description;
-  final String location;
-  final String imagePath;
-  final List<Attraction> attractions;
-  final bool isFavorited;
+  final String imageUrl;
+  final bool isFavourite;
+  final String ownerEmail;
 
-  const DreamPlace(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.location,
-      required this.imagePath,
-      required this.attractions,
-      this.isFavorited = false});
+  DreamPlace({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    required this.isFavourite,
+    required this.ownerEmail,
+  });
 
-  DreamPlace copyWith({bool? isFavorited}) {
-    return DreamPlace(
-      id: id,
-      title: title,
-      description: description,
-      location: location,
-      imagePath: imagePath,
-      attractions: attractions,
-      isFavorited: isFavorited ?? this.isFavorited,
-    );
-  }
-
-  factory DreamPlace.fromDbModel(DreamPlaceWithAttractions dbModel) {
-    final place = dbModel.place;
-    final attractions = dbModel.attractions.map(attractionFromValue).toList();
-
-    return DreamPlace(
-      id: place.id.toString(),
-      title: place.name,
-      description: place.description,
-      location: place.location,
-      imagePath: place.imageUrl,
-      attractions: attractions,
-      isFavorited: place.isFavorited,
-    );
-  }
+  factory DreamPlace.fromJson(Map<String, dynamic> json) => _$DreamPlaceFromJson(json);
+  Map<String, dynamic> toJson() => _$DreamPlaceToJson(this);
 }
