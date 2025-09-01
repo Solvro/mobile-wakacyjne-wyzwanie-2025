@@ -3,16 +3,16 @@ import "package:go_router/go_router.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
 import "../../../app/theme/app_theme.dart";
-import "../../auth/auth_notifier.dart";
+import "../../common/widgets/profile_button.dart";
 import "../../common/widgets/theme_selector_button.dart";
 import "../pages/create_place_page.dart";
 import "../service/dream_place_service.dart";
 import "../widgets/dream_place_list_tile.dart";
 import "place_detail_view.dart";
 
-class PlacesListScreen extends ConsumerWidget {
-  final void Function() onLogout;
-  const PlacesListScreen({super.key, required this.onLogout});
+class PlacesListView extends ConsumerWidget {
+  final void Function() onError;
+  const PlacesListView({super.key, required this.onError});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,13 +23,14 @@ class PlacesListScreen extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: const Text("Przeglądaj piękne miejsca"),
-          leading: IconButton(onPressed: onLogout, icon: const Icon(Icons.exit_to_app)),
+          leading: const ProfileButton(),
           actions: [ThemeSelectorButton()],
         ),
         body: dreamPlacesList.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) {
-            ref.read(authNotifierProvider.notifier).logout();
+            print("got error: $error");
+            onError();
             return null;
           },
           data: (places) => ListView.builder(

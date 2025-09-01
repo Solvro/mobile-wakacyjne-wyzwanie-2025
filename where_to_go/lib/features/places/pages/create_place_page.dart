@@ -21,7 +21,8 @@ class CreatePlacePage extends ConsumerWidget {
       onSubmit: (Map<String, Object?> values) async {
         final name = values["name"]! as String;
         final description = values["description"]! as String;
-        final isFavourite = values["isFavourite"] != null;
+        print("fav: ${values["isFavourite"]}");
+        final isFavourite = values["isFavourite"] != null && values["isFavourite"]! as bool;
         final file = values["image"]! as File;
         final p = await ref.read(dreamPlaceServiceProvider.notifier).createDreamPlaceWithPhoto(
             CreatePlaceDTO(

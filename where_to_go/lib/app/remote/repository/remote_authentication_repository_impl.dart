@@ -1,7 +1,7 @@
-import "../../../../app/remote/retrofit_client.dart";
-import "../../../../data/models/refresh_request.dart";
-import "../../../../data/models/user_data.dart";
-import "../remote_authentication_repository.dart";
+import "../../../data/models/refresh_request.dart";
+import "../../../data/models/user_data.dart";
+import "../../../features/auth/repository/remote_authentication_repository.dart";
+import "../retrofit_client.dart";
 
 class RemoteAuthenticationRepositoryImpl implements RemoteAuthenticationRepository {
   final RestClient _client;

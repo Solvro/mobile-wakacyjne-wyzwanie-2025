@@ -13,6 +13,7 @@ import "../../data/models/refresh_request.dart";
 import "../../data/models/refresh_response.dart";
 import "../../data/models/tokens.dart";
 import "../../data/models/user_data.dart";
+import "../../data/models/user_info.dart";
 import "paths.dart";
 
 part "retrofit_client.g.dart";
@@ -29,6 +30,9 @@ abstract class RestClient {
 
   @POST("/auth/refresh")
   Future<RefreshResponse> refresh(@Body() RefreshRequest token);
+
+  @GET("/auth/me")
+  Future<UserInfo> me();
 
   @GET("/places")
   Future<PaginatedDreamPlaces> getPlaces(@Query("sort") String sort, @Query("sortBy") String sortBy);

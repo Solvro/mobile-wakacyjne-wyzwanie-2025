@@ -1,6 +1,6 @@
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
-import "../local_authentication_repository.dart";
+import "../../../features/auth/repository/local_authentication_repository.dart";
 
 class LocalAuthenticationRepositoryImpl implements LocalAuthenticationRepository {
   static const _accessTokenKey = "access_token";

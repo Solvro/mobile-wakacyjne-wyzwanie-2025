@@ -1,5 +1,6 @@
 import "package:dio/dio.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
+import "../../app/remote/repository/user_repository_impl.dart";
 import "repository/implementation/authentication_repository_impl.dart";
 
 part "auth_notifier.g.dart";
@@ -47,5 +48,17 @@ class AuthNotifier extends _$AuthNotifier {
     final repository = ref.read(authenticationRepositoryProvider);
     await repository.logout();
     state = const AsyncData(AuthState.unauthed);
+  }
+
+  Future<void> attemptRefreshToken() async {
+    print("refreshing!");
+    final repository = ref.read(authenticationRepositoryProvider);
+    await repository.refreshToken();
+  }
+
+  Future<String> getUserEmail() async {
+    print("Asking");
+    final repository = await ref.read(userRepositoryProvider.future);
+    return repository.getUserEmail();
   }
 }

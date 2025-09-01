@@ -14,7 +14,7 @@ part "dream_place_service.g.dart";
 class DreamPlaceService extends _$DreamPlaceService {
   @override
   Future<List<DreamPlace>> build() async {
-    final repo = await ref.read(dreamPlaceRepositoryProvider.future);
+    final repo = await ref.watch(dreamPlaceRepositoryProvider.future);
     return repo.getAll();
   }
 

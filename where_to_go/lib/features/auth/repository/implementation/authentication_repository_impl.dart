@@ -2,12 +2,12 @@ import "package:flutter_secure_storage/flutter_secure_storage.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
+import "../../../../app/persistance/repository/local_authentication_repository_impl.dart";
+import "../../../../app/remote/repository/remote_authentication_repository_impl.dart";
 import "../../../../app/remote/retrofit_client.dart";
 import "../authentication_repository.dart";
 import "../local_authentication_repository.dart";
 import "../remote_authentication_repository.dart";
-import "local_authentication_repository_impl.dart";
-import "remote_authentication_repository_impl.dart";
 
 part "authentication_repository_impl.g.dart";
 
@@ -44,7 +44,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<String?> refreshToken() async {
     final (_, refreshToken) = await localAuth.readTokens();
     if (refreshToken == null) return null;
-    return remoteAuth.refreshAccessToken(refreshToken: refreshToken);
+    final newToken = await remoteAuth.refreshAccessToken(refreshToken: refreshToken);
+    await localAuth.saveTokens(accessToken: newToken, refreshToken: refreshToken);
+    print("new: $newToken");
+    return newToken;
   }
 
   @override

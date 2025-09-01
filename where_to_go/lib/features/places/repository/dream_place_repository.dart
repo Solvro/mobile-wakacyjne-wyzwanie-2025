@@ -1,4 +1,4 @@
-import "../data/models/dream_place.dart";
+import "../../../data/models/dream_place.dart";
 
 abstract class DreamPlaceRepository {
   const DreamPlaceRepository();

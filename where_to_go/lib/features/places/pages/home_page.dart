@@ -12,10 +12,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return PlacesListScreen(
-      onLogout: () {
-        ref.read(authNotifierProvider.notifier).logout();
-      },
-    );
+    return PlacesListView(onError: () async {
+      await ref.read(authNotifierProvider.notifier).attemptRefreshToken();
+    });
   }
 }
