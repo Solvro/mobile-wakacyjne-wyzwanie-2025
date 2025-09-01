@@ -15,7 +15,7 @@ class AppTheme implements AppThemeData {
           onSecondary: Color.fromARGB(255, 43, 43, 44),
           tertiary: Color.fromARGB(255, 226, 67, 67),
           shadow: Color.fromARGB(25, 219, 219, 221),
-          error: Color.fromARGB(255, 212, 84, 84),
+          error: Color.fromARGB(255, 168, 58, 58),
         ),
         textTheme: _textTheme,
       );
@@ -29,7 +29,7 @@ class AppTheme implements AppThemeData {
           onSecondary: Color.fromARGB(255, 224, 224, 231),
           tertiary: Color.fromARGB(255, 118, 13, 13),
           shadow: Color.fromARGB(25, 43, 43, 44),
-          error: Color.fromARGB(255, 173, 48, 48),
+          error: Color.fromARGB(255, 234, 143, 143),
         ),
         textTheme: _textTheme,
       );
