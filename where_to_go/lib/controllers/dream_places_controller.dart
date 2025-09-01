@@ -26,10 +26,11 @@ class DreamPlacesController extends StateNotifier<List<DreamPlace>> {
   }
 
   Future<void> _init() async {
+    _box = await repository.openBox();
+    await repository.seedIfEmpty();
+
     final places = await repository.getAll();
     state = places;
-
-    _box = await Hive.openBox<DreamPlace>(DreamPlacesRepository.boxName);
 
     _subscription = _box!.watch().listen((event) {
       state = _box!.values.toList();
