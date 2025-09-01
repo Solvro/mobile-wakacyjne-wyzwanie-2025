@@ -7,7 +7,7 @@ import "../features/auth/pages/login_page.dart";
 import "../features/auth/pages/register_page.dart";
 import "../features/places/pages/create_place_page.dart";
 import "../features/places/pages/home_page.dart";
-import "../features/places/views/dream_place_screen_consumer_widget.dart";
+import "../features/places/views/place_detail_view.dart";
 
 part "router.g.dart";
 
@@ -38,10 +38,10 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const CreatePlacePage(),
       ),
       GoRoute(
-        path: "${DreamPlaceScreenConsumerWidget.route}/:id",
+        path: "${PlaceDetailView.route}/:id",
         builder: (context, state) {
           final id = state.pathParameters["id"]!;
-          return DreamPlaceScreenConsumerWidget(id: int.parse(id));
+          return PlaceDetailView(id: int.parse(id));
         },
       ),
       GoRoute(

@@ -5,8 +5,8 @@ import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
 import "../service/dream_place_service.dart";
 
-class DreamPlaceScreenConsumerWidget extends ConsumerWidget {
-  const DreamPlaceScreenConsumerWidget({super.key, required this.id});
+class PlaceDetailView extends ConsumerWidget {
+  const PlaceDetailView({super.key, required this.id});
 
   static String route = "/dream_place";
   final int id;

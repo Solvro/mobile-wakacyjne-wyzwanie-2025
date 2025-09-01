@@ -5,8 +5,8 @@ import "../../../app/theme/app_theme.dart";
 import "../../../app/ui_config.dart";
 import "../../../data/models/dream_place.dart";
 
-class ListViewTile extends StatelessWidget {
-  const ListViewTile({required this.dreamPlace});
+class DreamPlaceListTile extends StatelessWidget {
+  const DreamPlaceListTile({required this.dreamPlace});
 
   final DreamPlace dreamPlace;
 

@@ -3,9 +3,9 @@ import "dart:io";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
-import "../../app/remote/authed_client.dart";
-import "../../app/remote/retrofit_client.dart";
-import "../photo_repository.dart";
+import "../../../features/photos/repository/photo_repository.dart";
+import "../authed_client.dart";
+import "../retrofit_client.dart";
 
 part "photo_repository_impl.g.dart";
 

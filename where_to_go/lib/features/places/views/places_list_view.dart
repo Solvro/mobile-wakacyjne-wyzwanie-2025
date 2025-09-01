@@ -7,8 +7,8 @@ import "../../auth/auth_notifier.dart";
 import "../../common/widgets/theme_selector_button.dart";
 import "../pages/create_place_page.dart";
 import "../service/dream_place_service.dart";
-import "../widgets/list_view_tile.dart";
-import "dream_place_screen_consumer_widget.dart";
+import "../widgets/dream_place_list_tile.dart";
+import "place_detail_view.dart";
 
 class PlacesListScreen extends ConsumerWidget {
   final void Function() onLogout;
@@ -35,8 +35,8 @@ class PlacesListScreen extends ConsumerWidget {
           data: (places) => ListView.builder(
             itemCount: places.length,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: () => GoRouter.of(context).push("${DreamPlaceScreenConsumerWidget.route}/${places[index].id}"),
-              child: ListViewTile(dreamPlace: places[index]),
+              onTap: () => GoRouter.of(context).push("${PlaceDetailView.route}/${places[index].id}"),
+              child: DreamPlaceListTile(dreamPlace: places[index]),
             ),
           ),
         ),

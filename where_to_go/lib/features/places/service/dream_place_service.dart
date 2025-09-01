@@ -3,10 +3,10 @@ import "dart:io";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
+import "../../../app/remote/repository/dream_place_repository_impl.dart";
+import "../../../app/remote/repository/photo_repository_impl.dart";
 import "../../../data/models/create_place_dto.dart";
 import "../../../data/models/dream_place.dart";
-import "../../../repository/implementation/dream_place_repository_impl.dart";
-import "../../../repository/implementation/photo_repository_impl.dart";
 
 part "dream_place_service.g.dart";
 

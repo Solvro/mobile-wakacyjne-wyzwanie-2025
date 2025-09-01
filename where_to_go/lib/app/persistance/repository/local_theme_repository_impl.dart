@@ -2,9 +2,9 @@ import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-import "../../app/persistance/shared_preferences.dart";
-import "../../app/theme/theme_mode.dart";
-import "../local_theme_repository.dart";
+import "../../theme/repository/local_theme_repository.dart";
+import "../../theme/theme_mode.dart";
+import "../shared_preferences.dart";
 
 part "local_theme_repository_impl.g.dart";
 

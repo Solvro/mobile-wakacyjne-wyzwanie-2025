@@ -1,11 +1,11 @@
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
-import "../../app/remote/authed_client.dart";
-import "../../app/remote/retrofit_client.dart";
-import "../../data/models/create_place_dto.dart";
-import "../../data/models/dream_place.dart";
-import "../dream_place_repository.dart";
+import "../../../data/models/create_place_dto.dart";
+import "../../../data/models/dream_place.dart";
+import "../../../features/places/repository/dream_place_repository.dart";
+import "../authed_client.dart";
+import "../retrofit_client.dart";
 
 part "dream_place_repository_impl.g.dart";
 
