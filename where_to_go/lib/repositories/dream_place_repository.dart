@@ -28,13 +28,11 @@ class DreamPlacesRepository {
   Future<int> add(DreamPlace place) async {
     final box = await _openBox();
     final key = await box.add(place);
-    // place.key is now assigned after saving; you can also do place.save()
     return key;
   }
 
   /// UPDATE
   Future<void> update(DreamPlace place) async {
-    // place.key musi być ustawione (czyli obiekt był wcześniej zapisany)
     if (place.key == null) {
       throw Exception('Object has no key. Use add() for new items.');
     }
@@ -64,36 +62,33 @@ class DreamPlacesRepository {
 
     final sample = [
       DreamPlace(
-        name: 'Paryż',
-        description: 'Miasto świateł',
-        imageUrl:
-            'https://images.unsplash.com/photo-1543340713-8d1a8aa71f06?w=1200',
+        name: "Sycylia, Włochy",
+        description: "Wulkan Etna i piękne plaże",
+        imageUrl: "assets/images/sycylia.png",
         isFavorite: true,
       ),
       DreamPlace(
-        name: 'Tokio',
-        description: 'Futurystyczna metropolia',
-        imageUrl:
-            'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=1200',
+        name: "Santorini, Grecja",
+        description: "Białe domki nad morzem",
+        imageUrl: "assets/images/santorini.png",
+        isFavorite: false,
       ),
       DreamPlace(
-        name: 'Nowy Jork',
-        description: 'Miasto, które nigdy nie śpi',
-        imageUrl:
-            'https://images.unsplash.com/photo-1529624463034-8b35f53f1e6b?w=1200',
+        name: "Bali, Indonezja",
+        description: "Świątynie i tropikalne plaże",
+        imageUrl: "assets/images/bali.jpg",
         isFavorite: true,
       ),
       DreamPlace(
-        name: 'Rzym',
-        description: 'Historia na każdym kroku',
-        imageUrl:
-            'https://images.unsplash.com/photo-1543352634-87367e72b32d?w=1200',
+        name: "Nowy Jork, USA",
+        description: "Central Park i wieżowce",
+        imageUrl: "assets/images/nowyJork.jpg",
+        isFavorite: false,
       ),
       DreamPlace(
-        name: 'Sydney',
-        description: 'Opera House i plaże',
-        imageUrl:
-            'https://images.unsplash.com/photo-1506976785307-8732e854ad75?w=1200',
+        name: "Tokio, Japonia",
+        description: "Technologia i kultura",
+        imageUrl: "assets/images/tokio.png",
         isFavorite: true,
       ),
     ];
@@ -101,5 +96,16 @@ class DreamPlacesRepository {
     for (final p in sample) {
       await box.add(p);
     }
+  }
+
+  /// Clear all data
+  Future<void> clearAll() async {
+    final box = await _openBox();
+    await box.clear();
+  }
+
+  /// Public method for controller
+  Future<Box<DreamPlace>> openBox() async {
+    return await _openBox();
   }
 }
