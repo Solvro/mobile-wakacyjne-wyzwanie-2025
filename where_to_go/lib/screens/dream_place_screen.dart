@@ -16,6 +16,14 @@ class DreamPlaceScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Ulubione miejsca!", style: TextStyle(fontSize: 24)),
         backgroundColor: Colors.amber[200],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () {
+              // ref.read(themeProvider.notifier).toggleTheme();
+            },
+          ),
+        ],
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(12),
