@@ -37,7 +37,8 @@ class DreamPlaceScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final place = places[index];
           return GestureDetector(
-            onTap: () => GoRouter.of(context).push("${DetailsScreen.route}/${place.id}"),
+            onTap: () =>
+                GoRouter.of(context).push("${DetailsScreen.route}/${place.id}"),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Container(
@@ -64,7 +65,9 @@ class DreamPlaceScreen extends ConsumerWidget {
                             ),
                           ),
                           Icon(
-                            place.isFavorite ? Icons.favorite : Icons.favorite_border,
+                            place.isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: place.isFavorite ? Colors.red : Colors.black,
                             size: 18,
                           )

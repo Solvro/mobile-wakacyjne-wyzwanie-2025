@@ -5,17 +5,21 @@ part 'dream_place.g.dart';
 @HiveType(typeId: 0)
 class DreamPlace extends HiveObject {
   @HiveField(0)
-  final String name;
+  String name;
 
   @HiveField(1)
-  final String description;
+  String? description;
 
   @HiveField(2)
-  final String imageUrl;
+  String? imageUrl;
+
+  @HiveField(3)
+  bool isFavorite;
 
   DreamPlace({
     required this.name,
-    required this.description,
-    required this.imageUrl,
+    this.description,
+    this.imageUrl,
+    this.isFavorite = false,
   });
 }

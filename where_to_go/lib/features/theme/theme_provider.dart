@@ -1,32 +1,32 @@
-import "dart:async";
-
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-
-import "local_theme_repository.dart";
+// lib/features/theme/theme_provider.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'local_theme_repository.dart';
 
 final localThemeRepositoryProvider = Provider<LocalThemeRepository>((ref) {
   return LocalThemeRepository();
 });
 
-final themeControllerProvider = StateNotifierProvider<ThemeController, ThemeMode>((ref) {
-  return ThemeController(ref.read(localThemeRepositoryProvider));
+final themeControllerProvider =
+    StateNotifierProvider<ThemeController, ThemeMode>((ref) {
+  final repo = ref.read(localThemeRepositoryProvider);
+  return ThemeController(repo);
 });
 
 class ThemeController extends StateNotifier<ThemeMode> {
-  ThemeController(this._repo) : super(ThemeMode.system) {
-    unawaited(_init());
-  }
-
   final LocalThemeRepository _repo;
+
+  ThemeController(this._repo) : super(ThemeMode.system) {
+    _init();
+  }
 
   Future<void> _init() async {
     final choice = await _repo.load();
     state = _mapChoice(choice);
   }
 
-  ThemeMode _mapChoice(ThemeChoice choice) {
-    switch (choice) {
+  ThemeMode _mapChoice(ThemeChoice c) {
+    switch (c) {
       case ThemeChoice.light:
         return ThemeMode.light;
       case ThemeChoice.dark:
