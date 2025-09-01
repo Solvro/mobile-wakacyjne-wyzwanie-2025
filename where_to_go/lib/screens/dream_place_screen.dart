@@ -1,84 +1,130 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:go_router/go_router.dart";
-import "../features/places/places_provider.dart";
-import "details_screen.dart";
+import 'package:dream_places/features/theme/local_theme_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class DreamPlaceScreen extends ConsumerWidget {
-  const DreamPlaceScreen({super.key});
+import '../controllers/dream_places_controller.dart';
+import '../features/theme/theme_provider.dart';
+import 'add_place_dialog.dart';
+
+class DreamPlacesScreen extends ConsumerWidget {
+  const DreamPlacesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final places = ref.watch(placesProvider);
+    final places = ref.watch(dreamPlacesControllerProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFCF8DD),
       appBar: AppBar(
-        title: const Text("Ulubione miejsca!", style: TextStyle(fontSize: 24)),
-        backgroundColor: Colors.amber[200],
+        title: const Text('Ulubione miejsca!'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: () {
-              // ref.read(themeProvider.notifier).toggleTheme();
+          PopupMenuButton<ThemeChoice>(
+            icon: const Icon(Icons.color_lens),
+            onSelected: (choice) {
+              ref.read(themeControllerProvider.notifier).setChoice(choice);
             },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: ThemeChoice.system,
+                child: Text('System'),
+              ),
+              PopupMenuItem(
+                value: ThemeChoice.light,
+                child: Text('Jasny'),
+              ),
+              PopupMenuItem(
+                value: ThemeChoice.dark,
+                child: Text('Ciemny'),
+              ),
+            ],
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.5,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: places.length,
-        itemBuilder: (context, index) {
-          final place = places[index];
-          return GestureDetector(
-            onTap: () =>
-                GoRouter.of(context).push("${DetailsScreen.route}/${place.id}"),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                color: Colors.yellow[600],
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Image.asset(
-                        place.imagePath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+      body: places.isEmpty
+          ? const Center(
+              child: Text('Brak miejsc — zobacz seedowane przykłady.'))
+          : GridView.builder(
+              padding: const EdgeInsets.all(12),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.5,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: places.length,
+              itemBuilder: (context, index) {
+                final place = places[index];
+                final placeKey = place.key as int?;
+
+                if (placeKey == null) {
+                  return const SizedBox();
+                }
+
+                return GestureDetector(
+                  onTap: () {
+                    context.go('/details/$placeKey');
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      child: Column(
                         children: [
                           Expanded(
-                            child: Text(
-                              place.title,
-                              style: const TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
+                            child: place.imageUrl != null &&
+                                    place.imageUrl!.isNotEmpty
+                                ? Image.network(
+                                    place.imageUrl!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (c, e, s) => const Center(
+                                        child: Icon(Icons.broken_image)),
+                                  )
+                                : const Center(child: Icon(Icons.image)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(place.name,
+                                      style: const TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                                const SizedBox(width: 6),
+                                Icon(
+                                  place.isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: place.isFavorite
+                                      ? Colors.red
+                                      : Theme.of(context).iconTheme.color,
+                                  size: 18,
+                                ),
+                              ],
                             ),
                           ),
-                          Icon(
-                            place.isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: place.isFavorite ? Colors.red : Colors.black,
-                            size: 18,
-                          )
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () async {
+          final newPlace = await showDialog(
+            context: context,
+            builder: (_) => const AddPlaceDialog(),
           );
+          if (newPlace != null) {
+            await ref
+                .read(dreamPlacesControllerProvider.notifier)
+                .addPlace(newPlace);
+          }
         },
       ),
     );

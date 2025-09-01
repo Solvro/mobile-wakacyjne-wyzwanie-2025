@@ -1,4 +1,3 @@
-// lib/controllers/dream_places_controller.dart
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,23 +26,18 @@ class DreamPlacesController extends StateNotifier<List<DreamPlace>> {
   }
 
   Future<void> _init() async {
-    _box = await repository._openBox();
-    // seed the database if empty
-    await repository.seedIfEmpty();
+    final places = await repository.getAll();
+    state = places;
 
-    // initial load
-    state = _box!.values.toList();
+    _box = await Hive.openBox<DreamPlace>(DreamPlacesRepository.boxName);
 
-    // listen to changes in the box and update state accordingly
     _subscription = _box!.watch().listen((event) {
-      // whenever something changes, refresh the state
       state = _box!.values.toList();
     });
   }
 
   Future<void> addPlace(DreamPlace place) async {
     await repository.add(place);
-    // repository.add will trigger box.watch -> subscription updates state
   }
 
   Future<void> deletePlace(int key) async {
@@ -57,6 +51,7 @@ class DreamPlacesController extends StateNotifier<List<DreamPlace>> {
   @override
   void dispose() {
     _subscription?.cancel();
+    _box?.close();
     super.dispose();
   }
 }
