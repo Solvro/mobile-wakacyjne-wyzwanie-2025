@@ -7,19 +7,17 @@ final tokensProvider = FutureProvider<(String?, String?)>((ref) async {
   final access = persisted.$1;
   final refresh = persisted.$2;
 
-  print("Tokens available in the provider: $persisted");
-
   // nothing persisted
   if (access == null || refresh == null) return (null, null);
 
   try {
     final fresh = await authRepo.refreshToken(refresh); // (access, refresh)
-    print("fresh accessToken: $fresh");
+    final freshAccess = fresh;
+
     // persist fresh tokens and return them
-    await authRepo.saveTokens(fresh! as String, refresh);
-    return (fresh as String, refresh);
-  } catch (e) {
-    print("Error refreshing token: $e");
+    await authRepo.saveTokens(freshAccess as String, refresh);
+    return (freshAccess, refresh);
+  } on Object catch (_) {
     // refresh failed — delete persisted tokens and return null
     await authRepo.deleteTokens();
     return (null, null);

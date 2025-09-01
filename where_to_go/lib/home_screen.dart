@@ -18,13 +18,11 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeAsync = ref.watch(localThemeNotifierProvider);
     final dreamPlacesAsync = ref.watch(dreamPlacesProvider);
-    final dreamPlaceRepositoryProviderAsync = ref.read(dreamPlaceRepositoryProvider);
 
     return dreamPlacesAsync.when(
       data: (data) {
-        final dreamPlaces = data.first["results"] as List<dynamic>;
-        print("dreamPlaces: $dreamPlaces");
-        print("dreamPlaces: $dreamPlaces");
+        final results = (data.first as Map<String, dynamic>)["results"] as List<dynamic>;
+        final dreamPlaces = results.cast<Map<String, dynamic>>();
         return themeAsync.when(
             data: (currentTheme) {
               final icon = currentTheme == LocalTheme.light ? Icons.light_mode : Icons.dark_mode;
@@ -42,7 +40,6 @@ class HomeScreen extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             await ref.read(authenticationRepositoryProvider).deleteTokens();
-                            print("deleting tokens");
                             ref.invalidate(tokensProvider);
                           },
                           style: OutlinedButton.styleFrom(
@@ -80,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
                         children: [
                           // Add tile
                           GestureDetector(
-                            onTap: () async => context.push("/add"),
+                            onTap: () => context.push("/add"),
                             child: Card(
                               color: palette.getPrimaryColor(currentTheme, context),
                               shadowColor: palette.getSecondaryColor(currentTheme, context),
@@ -93,10 +90,10 @@ class HomeScreen extends ConsumerWidget {
                           ),
                           // One grid item per place, stable key per place
                           ...dreamPlaces.map((place) {
-                            final id = place["id"];
+                            final id = place["id"] as int;
                             return GestureDetector(
                               key: ValueKey("place_$id"),
-                              onTap: () async => context.push("/details/$id"),
+                              onTap: () => context.push("/details/$id"),
                               child: Card(
                                 color: palette.getPrimaryColor(currentTheme, context),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -111,7 +108,8 @@ class HomeScreen extends ConsumerWidget {
                                             final repo = await ref.read(dreamPlaceRepositoryProvider.future);
                                             final tokens = await ref.read(tokensProvider.future);
                                             final access = tokens.$1; // nullable
-                                            return repo.getPhotoBytes(place["imageUrl"] as String, access);
+                                            final imageUrl = place["imageUrl"] as String?;
+                                            return repo.getPhotoBytes(imageUrl, access);
                                           })(),
                                           builder: (context, snap) {
                                             if (snap.connectionState == ConnectionState.waiting) {

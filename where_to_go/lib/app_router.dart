@@ -34,7 +34,7 @@ final goRouter = Provider<GoRouter>((ref) {
             return DreamPlaceScreen(id: int.parse(id));
           },
         ),
-        GoRoute(path: "/add", builder: (context, state) => PlacesFormView()),
+        GoRoute(path: "/add", builder: (context, state) => const PlacesFormView()),
         GoRoute(
           path: "/auth",
           builder: (context, state) => const AuthView(),
@@ -49,7 +49,7 @@ final goRouter = Provider<GoRouter>((ref) {
         tokensAsync.when(
           data: (tokens) {
             {
-              print(tokens);
+              debugPrint(tokens.toString());
               loggedIn = tokens.$1 != null && tokens.$2 != null;
             }
           },

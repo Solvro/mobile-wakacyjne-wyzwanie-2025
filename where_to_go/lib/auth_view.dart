@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
+
 import "features/auth/authentication_repository_provider.dart";
 import "features/auth/tokens_provider.dart";
 import "features/theme/local_theme_provider.dart";
@@ -80,15 +81,14 @@ class AuthView extends HookConsumerWidget {
                       try {
                         final response = await authRepo.signIn(email, password);
 
-                        if (response != (null, null)) {
+                        if (response.$1.trim().isNotEmpty && response.$2.trim().isNotEmpty) {
                           final accessToken = response.$1;
                           final refreshToken = response.$2;
                           await authRepo.saveTokens(accessToken, refreshToken);
                           ref.invalidate(tokensProvider);
                         }
-                      } catch (e) {
-                        // keep simple error handling for now
-                        print("Error signing in: $e");
+                      } on Object catch (e) {
+                        debugPrint("Error signing in: $e");
                       }
                     },
                     child: const Text("Sign Up"),
@@ -107,15 +107,14 @@ class AuthView extends HookConsumerWidget {
                     onPressed: () async {
                       try {
                         final response = await authRepo.logIn(email, password);
-                        if (response != (null, null)) {
+                        if (response.$1.trim().isNotEmpty && response.$2.trim().isNotEmpty) {
                           final accessToken = response.$1;
                           final refreshToken = response.$2;
                           await authRepo.saveTokens(accessToken, refreshToken);
                           ref.invalidate(tokensProvider);
-                          print("invalidated tokensProvider");
                         }
-                      } catch (e) {
-                        print("Error logging in: $e");
+                      } on Object catch (e) {
+                        debugPrint("Error logging in: $e");
                       }
                     },
                     child: const Text("Log In"),

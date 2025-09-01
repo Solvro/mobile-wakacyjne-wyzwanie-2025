@@ -8,9 +8,14 @@ import "features/database/dream_place_provider.dart";
 import "features/theme/local_theme_provider.dart";
 import "features/theme/theme.dart" show ThemePalette;
 
-class PlacesFormView extends ConsumerWidget {
-  PlacesFormView();
+class PlacesFormView extends ConsumerStatefulWidget {
+  const PlacesFormView({super.key});
 
+  @override
+  ConsumerState<PlacesFormView> createState() => _PlacesFormViewState();
+}
+
+class _PlacesFormViewState extends ConsumerState<PlacesFormView> {
   final _formKey = GlobalKey<FormState>();
 
   String? _notEmptyValidator(String? value) {
@@ -22,9 +27,11 @@ class PlacesFormView extends ConsumerWidget {
 
   File? _pickedImage;
 
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
   // Helper to pick image
-  Future<void> _pickImage(BuildContext context, StateSetter setState) async {
-    print("picking image");
+  Future<void> _pickImage() async {
     try {
       final picker = ImagePicker();
       final picked = await picker.pickImage(source: ImageSource.gallery);
@@ -33,19 +40,17 @@ class PlacesFormView extends ConsumerWidget {
           _pickedImage = File(picked.path);
         });
       }
-    } catch (e) {
-      print("Image picker unexpected error: $e");
+    } on Object catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Image picker error: $e")),
       );
     }
   }
 
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-
-  Future<void> _submit(BuildContext context, WidgetRef ref) async {
+  Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false) || _pickedImage == null) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill all fields and select an image.")),
       );
@@ -69,35 +74,24 @@ class PlacesFormView extends ConsumerWidget {
         "file": await MultipartFile.fromFile(_pickedImage!.path),
       });
 
-      print("Uploading image...");
-
-      Response<dynamic> photoResponse;
+      Response<Map<String, dynamic>> photoResponse;
       try {
-        photoResponse = await repo.dio.post("/photos/upload", data: formData);
-        print("photoResponse status=${photoResponse.statusCode} data=${photoResponse.data}");
+        photoResponse = await repo.dio.post<Map<String, dynamic>>("/photos/upload", data: formData);
       } on DioException catch (dioErr) {
-        print("Photo upload failed:");
-        print("  type: ${dioErr.type}");
-        print("  message: ${dioErr.message}");
-        print("  request: ${dioErr.requestOptions.method} ${dioErr.requestOptions.uri}");
-        print("  requestData: ${dioErr.requestOptions.data}");
-        print("  responseStatus: ${dioErr.response?.statusCode}");
-        print("  responseData: ${dioErr.response?.data}");
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Photo upload failed: ${dioErr.message}")));
         return;
-      } catch (e) {
-        print("Unexpected error during photo upload: $e");
+      } on Object catch (e) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Photo upload failed: $e")));
         return;
       }
 
       // Use the returned photo reference for imageUrl
-      final imageUrl = photoResponse.data["filename"];
-
-      print("imageUrl: $imageUrl");
+      final imageUrl = photoResponse.data?["filename"] as String?;
 
       try {
-        final response = await repo.dio.post(
+        await repo.dio.post<Map<String, dynamic>>(
           "/places",
           data: {
             "name": name,
@@ -106,23 +100,17 @@ class PlacesFormView extends ConsumerWidget {
             "isFavourite": false,
           },
         );
-        print("Create place success: status=${response.statusCode} data=${response.data}");
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Place created successfully")),
         );
       } on DioException catch (dioErr) {
-        print("Create place failed:");
-        print("  type: ${dioErr.type}");
-        print("  message: ${dioErr.message}");
-        print("  request: ${dioErr.requestOptions.method} ${dioErr.requestOptions.uri}");
-        print("  requestData: ${dioErr.requestOptions.data}");
-        print("  responseStatus: ${dioErr.response?.statusCode}");
-        print("  responseData: ${dioErr.response?.data}");
+        if (!mounted) return;
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Failed to create place: ${dioErr.message}")));
         return;
-      } catch (e) {
-        print("Unexpected error creating place: $e");
+      } on Object catch (e) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Failed to create place: $e")),
         );
@@ -130,9 +118,10 @@ class PlacesFormView extends ConsumerWidget {
       }
 
       ref.invalidate(dreamPlacesProvider);
+      if (!mounted) return;
       Navigator.of(context).pop();
-    } catch (e) {
-      print("Error: $e");
+    } on Object catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to create place: $e")),
       );
@@ -140,7 +129,7 @@ class PlacesFormView extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final themeAsync = ref.watch(localThemeNotifierProvider);
     final palette = ThemePalette();
 
@@ -164,74 +153,70 @@ class PlacesFormView extends ConsumerWidget {
 
         final textStyle = TextStyle(color: secondaryColor);
 
-        return StatefulBuilder(
-            builder: (context, setState) => Scaffold(
-                  backgroundColor: primaryColor,
-                  appBar: AppBar(
-                    backgroundColor: primaryColor,
-                    title: Text("Add Dreamspace",
-                        style: TextStyle(
-                          color: secondaryColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    iconTheme: IconThemeData(color: secondaryColor),
+        return Scaffold(
+          backgroundColor: primaryColor,
+          appBar: AppBar(
+            backgroundColor: primaryColor,
+            title: Text("Add Dreamspace",
+                style: TextStyle(
+                  color: secondaryColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                )),
+            iconTheme: IconThemeData(color: secondaryColor),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: themedDecoration("Name"),
+                    style: textStyle,
+                    textInputAction: TextInputAction.next,
+                    validator: _notEmptyValidator,
                   ),
-                  body: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Form(
-                      key: _formKey,
-                      child: ListView(
-                        children: [
-                          TextFormField(
-                            controller: _nameController,
-                            decoration: themedDecoration("Name"),
-                            style: textStyle,
-                            textInputAction: TextInputAction.next,
-                            validator: _notEmptyValidator,
-                          ),
-                          const SizedBox(height: 12),
-                          TextFormField(
-                            controller: _descriptionController,
-                            decoration: themedDecoration("Description"),
-                            style: textStyle,
-                            maxLines: 4,
-                            validator: _notEmptyValidator,
-                          ),
-                          const SizedBox(height: 12),
-                          Text("Image", style: textStyle),
-                          const SizedBox(height: 8),
-                          if (_pickedImage != null)
-                            Image.file(_pickedImage!, height: 120)
-                          else
-                            const Text("No image selected"),
-                          ElevatedButton(
-                            onPressed: () => _pickImage(context, setState),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: secondaryColor,
-                              foregroundColor: primaryColor,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            ),
-                            child: const Text("Pick Image"),
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton.icon(
-                            onPressed: () => _submit(context, ref),
-                            icon: Icon(Icons.save, color: primaryColor),
-                            label: Text("Create Dreamspace", style: TextStyle(color: primaryColor)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: secondaryColor,
-                              foregroundColor: primaryColor,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            ),
-                          ),
-                        ],
-                      ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _descriptionController,
+                    decoration: themedDecoration("Description"),
+                    style: textStyle,
+                    maxLines: 4,
+                    validator: _notEmptyValidator,
+                  ),
+                  const SizedBox(height: 12),
+                  Text("Image", style: textStyle),
+                  const SizedBox(height: 8),
+                  if (_pickedImage != null) Image.file(_pickedImage!, height: 120) else const Text("No image selected"),
+                  ElevatedButton(
+                    onPressed: _pickImage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: secondaryColor,
+                      foregroundColor: primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Text("Pick Image"),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: _submit,
+                    icon: Icon(Icons.save, color: primaryColor),
+                    label: Text("Create Dreamspace", style: TextStyle(color: primaryColor)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: secondaryColor,
+                      foregroundColor: primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
-                ));
+                ],
+              ),
+            ),
+          ),
+        );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => const Center(child: Text("Error loading theme")),

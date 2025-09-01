@@ -1,8 +1,11 @@
 import "dart:typed_data";
+
 import "package:dio/dio.dart";
-import "dream_place.dart";
+import "package:flutter/foundation.dart" show debugPrint;
+import "package:flutter_riverpod/flutter_riverpod.dart" show Ref;
+
 import "../auth/tokens_provider.dart";
-import "package:riverpod/riverpod.dart";
+import "dream_place.dart";
 
 class DreamPlaceRepository {
   // Use a file-backed DB instead of in-memory so data persists across restarts
@@ -12,7 +15,7 @@ class DreamPlaceRepository {
   final Map<String, Uint8List> _photoCache = {};
 
   Future<void> addDreamPlace(DreamPlace place) async {
-    await dio.post("/places", data: {
+    await dio.post<Map<String, dynamic>>("/places", data: {
       "name": place.name,
       "description": place.description,
       "imageUrl": place.imageUrl,
@@ -21,12 +24,12 @@ class DreamPlaceRepository {
   }
 
   Future<List<dynamic>> getAllDreamPlaces(Ref ref) async {
-    print("entering getAllDreamPlaces");
+    debugPrint("entering getAllDreamPlaces");
 
     final tokens = await ref.read(tokensProvider.future);
     final accessToken = tokens.$1;
     if (accessToken == null) {
-      print("getAllDreamPlaces: no access token -> returning empty list");
+      debugPrint("getAllDreamPlaces: no access token -> returning empty list");
       return <dynamic>[];
     }
 
@@ -36,14 +39,16 @@ class DreamPlaceRepository {
 
     Response<dynamic>? response;
     try {
-      // don't force a List<> type here — let the response be dynamic and inspect it
-      response = await dio.get(
+      // request dynamic response and inspect contents
+      response = await dio.get<dynamic>(
         "/places",
         options: Options(headers: {"Authorization": "Bearer $accessToken"}),
       );
     } on DioException catch (dioErr) {
+      debugPrint("getAllDreamPlaces: network error: ${dioErr.message}");
       return <dynamic>[];
-    } catch (e) {
+    } on Object catch (e) {
+      debugPrint("getAllDreamPlaces: unexpected error: $e");
       return <dynamic>[];
     }
 
@@ -55,8 +60,8 @@ class DreamPlaceRepository {
     return <dynamic>[];
   }
 
-  Future<dynamic> updateDreamplace(DreamPlace place) async {
-    final response = await dio.put("/places/${place.id}", data: {
+  Future<void> updateDreamplace(DreamPlace place) async {
+    await dio.put<Map<String, dynamic>>("/places/${place.id}", data: {
       "name": place.name,
       "description": place.description,
       "imageUrl": place.imageUrl,
@@ -64,21 +69,22 @@ class DreamPlaceRepository {
     });
   }
 
-  Future<dynamic> toggleFavourite(int id) async {
-    final place = await dio.get("/places/$id");
-    if (place.statusCode == 200) {
-      final bool isFavourite = !(place.data["isFavourite"] as bool);
-      await dio.put("/places/$id", data: {
-        "name": place.data["name"],
-        "description": place.data["description"],
-        "imageUrl": place.data["imageUrl"],
+  Future<void> toggleFavourite(int id) async {
+    final placeResp = await dio.get<Map<String, dynamic>>("/places/$id");
+    if (placeResp.statusCode == 200 && placeResp.data != null) {
+      final data = placeResp.data!;
+      final bool isFavourite = !(data["isFavourite"] as bool? ?? false);
+      await dio.put<Map<String, dynamic>>("/places/$id", data: {
+        "name": data["name"],
+        "description": data["description"],
+        "imageUrl": data["imageUrl"],
         "isFavourite": isFavourite,
       });
     }
   }
 
   Future<dynamic> deleteDreamPlace(int id) async {
-    await dio.delete("/places/$id");
+    await dio.delete<void>("/places/$id");
   }
 
   Future<Uint8List?> getPhotoBytes(String? filename, String? accessToken) async {
@@ -90,7 +96,7 @@ class DreamPlaceRepository {
     }
 
     final path = "/photos/${Uri.encodeComponent(filename)}";
-    print("getPhotoBytes: requesting $path");
+    debugPrint("getPhotoBytes: requesting $path");
 
     try {
       final resp = await dio.get<List<int>>(
@@ -103,7 +109,7 @@ class DreamPlaceRepository {
 
       final body = resp.data;
       if (body == null) {
-        print("getPhotoBytes: empty body");
+        debugPrint("getPhotoBytes: empty body");
         return null;
       }
 
@@ -112,9 +118,9 @@ class DreamPlaceRepository {
       _photoCache[filename] = bytes;
       return bytes;
     } on DioException catch (e) {
-      print("getPhotoBytes: DioException type=${e.type} status=${e.response?.statusCode} message=${e.message}");
-    } catch (e, st) {
-      print("getPhotoBytes: unexpected $e\n$st");
+      debugPrint("getPhotoBytes: DioException type=${e.type} status=${e.response?.statusCode} message=${e.message}");
+    } on Object catch (e, st) {
+      debugPrint("getPhotoBytes: unexpected $e\n$st");
     }
     return null;
   }

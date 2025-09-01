@@ -43,6 +43,7 @@ dependencies:
   flutter_secure_storage: ^4.2.1
   freezed: ^3.1.0
   image_picker: ^1.2.0
+  riverpod: ^2.4.9
 
 
 dev_dependencies:

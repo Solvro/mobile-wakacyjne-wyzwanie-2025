@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "features/auth/tokens_provider.dart";
 import "features/database/dream_place_provider.dart";
-import "features/places/places_provider.dart";
 import "features/theme/local_theme_provider.dart";
 import "features/theme/theme.dart";
 
@@ -33,9 +32,11 @@ class DreamPlaceScreen extends ConsumerWidget {
                 final themePalette = ThemePalette();
                 return dreamPlacesAsync.when(
                   data: (data) {
-                    final dreamPlaces = data.first["results"] as List<dynamic>;
+                    // Normalize types from dynamic responses to concrete maps/lists
+                    final results = (data.first as Map<String, dynamic>)["results"] as List<dynamic>;
+                    final dreamPlaces = results.cast<Map<String, dynamic>>();
                     final dreamPlace = dreamPlaces.firstWhere((dp) => dp["id"] == id);
-                    final isFavourited = dreamPlace["isFavourite"] as bool;
+                    final isFavourited = (dreamPlace["isFavourite"] as bool?) ?? false;
                     final icon = isFavourited ? Icons.favorite : Icons.favorite_border;
 
                     return Scaffold(
@@ -56,13 +57,12 @@ class DreamPlaceScreen extends ConsumerWidget {
                             ),
                             onPressed: () async {
                               try {
-                                final placeId = dreamPlace["id"] as int;
                                 // trigger the toggle provider and await completion
                                 await repo.toggleFavourite(id);
                                 // ensure places are refetched / UI updated
                                 ref.invalidate(dreamPlacesProvider);
-                              } catch (e, st) {
-                                print("toggle favourite failed: $e\n$st");
+                              } on Object {
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Failed to toggle favourite")),
                                 );
@@ -128,10 +128,14 @@ class DreamPlaceScreen extends ConsumerWidget {
                                 try {
                                   await repo.deleteDreamPlace(dreamPlace["id"] as int);
 
+                                  if (!context.mounted) return;
                                   Navigator.of(context).pop();
                                   ref.invalidate(dreamPlacesProvider);
-                                } catch (e) {
-                                  print("error when trying to remove a dream place: $e");
+                                } on Object {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text("Failed to delete dream place")),
+                                  );
                                 }
                               },
                               icon: Icon(Icons.delete, color: themePalette.getPrimaryColor(currentTheme, context)),
