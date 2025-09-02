@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "../providers/places_provider.dart";
+import "../providers/theme_provider.dart";
 
 class DetailsScreen extends ConsumerWidget {
   const DetailsScreen({required this.id, super.key});
@@ -11,18 +12,19 @@ class DetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final place = ref.watch(placesProvider)[int.parse(id)];
+    final theme = ref.watch(themesProvider);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 123, 144, 118),
+      backgroundColor: theme.backgroundColor,
       appBar: AppBar(
-        title: Text(place.placeText, style: const TextStyle(color: Color.fromARGB(255, 248, 231, 148))),
-        backgroundColor: const Color.fromARGB(255, 40, 65, 57),
+        title: Text(place.placeText, style: TextStyle(color: theme.color)),
+        backgroundColor: theme.primary,
         actions: [
           IconButton(
-              onPressed: () {
-                ref.read(placesProvider.notifier).toggleFavorite(id);
+              onPressed: () async {
+                await ref.read(placesProvider.notifier).toggleFavorite(id);
               },
               icon: Icon(place.isFavorite ? Icons.favorite : Icons.favorite_border),
-              color: place.isFavorite ? const Color.fromARGB(255, 255, 0, 0) : const Color.fromARGB(255, 248, 231, 148))
+              color: place.isFavorite ? theme.red : theme.color)
         ],
       ),
       body: Column(
@@ -38,12 +40,12 @@ class DetailsScreen extends ConsumerWidget {
               children: [
                 Text(
                   place.titleText,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: theme.black),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
-                Text(place.descriptionText)
+                Text(place.descriptionText, style: TextStyle(color: theme.black))
               ],
             ),
           ),
@@ -51,7 +53,16 @@ class DetailsScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: place.attractions
                 .map((att) => Column(
-                      children: [Icon(att.icon), Text(att.text)],
+                      children: [
+                        Icon(
+                          IconData(
+                            att.icon,
+                            fontFamily: "MaterialIcons", // usually this is the font family for Flutter Material icons
+                          ),
+                          color: theme.black,
+                        ),
+                        Text(att.text, style: TextStyle(color: theme.black))
+                      ],
                     ))
                 .toList(),
           )
