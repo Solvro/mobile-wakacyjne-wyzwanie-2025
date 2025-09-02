@@ -49,3 +49,6 @@ app.*.map.json
 .fvm/
 
 *.gen.dart
+.swift
+.cc
+.cmake
