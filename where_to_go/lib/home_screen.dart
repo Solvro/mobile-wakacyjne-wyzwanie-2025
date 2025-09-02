@@ -37,42 +37,42 @@ class HomeScreen extends ConsumerWidget {
           },
         ],
       ),
-      body: placesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text("Błąd: $error")),
-        data: (places) => ListView.separated(
-          itemCount: places.length,
-          separatorBuilder: (_, __) => const Divider(height: 4),
-          itemBuilder: (context, index) {
-            final place = places[index];
-            return Card(
-              child: ListTile(
-                horizontalTitleGap: 12,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    place.imagePath,
-                    width: 60,
-                    fit: BoxFit.cover,
+      body: switch (placesAsync) {
+        AsyncData(value: final places) => ListView.separated(
+            itemCount: places.length,
+            separatorBuilder: (_, __) => const Divider(height: 4),
+            itemBuilder: (context, index) {
+              final place = places[index];
+              return Card(
+                child: ListTile(
+                  horizontalTitleGap: 12,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      place.imagePath,
+                      width: 60,
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  title: Text(
+                    place.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  trailing: Icon(
+                    place.isFavourite ? Icons.favorite : Icons.favorite_border,
+                    color: place.isFavourite ? Colors.red : null,
+                  ),
+                  onTap: () async {
+                    await GoRouter.of(context).push("${DetailsScreen.route}/${place.id}");
+                  },
                 ),
-                title: Text(
-                  place.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                trailing: Icon(
-                  place.isFavourite ? Icons.favorite : Icons.favorite_border,
-                  color: place.isFavourite ? Colors.red : null,
-                ),
-                onTap: () async {
-                  await GoRouter.of(context).push("${DetailsScreen.route}/${place.id}");
-                },
-              ),
-            );
-          },
-        ),
-      ),
+              );
+            },
+          ),
+        AsyncError() => Center(child: Text("Błąd: ${placesAsync.error}")),
+        _ => const Center(child: CircularProgressIndicator()),
+      },
     );
   }
 }
