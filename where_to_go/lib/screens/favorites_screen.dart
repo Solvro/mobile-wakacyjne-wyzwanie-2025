@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
+import "../providers.dart";
 import "details_screen.dart";
-import "features/favorite/favorite_places_provider.dart";
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -12,12 +12,17 @@ class FavoritesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritePlaces = ref.watch(favoritePlacesProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Ulubione miejsca"),
-      ),
-      body: favoritePlaces.isNotEmpty
-          ? GridView.builder(
+    final Widget body = switch (favoritePlaces) {
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
+      AsyncError(:final error) => Center(child: Text("Error: $error")),
+      AsyncData(:final value) => value.isEmpty
+          ? Center(
+              child: Text(
+                "Brak ulubionych miejsc",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            )
+          : GridView.builder(
               padding: const EdgeInsets.all(8),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 250,
@@ -25,9 +30,9 @@ class FavoritesScreen extends ConsumerWidget {
                 crossAxisSpacing: 8,
                 childAspectRatio: 3 / 2,
               ),
-              itemCount: favoritePlaces.length,
+              itemCount: value.length,
               itemBuilder: (context, index) {
-                final place = favoritePlaces[index];
+                final place = value[index];
                 return GestureDetector(
                   child: Card(
                     child: Column(
@@ -38,8 +43,8 @@ class FavoritesScreen extends ConsumerWidget {
                             tag: place.title,
                             child: ClipRRect(
                               borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                              child: Image.asset(
-                                place.image.path,
+                              child: Image.network(
+                                place.imagePath,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -49,7 +54,7 @@ class FavoritesScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(8),
                           child: Text(
                             place.title,
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -63,10 +68,15 @@ class FavoritesScreen extends ConsumerWidget {
                   },
                 );
               },
-            )
-          : const Center(
-              child: Text("Brak ulubionych miejsc", style: TextStyle(fontSize: 20)),
             ),
+      _ => const Center(child: Text("Brak ulubionych miejsc"))
+    };
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Ulubione miejsca"),
+      ),
+      body: body,
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
