@@ -9,13 +9,13 @@ import "features/places/places_provider.dart"; // ignore: unused_import
 class DetailsScreen extends ConsumerWidget {
   static const route = "/place";
   final String id;
+  late final int placeId;
 
-  const DetailsScreen({super.key, required this.id});
+  DetailsScreen({super.key, required this.id}) : placeId = int.parse(id);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final placesAsync = ref.watch(dreamPlacesProvider);
-    final int placeId = int.parse(id);
 
     return placesAsync.when(
       loading: () => Scaffold(
@@ -28,10 +28,9 @@ class DetailsScreen extends ConsumerWidget {
       ),
       data: (places) {
         final place = places.firstWhere((p) => p.id == placeId);
-        final attractions = _getAttractionsForPlace(place.id);
+        final attractions = _getAttractionsForPlace();
 
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             title: Text(place.name),
             actions: [
@@ -121,45 +120,39 @@ class DetailsScreen extends ConsumerWidget {
     );
   }
 
-  List<Attraction> _getAttractionsForPlace(int id) {
-    switch (id) {
-      case 1: // Tokio
-        return const [
+  List<Attraction> _getAttractionsForPlace() {
+    return switch (placeId) {
+      1 => const [
           Attraction(icon: Icons.wb_sunny, label: "Słońce"),
           Attraction(icon: Icons.cell_tower, label: "Tokio Tower"),
           Attraction(icon: Icons.computer, label: "Technologia"),
           Attraction(icon: Icons.train, label: "Shinkansen"),
-        ];
-      case 2: // Paryż
-        return const [
+        ],
+      2 => const [
           Attraction(icon: Icons.location_city, label: "Miasto"),
           Attraction(icon: Icons.local_cafe, label: "Kawiarnie"),
           Attraction(icon: Icons.museum, label: "Muzea"),
           Attraction(icon: Icons.brush, label: "Sztuka"),
-        ];
-      case 3: // Rzym
-        return const [
+        ],
+      3 => const [
           Attraction(icon: Icons.history, label: "Historia"),
           Attraction(icon: Icons.local_pizza, label: "Pizza"),
           Attraction(icon: Icons.church, label: "Bazyliki"),
           Attraction(icon: Icons.local_cafe, label: "Kawiarnie"),
-        ];
-      case 4: // Nowy Jork
-        return const [
+        ],
+      4 => const [
           Attraction(icon: Icons.location_city, label: "Miasto"),
           Attraction(icon: Icons.shopping_bag, label: "Zakupy"),
           Attraction(icon: Icons.music_note, label: "Muzyka"),
           Attraction(icon: Icons.park, label: "Central Park"),
-        ];
-      case 5: // Kair
-        return [
-          const Attraction(icon: Icons.beach_access, label: "Pustynia"),
-          const Attraction(icon: Icons.sailing, label: "Nil"),
-          const Attraction(icon: Icons.museum, label: "Muzea"),
-          const Attraction(icon: Icons.landscape, label: "Piramidy"),
-        ];
-      default:
-        return [];
-    }
+        ],
+      5 => const [
+          Attraction(icon: Icons.beach_access, label: "Pustynia"),
+          Attraction(icon: Icons.sailing, label: "Nil"),
+          Attraction(icon: Icons.museum, label: "Muzea"),
+          Attraction(icon: Icons.landscape, label: "Piramidy"),
+        ],
+      _ => [],
+    };
   }
 }

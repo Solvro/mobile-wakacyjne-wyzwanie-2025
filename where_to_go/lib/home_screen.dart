@@ -19,21 +19,22 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Moje wymarzone miejsca"),
         actions: [
-          themeAsync.when(
-            data: (currentTheme) => IconButton(
-              icon: Icon(currentTheme == AppTheme.light
-                  ? Icons.light_mode
-                  : currentTheme == AppTheme.dark
-                      ? Icons.dark_mode
-                      : Icons.auto_mode),
-              onPressed: () => ref.read(themeNotifierProvider.notifier).toggleTheme(),
-            ),
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stack) => IconButton(
-              icon: const Icon(Icons.error),
-              onPressed: () => ref.invalidate(themeNotifierProvider),
-            ),
-          ),
+          switch (themeAsync) {
+            AsyncData(value: final currentTheme) => IconButton(
+                icon: Icon(currentTheme == AppTheme.light
+                    ? Icons.light_mode
+                    : currentTheme == AppTheme.dark
+                        ? Icons.dark_mode
+                        : Icons.auto_mode),
+                onPressed: () => ref.read(themeNotifierProvider.notifier).toggleTheme(),
+              ),
+            AsyncLoading() => const CircularProgressIndicator(),
+            AsyncError() => IconButton(
+                icon: const Icon(Icons.error),
+                onPressed: () => ref.invalidate(themeNotifierProvider),
+              ),
+            _ => const SizedBox.shrink(),
+          },
         ],
       ),
       body: placesAsync.when(
