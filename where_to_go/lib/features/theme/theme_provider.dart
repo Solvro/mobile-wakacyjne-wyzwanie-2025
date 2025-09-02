@@ -1,14 +1,15 @@
 // lib/features/theme/theme_provider.dart
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'local_theme_repository.dart';
+import "dart:async";
+
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "local_theme_repository.dart";
 
 final localThemeRepositoryProvider = Provider<LocalThemeRepository>((ref) {
   return LocalThemeRepository();
 });
 
-final themeControllerProvider =
-    StateNotifierProvider<ThemeController, ThemeMode>((ref) {
+final themeControllerProvider = StateNotifierProvider<ThemeController, ThemeMode>((ref) {
   final repo = ref.read(localThemeRepositoryProvider);
   return ThemeController(repo);
 });
@@ -17,7 +18,7 @@ class ThemeController extends StateNotifier<ThemeMode> {
   final LocalThemeRepository _repo;
 
   ThemeController(this._repo) : super(ThemeMode.system) {
-    _init();
+    unawaited(_init());
   }
 
   Future<void> _init() async {

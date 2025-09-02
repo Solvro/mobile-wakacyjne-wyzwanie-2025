@@ -1,11 +1,11 @@
-import 'package:dream_places/features/theme/local_theme_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
-import '../controllers/dream_places_controller.dart';
-import '../features/theme/theme_provider.dart';
-import 'add_place_dialog.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
+import "../controllers/dream_places_controller.dart";
+import "../features/theme/local_theme_repository.dart";
+import "../features/theme/theme_provider.dart";
+import "../models/dream_place.dart";
+import "add_place_dialog.dart";
 
 class DreamPlacesScreen extends ConsumerWidget {
   const DreamPlacesScreen({super.key});
@@ -16,33 +16,32 @@ class DreamPlacesScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ulubione miejsca!'),
+        title: const Text("Ulubione miejsca!"),
         actions: [
           PopupMenuButton<ThemeChoice>(
             icon: const Icon(Icons.color_lens),
-            onSelected: (choice) {
-              ref.read(themeControllerProvider.notifier).setChoice(choice);
+            onSelected: (choice) async {
+              await ref.read(themeControllerProvider.notifier).setChoice(choice);
             },
             itemBuilder: (context) => const [
               PopupMenuItem(
                 value: ThemeChoice.system,
-                child: Text('System'),
+                child: Text("System"),
               ),
               PopupMenuItem(
                 value: ThemeChoice.light,
-                child: Text('Jasny'),
+                child: Text("Jasny"),
               ),
               PopupMenuItem(
                 value: ThemeChoice.dark,
-                child: Text('Ciemny'),
+                child: Text("Ciemny"),
               ),
             ],
           ),
         ],
       ),
       body: places.isEmpty
-          ? const Center(
-              child: Text('Brak miejsc — zobacz seedowane przykłady.'))
+          ? const Center(child: Text("Brak miejsc — zobacz seedowane przykłady."))
           : GridView.builder(
               padding: const EdgeInsets.all(12),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -62,23 +61,21 @@ class DreamPlacesScreen extends ConsumerWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    context.go('/details/$placeKey');
+                    context.go("/details/$placeKey");
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Container(
+                    child: ColoredBox(
                       color: Theme.of(context).colorScheme.secondaryContainer,
                       child: Column(
                         children: [
                           Expanded(
-                            child: place.imageUrl != null &&
-                                    place.imageUrl!.isNotEmpty
+                            child: place.imageUrl != null && place.imageUrl!.isNotEmpty
                                 ? Image.network(
                                     place.imageUrl!,
                                     fit: BoxFit.cover,
                                     width: double.infinity,
-                                    errorBuilder: (c, e, s) => const Center(
-                                        child: Icon(Icons.broken_image)),
+                                    errorBuilder: (c, e, s) => const Center(child: Icon(Icons.broken_image)),
                                   )
                                 : const Center(child: Icon(Icons.image)),
                           ),
@@ -95,12 +92,8 @@ class DreamPlacesScreen extends ConsumerWidget {
                                 ),
                                 const SizedBox(width: 6),
                                 Icon(
-                                  place.isFavorite
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: place.isFavorite
-                                      ? Colors.red
-                                      : Theme.of(context).iconTheme.color,
+                                  place.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                  color: place.isFavorite ? Colors.red : Theme.of(context).iconTheme.color,
                                   size: 18,
                                 ),
                               ],
@@ -116,14 +109,12 @@ class DreamPlacesScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          final newPlace = await showDialog(
+          final newPlace = await showDialog<DreamPlace>(
             context: context,
             builder: (_) => const AddPlaceDialog(),
           );
           if (newPlace != null) {
-            await ref
-                .read(dreamPlacesControllerProvider.notifier)
-                .addPlace(newPlace);
+            await ref.read(dreamPlacesControllerProvider.notifier).addPlace(newPlace);
           }
         },
       ),

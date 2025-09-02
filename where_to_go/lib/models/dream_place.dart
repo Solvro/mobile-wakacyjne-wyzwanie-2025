@@ -1,6 +1,6 @@
-import 'package:hive/hive.dart';
+import "package:hive/hive.dart";
 
-part 'dream_place.g.dart';
+part "dream_place.g.dart";
 
 @HiveType(typeId: 0)
 class DreamPlace extends HiveObject {

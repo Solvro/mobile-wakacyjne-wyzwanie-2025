@@ -1,17 +1,16 @@
-import 'dart:async';
+import "dart:async";
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:hive/hive.dart";
 
-import '../models/dream_place.dart';
-import '../repositories/dream_place_repository.dart';
+import "../models/dream_place.dart";
+import "../repositories/dream_place_repository.dart";
 
 final dreamPlacesRepositoryProvider = Provider<DreamPlacesRepository>((ref) {
   return DreamPlacesRepository();
 });
 
-final dreamPlacesControllerProvider =
-    StateNotifierProvider<DreamPlacesController, List<DreamPlace>>((ref) {
+final dreamPlacesControllerProvider = StateNotifierProvider<DreamPlacesController, List<DreamPlace>>((ref) {
   final repo = ref.watch(dreamPlacesRepositoryProvider);
   return DreamPlacesController(repo);
 });
@@ -22,7 +21,7 @@ class DreamPlacesController extends StateNotifier<List<DreamPlace>> {
   StreamSubscription<BoxEvent>? _subscription;
 
   DreamPlacesController(this.repository) : super([]) {
-    _init();
+    unawaited(_init());
   }
 
   Future<void> _init() async {
@@ -50,8 +49,9 @@ class DreamPlacesController extends StateNotifier<List<DreamPlace>> {
   }
 
   @override
-  void dispose() {
-    _subscription?.cancel();
+  Future<void> dispose() async {
+    await _subscription?.cancel();
+    // ignore: unawaited_futures
     _box?.close();
     super.dispose();
   }

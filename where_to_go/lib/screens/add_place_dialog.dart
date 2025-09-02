@@ -1,6 +1,5 @@
-// lib/screens/add_place_dialog.dart
-import 'package:flutter/material.dart';
-import '../models/dream_place.dart';
+import "package:flutter/material.dart";
+import "../models/dream_place.dart";
 
 class AddPlaceDialog extends StatefulWidget {
   const AddPlaceDialog({super.key});
@@ -36,8 +35,7 @@ class _AddPlaceDialogState extends State<AddPlaceDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: "Nazwa"),
-                validator: (value) =>
-                    value == null || value.isEmpty ? "Podaj nazwę" : null,
+                validator: (value) => value == null || value.isEmpty ? "Podaj nazwę" : null,
               ),
               TextFormField(
                 controller: _descController,
@@ -45,17 +43,14 @@ class _AddPlaceDialogState extends State<AddPlaceDialog> {
               ),
               TextFormField(
                 controller: _imageController,
-                decoration: const InputDecoration(
-                    labelText: "URL zdjęcia (opcjonalnie)"),
+                decoration: const InputDecoration(labelText: "URL zdjęcia (opcjonalnie)"),
               ),
             ],
           ),
         ),
       ),
       actions: [
-        TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Anuluj")),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Anuluj")),
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {

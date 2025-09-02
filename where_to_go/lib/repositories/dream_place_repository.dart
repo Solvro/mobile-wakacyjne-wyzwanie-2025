@@ -1,15 +1,15 @@
-import 'package:hive/hive.dart';
-import '../models/dream_place.dart';
+import "package:hive/hive.dart";
+import "../models/dream_place.dart";
 
 class DreamPlacesRepository {
-  static const String boxName = 'dream_places_box';
+  static const boxName = "dream_places_box";
 
   /// Open the Hive box (if not already open)
   Future<Box<DreamPlace>> _openBox() async {
     if (Hive.isBoxOpen(boxName)) {
       return Hive.box<DreamPlace>(boxName);
     }
-    return await Hive.openBox<DreamPlace>(boxName);
+    return Hive.openBox<DreamPlace>(boxName);
   }
 
   /// READ all
@@ -34,7 +34,7 @@ class DreamPlacesRepository {
   /// UPDATE
   Future<void> update(DreamPlace place) async {
     if (place.key == null) {
-      throw Exception('Object has no key. Use add() for new items.');
+      throw Exception("Object has no key. Use add() for new items.");
     }
     await place.save();
   }
@@ -71,7 +71,6 @@ class DreamPlacesRepository {
         name: "Santorini, Grecja",
         description: "Białe domki nad morzem",
         imageUrl: "assets/images/santorini.png",
-        isFavorite: false,
       ),
       DreamPlace(
         name: "Bali, Indonezja",
@@ -83,7 +82,6 @@ class DreamPlacesRepository {
         name: "Nowy Jork, USA",
         description: "Central Park i wieżowce",
         imageUrl: "assets/images/nowyJork.jpg",
-        isFavorite: false,
       ),
       DreamPlace(
         name: "Tokio, Japonia",
@@ -105,7 +103,7 @@ class DreamPlacesRepository {
   }
 
   /// Public method for controller
-  Future<Box<DreamPlace>> openBox() async {
-    return await _openBox();
+  Future<Box<DreamPlace>> openBox() {
+    return _openBox();
   }
 }
