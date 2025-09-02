@@ -1,13 +1,14 @@
 import "dart:async";
-
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:hive/hive.dart";
-
-import "../models/dream_place.dart";
+// import "package:drift/drift.dart";
+import "../database/app_database.dart";
 import "../repositories/dream_place_repository.dart";
 
+final databaseProvider = Provider<AppDatabase>((ref) => AppDatabase());
+
 final dreamPlacesRepositoryProvider = Provider<DreamPlacesRepository>((ref) {
-  return DreamPlacesRepository();
+  final db = ref.watch(databaseProvider);
+  return DreamPlacesRepository(db);
 });
 
 final dreamPlacesControllerProvider = StateNotifierProvider<DreamPlacesController, List<DreamPlace>>((ref) {
@@ -17,42 +18,28 @@ final dreamPlacesControllerProvider = StateNotifierProvider<DreamPlacesControlle
 
 class DreamPlacesController extends StateNotifier<List<DreamPlace>> {
   final DreamPlacesRepository repository;
-  Box<DreamPlace>? _box;
-  StreamSubscription<BoxEvent>? _subscription;
 
   DreamPlacesController(this.repository) : super([]) {
     unawaited(_init());
   }
 
   Future<void> _init() async {
-    _box = await repository.openBox();
     await repository.seedIfEmpty();
-
-    final places = await repository.getAll();
-    state = places;
-
-    _subscription = _box!.watch().listen((event) {
-      state = _box!.values.toList();
-    });
+    state = await repository.getAll();
   }
 
-  Future<void> addPlace(DreamPlace place) async {
-    await repository.add(place);
+  Future<void> addPlace(DreamPlacesCompanion entry) async {
+    await repository.add(entry);
+    state = await repository.getAll();
   }
 
-  Future<void> deletePlace(int key) async {
-    await repository.delete(key);
+  Future<void> deletePlace(int id) async {
+    await repository.delete(id);
+    state = await repository.getAll();
   }
 
-  Future<void> toggleFavorite(int key) async {
-    await repository.toggleFavorite(key);
-  }
-
-  @override
-  Future<void> dispose() async {
-    await _subscription?.cancel();
-    // ignore: unawaited_futures
-    _box?.close();
-    super.dispose();
+  Future<void> toggleFavorite(DreamPlace place) async {
+    await repository.toggleFavorite(place);
+    state = await repository.getAll();
   }
 }

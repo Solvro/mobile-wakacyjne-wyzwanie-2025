@@ -1,5 +1,8 @@
+// add_place_dialog.dart
+import "package:drift/drift.dart" as drift;
 import "package:flutter/material.dart";
-import "../models/dream_place.dart";
+
+import "../database/app_database.dart";
 
 class AddPlaceDialog extends StatefulWidget {
   const AddPlaceDialog({super.key});
@@ -43,23 +46,32 @@ class _AddPlaceDialogState extends State<AddPlaceDialog> {
               ),
               TextFormField(
                 controller: _imageController,
-                decoration: const InputDecoration(labelText: "URL zdjęcia (opcjonalnie)"),
+                decoration: const InputDecoration(
+                  labelText: "URL zdjęcia (opcjonalnie)",
+                ),
               ),
             ],
           ),
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Anuluj")),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text("Anuluj"),
+        ),
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              final place = DreamPlace(
+              final entry = DreamPlacesCompanion.insert(
                 name: _nameController.text,
-                description: _descController.text,
-                imageUrl: _imageController.text,
+                description: drift.Value(
+                  _descController.text.isNotEmpty ? _descController.text : null,
+                ),
+                imageUrl: drift.Value(
+                  _imageController.text.isNotEmpty ? _imageController.text : null,
+                ),
               );
-              Navigator.of(context).pop(place);
+              Navigator.of(context).pop(entry);
             }
           },
           child: const Text("Dodaj"),
