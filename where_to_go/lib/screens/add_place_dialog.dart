@@ -1,8 +1,5 @@
 // add_place_dialog.dart
-import "package:drift/drift.dart" as drift;
 import "package:flutter/material.dart";
-
-import "../database/app_database.dart";
 
 class AddPlaceDialog extends StatefulWidget {
   const AddPlaceDialog({super.key});
