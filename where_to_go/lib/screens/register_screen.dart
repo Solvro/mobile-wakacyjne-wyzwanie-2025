@@ -93,6 +93,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     }
                     return null;
                   }),
+              TextFormField(
+                  controller: _passwdController,
+                  decoration: const InputDecoration(labelText: "Potwierdź hasło"),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Proszę wprowadzić hasło.";
+                    }
+                    if (value.length < 3) {
+                      return "Hasło musi mieć co najmniej 3 znaków.";
+                    }
+                    if (value != _passwdController.text) {
+                      return "Hasła nie są zgodne.";
+                    }
+                    return null;
+                  }),
               const SizedBox(height: 20),
               if (_errorMessage != null)
                 Text(
