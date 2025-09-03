@@ -1,10 +1,12 @@
 // app_router.dart
 import "package:go_router/go_router.dart";
+
+import "screens/auth_screen.dart";
 import "screens/details_screen.dart";
 import "screens/dream_place_screen.dart";
 
 final goRouter = GoRouter(
-  initialLocation: "/",
+  initialLocation: AuthScreen.routeName,
   routes: [
     GoRoute(
       path: "/",

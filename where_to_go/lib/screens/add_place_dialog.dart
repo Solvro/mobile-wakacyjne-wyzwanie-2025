@@ -58,7 +58,7 @@ class _AddPlaceDialogState extends State<AddPlaceDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_formKey.currentState!.validate()) {
+            if (!_formKey.currentState!.validate()) {
               final entry = DreamPlacesCompanion.insert(
                 name: _nameController.text,
                 description: drift.Value(
