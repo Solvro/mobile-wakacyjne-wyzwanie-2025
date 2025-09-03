@@ -1,21 +1,40 @@
 import "package:flutter/material.dart";
-import "app_router.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "features/routing/app_router.dart";
+import "features/themes/app_theme.dart";
+import "features/themes/local_theme_repository.dart";
+import "features/themes/theme_notifier.dart";
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: goRouter,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.grey[50],
-        scaffoldBackgroundColor: const Color.fromARGB(255, 236, 219, 249),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey[50],
-          foregroundColor: Colors.black,
-          elevation: 2,
-        ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeAsync = ref.watch(themeNotifierProvider);
+    final platformBrightness = MediaQuery.platformBrightnessOf(context);
+    final appTheme = AppThemeImplementation();
+
+    return themeAsync.when(
+      data: (theme) {
+        final themeMode = switch (theme) {
+          AppTheme.light => ThemeMode.light,
+          AppTheme.dark => ThemeMode.dark,
+          AppTheme.system => platformBrightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
+        };
+
+        return MaterialApp.router(
+          routerConfig: goRouter,
+          debugShowCheckedModeBanner: false,
+          themeMode: themeMode,
+          theme: appTheme.light,
+          darkTheme: appTheme.dark,
+        );
+      },
+      loading: () => const MaterialApp(
+        home: Scaffold(body: Center(child: CircularProgressIndicator())),
+      ),
+      error: (error, stack) => MaterialApp(
+        home: Scaffold(body: Center(child: Text("Błąd: $error"))),
       ),
     );
   }
