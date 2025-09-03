@@ -9,6 +9,8 @@ import "../repositories/local_authentication_repository.dart";
 import "../repositories/remote_authentication_repository.dart";
 
 // Plik ten definiuje providery dla zarządzania autentykacją użytkownika przy użyciu Riverpod.
+// Providery w Riverpod to mechanizm zarządzania stanem i zależnościami w aplikacji Flutter. To takie "dostawcy" danych i funkcjonalności dla całej aplikacji.
+// Dzięki nim możemy łatwo używać danych w różnych częściach aplikacji bez konieczności przekazywania ich ręcznie przez widgety.
 
 // 1. Provider dla zewnętrznych zależności
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
