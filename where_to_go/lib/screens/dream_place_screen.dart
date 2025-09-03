@@ -4,7 +4,7 @@ import "package:go_router/go_router.dart";
 
 import "../controllers/dream_places_controller.dart";
 import "../features/theme/local_theme_repository.dart";
-import "../features/theme/theme_provider.dart";
+import "../providers/theme_provider.dart";
 import "add_place_dialog.dart";
 
 class DreamPlacesScreen extends ConsumerWidget {

@@ -1,7 +1,6 @@
 import "dart:async";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 // import "package:drift/drift.dart";
-import "../database/app_database.dart";
 import "../repositories/local_authentication_repository.dart";
 
 final databaseProvider = Provider<AppDatabase>((ref) => AppDatabase());

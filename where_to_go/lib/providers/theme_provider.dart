@@ -3,7 +3,7 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "local_theme_repository.dart";
+import "../features/theme/local_theme_repository.dart";
 
 final localThemeRepositoryProvider = Provider<LocalThemeRepository>((ref) {
   return LocalThemeRepository();
