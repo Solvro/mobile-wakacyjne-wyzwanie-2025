@@ -1,1 +1,4 @@
 include: package:solvro_config/app.yaml
+linter:
+  rules:
+    unreachable_from_main: false
