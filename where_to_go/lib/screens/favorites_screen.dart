@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
-import "../providers.dart";
+import "../places_providers.dart";
 import "details_screen.dart";
 
 class FavoritesScreen extends ConsumerWidget {
@@ -33,6 +33,17 @@ class FavoritesScreen extends ConsumerWidget {
               itemCount: value.length,
               itemBuilder: (context, index) {
                 final place = value[index];
+                final photo = ref.watch(photoProvider(place.imageUrl));
+
+                final Widget imageWidget = photo.when(
+                  data: (photoBytes) => Image.memory(
+                    photoBytes,
+                    fit: BoxFit.cover,
+                  ),
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => const Icon(Icons.error),
+                );
+
                 return GestureDetector(
                   child: Card(
                     child: Column(
@@ -40,20 +51,17 @@ class FavoritesScreen extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: Hero(
-                            tag: place.title,
+                            tag: place.name,
                             child: ClipRRect(
                               borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                              child: Image.network(
-                                place.imagePath,
-                                fit: BoxFit.cover,
-                              ),
+                              child: imageWidget,
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            place.title,
+                            place.name,
                             style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                             maxLines: 1,
@@ -87,6 +95,10 @@ class FavoritesScreen extends ConsumerWidget {
             icon: Icon(Icons.favorite_rounded),
             label: "Ulubione",
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_rounded),
+            label: "Ustawienia",
+          ),
         ],
         selectedItemColor: Theme.of(context).colorScheme.primary,
         showSelectedLabels: false,
@@ -98,6 +110,8 @@ class FavoritesScreen extends ConsumerWidget {
             context.go("/");
           } else if (index == 1) {
             context.go("/favorites");
+          } else if (index == 2) {
+            context.go("/settings");
           }
         },
       ),
