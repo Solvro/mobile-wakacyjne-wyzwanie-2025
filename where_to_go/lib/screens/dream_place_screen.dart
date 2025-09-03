@@ -9,6 +9,7 @@ import "add_place_dialog.dart";
 
 class DreamPlacesScreen extends ConsumerWidget {
   const DreamPlacesScreen({super.key});
+  static const routeName = "/";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

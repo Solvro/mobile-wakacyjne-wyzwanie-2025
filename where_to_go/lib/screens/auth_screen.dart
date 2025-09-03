@@ -4,6 +4,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
+  static const routeName = "/auth";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

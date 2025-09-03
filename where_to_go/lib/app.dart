@@ -1,3 +1,4 @@
+// lib/app.dart
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "app_router.dart";
@@ -9,10 +10,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeControllerProvider);
+    final goRouter = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
       title: "Dream Places",
       themeMode: themeMode,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       routerConfig: goRouter,
     );
   }
