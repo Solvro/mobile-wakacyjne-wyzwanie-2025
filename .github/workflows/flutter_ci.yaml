@@ -19,9 +19,7 @@ jobs:
         working-directory: where_to_go
 
     steps:
-      - uses: actions/checkout@v4
-
-      # POPRAWIONA LINIA - usuń flutter-version-file LUB popraw ścieżkę
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"

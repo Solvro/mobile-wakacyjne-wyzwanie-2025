@@ -40,7 +40,7 @@ Aby zapewnić sprawną organizację kursu oraz efektywną komunikację, wszyscy 
 
 * **Organizacja Pracy w Git:** Prace nad zadaniami należy prowadzić na osobnej gałęzi (branch) w systemie Git, stosując format nazewnictwa: `{numer_listy}-{imie}-{nazwisko}`.
 
-* **Zgłaszanie Zadań do Sprawdzenia:** Ukończone zadania należy zgłaszać poprzez utworzenie Pull Requesta na platformie GitHub. Tytuł Pull Requesta musi być zgodny ze schematem: `{numer_listy}-{imie}-{nazwisko}`. Pipeline (CI/CD) powiązany z Pull Requestem musi przechodzić poprawnie – wszystkie jego kroki muszą świecić się na zielono.
+* **Zgłaszanie Zadań do Sprawdzenia:** Ukończone zadania należy zgłaszać poprzez utworzenie Pull Requesta na platformie GitHub. Tytuł Pull Requesta musi być zgodny ze schematem: `{numer_listy}-{imie}-{nazwisko}` oraz w opisie pull requesta powinny być załączone screenshoty pokazujące stworzone UI. Pipeline (CI/CD) powiązany z Pull Requestem musi przechodzić poprawnie – wszystkie jego kroki muszą świecić się na zielono.
 
 * **Wyznaczenie Recenzentów:** W polu "Reviewers" utworzonego Pull Requesta należy oznaczyć prowadzących kurs: [tomasz-trela](https://github.com/tomasz-trela) oraz [simon-the-shark](https://github.com/simon-the-shark).
 
