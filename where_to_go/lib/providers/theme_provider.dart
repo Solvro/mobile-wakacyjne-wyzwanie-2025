@@ -5,15 +5,33 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "../features/theme/local_theme_repository.dart";
 
+// Provider for LocalThemeRepository
 final localThemeRepositoryProvider = Provider<LocalThemeRepository>((ref) {
   return LocalThemeRepository();
 });
 
+// StateNotifierProvider to manage ThemeMode state
 final themeControllerProvider = StateNotifierProvider<ThemeController, ThemeMode>((ref) {
   final repo = ref.read(localThemeRepositoryProvider);
   return ThemeController(repo);
 });
 
+// Define light and dark themes
+final light = ThemeData(
+  brightness: Brightness.light,
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+  appBarTheme: const AppBarTheme(centerTitle: false),
+  useMaterial3: true,
+);
+
+final dark = ThemeData(
+  brightness: Brightness.dark,
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber, brightness: Brightness.dark),
+  appBarTheme: const AppBarTheme(centerTitle: false),
+  useMaterial3: true,
+);
+
+// ThemeController to manage theme state
 class ThemeController extends StateNotifier<ThemeMode> {
   final LocalThemeRepository _repo;
 
