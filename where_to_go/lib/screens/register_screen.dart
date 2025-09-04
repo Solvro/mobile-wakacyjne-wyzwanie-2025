@@ -1,4 +1,6 @@
 // lib/screens/register_screen.dart
+import "dart:developer" as developer;
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
@@ -39,11 +41,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     try {
       final authRepo = ref.read(authRepositoryProvider);
       await authRepo.register(_emailController.text, _passwdController.text);
+
+      if (mounted) {
+        // Navigator.of(context).pop(); // Powrót do poprzedniego ekranu (AuthScreen)
+        await Navigator.of(context).pushReplacementNamed("/"); // Przejście do ekranu głównego
+      }
     } on Exception catch (e) {
-      setState(() {
-        _errorMessage = _getErrorMessage(e);
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = _getErrorMessage(e);
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -53,8 +62,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     } else if (error.toString().contains("Network error")) {
       return "Błąd sieci. Sprawdź połączenie internetowe.";
     }
-    print("Unexpected error: $error");
-    return "Wystąpił błąd. Spróbuj ponownie.";
+    developer.log("Unexpected error: $error", name: "AuthError");
+    // return "Wystąpił błąd. Spróbuj ponownie.";
+    return "Unexpected error: $error";
   }
 
   @override

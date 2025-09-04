@@ -8,10 +8,6 @@ import "../repositories/authentication_repository.dart";
 import "../repositories/local_authentication_repository.dart";
 import "../repositories/remote_authentication_repository.dart";
 
-// Plik ten definiuje providery dla zarządzania autentykacją użytkownika przy użyciu Riverpod.
-// Providery w Riverpod to mechanizm zarządzania stanem i zależnościami w aplikacji Flutter. To takie "dostawcy" danych i funkcjonalności dla całej aplikacji.
-// Dzięki nim możemy łatwo używać danych w różnych częściach aplikacji bez konieczności przekazywania ich ręcznie przez widgety.
-
 // 1. Provider dla zewnętrznych zależności
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage();
@@ -43,7 +39,7 @@ final authRepositoryProvider = Provider<AuthenticationRepository>((ref) {
   );
 });
 
-// 4. Provider stanu autentykacji
+// 4. Provider stanu autentykacji (uproszczony)
 final authStateProvider = FutureProvider<bool>((ref) async {
   final authRepo = ref.watch(authRepositoryProvider);
   await authRepo.initialize();
@@ -54,19 +50,4 @@ final authStateProvider = FutureProvider<bool>((ref) async {
 final tokensProvider = Provider<AuthenticationTokens?>((ref) {
   final authRepo = ref.watch(authRepositoryProvider);
   return authRepo.tokens;
-});
-
-// 6. Provider do odświeżania tokenów
-final refreshTokenProvider = FutureProvider<void>((ref) async {
-  final authRepo = ref.watch(authRepositoryProvider);
-  try {
-    final refreshed = await authRepo.refreshToken();
-    if (refreshed == null) {
-      await authRepo.logout();
-      throw Exception("Nie udało się odświeżyć tokena.");
-    }
-  } on DioException catch (e) {
-    await authRepo.logout();
-    throw Exception("Błąd odświeżania tokena: ${e.response?.data}");
-  }
 });

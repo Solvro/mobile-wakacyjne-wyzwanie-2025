@@ -6,7 +6,7 @@ import "../repositories/local_authentication_repository.dart";
 class RemoteAuthenticationRepository {
   final Dio _dio;
   final LocalAuthenticationRepository _localAuthRepo;
-  final _baseUrl = "https://backend-api.w.solvro.pl/";
+  final _baseUrl = "https://backend-api.w.solvro.pl";
 
   RemoteAuthenticationRepository({
     required Dio dio,

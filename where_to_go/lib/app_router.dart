@@ -1,6 +1,4 @@
-// app_router.dart
-import "dart:async";
-
+// lib/app_router.dart
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
@@ -21,18 +19,14 @@ class RouteNames {
 }
 
 final goRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
-
   return GoRouter(
     initialLocation: RouteNames.auth,
-    redirect: (context, state) {
-      // Sprawdź stan uwierzytelnienia
-      final isAuthenticated = authState.when(
-        data: (value) => value, //  Zwraca bool gdy dane są dostępne
-        loading: () => false, // Podczas ładowania traktuj jako niezalogowany
-        error: (_, __) => false, // 👈 Przy błędzie traktuj jako niezalogowany
-      );
-      // Ścieżki związane z uwierzytelnianiem
+    redirect: (context, state) async {
+      // Odczytaj authRepo bez watch (aby uniknąć cyklicznych zależności)
+      final authRepo = ref.read(authRepositoryProvider);
+      await authRepo.initialize();
+      final isAuthenticated = await authRepo.isLoggedIn;
+
       final isAuthPath = state.matchedLocation == RouteNames.auth ||
           state.matchedLocation == RouteNames.login ||
           state.matchedLocation == RouteNames.register;
@@ -47,7 +41,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         return RouteNames.auth;
       }
 
-      // Pozwól na normalną nawigację
       return null;
     },
     routes: [
@@ -83,28 +76,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
+    errorBuilder: (context, state) => const Scaffold(
       body: Center(
-        child: Text("Błąd 404: Strona nie znaleziona ${state.error}"),
+        child: Text("Błąd 404: Strona nie znaleziona"),
       ),
     ),
   );
 });
-
-// Potrzebna klasa do obsługi refreshListenable z Riverpod
-class GoRouterRefreshStream extends ChangeNotifier {
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    notifyListeners();
-    _subscription = stream.asBroadcastStream().listen(
-          (dynamic _) => notifyListeners(),
-        );
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  Future<void> dispose() async {
-    await _subscription.cancel();
-    super.dispose();
-  }
-}

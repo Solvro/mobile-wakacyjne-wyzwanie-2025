@@ -29,6 +29,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (mounted) {
+      // Navigator.of(context).pop(); // Powrót do poprzedniego ekranu (AuthScreen)
+      await Navigator.of(context).pushReplacementNamed("/"); // Przejście do ekranu głównego
+    }
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -51,7 +56,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } else if (error.toString().contains("Network error")) {
       return "Błąd sieci. Sprawdź połączenie internetowe.";
     }
-    return "Wystąpił błąd. Spróbuj ponownie.";
+    // return "Wystąpił błąd. Spróbuj ponownie.";
+    return "Unexpected error: $error";
   }
 
   @override

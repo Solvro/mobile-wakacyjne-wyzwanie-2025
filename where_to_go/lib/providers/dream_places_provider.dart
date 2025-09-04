@@ -1,12 +1,12 @@
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "../models/dream_place.dart";
 import "../repositories/dream_place_repository.dart";
-import "http_client_provider.dart"; // tu masz authenticationRepositoryProvider -> Dio
+import "http_client_provider.dart";
 
 /// Provider repozytorium DreamPlace
 final dreamPlaceRepositoryProvider = Provider<DreamPlaceRepository>((ref) {
   final dio = ref.watch(authenticationRepositoryProvider);
-  return DreamPlaceRepository(apiUrl: "${dio.options.baseUrl}dream-places");
+  return DreamPlaceRepository(apiUrl: dio.options.baseUrl);
 });
 
 /// Provider do listy miejsc marzeń
