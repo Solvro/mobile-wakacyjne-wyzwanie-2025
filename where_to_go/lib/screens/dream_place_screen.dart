@@ -5,6 +5,7 @@ import "package:go_router/go_router.dart";
 import "../controllers/dream_places_controller.dart";
 import "../features/theme/local_theme_repository.dart";
 import "../providers/theme_provider.dart";
+import ".//repositories/dream_place_repository.dart";
 import "add_place_dialog.dart";
 
 class DreamPlacesScreen extends ConsumerWidget {
@@ -105,7 +106,7 @@ class DreamPlacesScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          final newEntry = await showDialog<DreamPlacesCompanion>(
+          final newEntry = await showDialog<DreamPlaceRepository>(
             context: context,
             builder: (_) => const AddPlaceDialog(),
           );

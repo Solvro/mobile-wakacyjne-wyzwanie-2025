@@ -1,18 +1,25 @@
-// add_place_dialog.dart
+// lib/screens/add_place_dialog.dart
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
-class AddPlaceDialog extends StatefulWidget {
+import "../features/favorite/favorite_provider.dart";
+import "../models/dream_place.dart";
+import "../providers/http_client_provider.dart";
+
+class AddPlaceDialog extends ConsumerStatefulWidget {
   const AddPlaceDialog({super.key});
 
   @override
-  State<AddPlaceDialog> createState() => _AddPlaceDialogState();
+  ConsumerState<AddPlaceDialog> createState() => _AddPlaceDialogState();
 }
 
-class _AddPlaceDialogState extends State<AddPlaceDialog> {
+class _AddPlaceDialogState extends ConsumerState<AddPlaceDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
   final _imageController = TextEditingController();
+
+  var _isFavorite = false;
 
   @override
   void dispose() {
@@ -34,18 +41,41 @@ class _AddPlaceDialogState extends State<AddPlaceDialog> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: "Nazwa"),
+                decoration: const InputDecoration(
+                  labelText: "Nazwa",
+                  hintText: "Wenecja",
+                ),
                 validator: (value) => value == null || value.isEmpty ? "Podaj nazwę" : null,
               ),
               TextFormField(
                 controller: _descController,
-                decoration: const InputDecoration(labelText: "Opis"),
+                decoration: const InputDecoration(
+                  labelText: "Opis",
+                  hintText: "Piękne miejsce na ziemi",
+                ),
+                validator: (value) => value == null || value.isEmpty ? "Podaj opis" : null,
               ),
               TextFormField(
                 controller: _imageController,
                 decoration: const InputDecoration(
-                  labelText: "URL zdjęcia (opcjonalnie)",
+                  labelText: "URL obrazka",
+                  hintText: "https://example.com/image.jpg",
                 ),
+                validator: (value) => value == null || value.isEmpty ? "Podaj link obrazu" : null,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Text("Ulubione"),
+                  const Spacer(),
+                  Checkbox(
+                    value: _isFavorite,
+                    onChanged: (value) {
+                      setState(() => _isFavorite = value ?? false);
+                      ref.read(favoriteProvider.notifier).toggle();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -57,19 +87,25 @@ class _AddPlaceDialogState extends State<AddPlaceDialog> {
           child: const Text("Anuluj"),
         ),
         ElevatedButton(
-          onPressed: () {
-            if (!_formKey.currentState!.validate()) {
-              final entry = DreamPlacesCompanion.insert(
-                name: _nameController.text,
-                description: drift.Value(
-                  _descController.text.isNotEmpty ? _descController.text : null,
-                ),
-                imageUrl: drift.Value(
-                  _imageController.text.isNotEmpty ? _imageController.text : null,
-                ),
-              );
-              Navigator.of(context).pop(entry);
-            }
+          onPressed: () async {
+            if (!_formKey.currentState!.validate()) return;
+
+            // 👇 CHWYTAMY Navigator PRZED await – brak użycia BuildContext po await
+            final navigator = Navigator.of(context);
+
+            final newPlace = DreamPlace(
+              name: _nameController.text,
+              description: _descController.text,
+              imageUrl: _imageController.text,
+              isFavorite: _isFavorite,
+            );
+
+            final repo = ref.read(dreamPlaceRepositoryProvider);
+
+            await repo.addDreamPlace(newPlace);
+
+            // Pokazujemy nowe miejsce po dodaniu
+            navigator.pop(newPlace);
           },
           child: const Text("Dodaj"),
         ),

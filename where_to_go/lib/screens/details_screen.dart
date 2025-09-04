@@ -2,7 +2,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
+
 import "../controllers/dream_places_controller.dart";
+import "../models/dream_place.dart";
 
 class DetailsScreen extends ConsumerWidget {
   static const route = "/details";
@@ -52,9 +54,9 @@ class DetailsScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            if (place.imageUrl != null && place.imageUrl!.isNotEmpty)
+            if (place.imageUrl.isNotEmpty)
               Image.network(
-                place.imageUrl!,
+                place.imageUrl,
                 width: double.infinity,
                 height: 300,
                 fit: BoxFit.cover,
@@ -70,11 +72,11 @@ class DetailsScreen extends ConsumerWidget {
               ),
             const SizedBox(height: 20),
             Text(place.name, style: const TextStyle(fontSize: 32)),
-            if (place.description != null && place.description!.isNotEmpty)
+            if (place.description.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  place.description!,
+                  place.description,
                   style: const TextStyle(fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
