@@ -53,6 +53,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     } else if (error.toString().contains("Network error")) {
       return "Błąd sieci. Sprawdź połączenie internetowe.";
     }
+    print("Unexpected error: $error");
     return "Wystąpił błąd. Spróbuj ponownie.";
   }
 

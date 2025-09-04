@@ -6,7 +6,7 @@ import "../providers/auth_providers.dart";
 final authenticationRepositoryProvider = Provider<Dio>((ref) {
   final authRepo = ref.watch(authRepositoryProvider);
   final dio = Dio(BaseOptions(
-    baseUrl: "https://backend-api.w.solvro.pl/",
+    baseUrl: "https://backend-api.w.solvro.pl",
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 20),
     headers: {
