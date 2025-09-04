@@ -4,7 +4,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../features/favorite/favorite_provider.dart";
 import "../models/dream_place.dart";
-import "../providers/http_client_provider.dart";
+import "../providers/dream_places_provider.dart";
 
 class AddPlaceDialog extends ConsumerStatefulWidget {
   const AddPlaceDialog({super.key});

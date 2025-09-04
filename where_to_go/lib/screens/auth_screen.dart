@@ -1,6 +1,7 @@
 //lib/screens/auth_screen.dart
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -36,16 +37,17 @@ class AuthScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 // Navigate to Login Screen
-                await Navigator.pushNamed(context, "/login");
+                context.go("/login");
               },
               child: const Text("Zaloguj się"),
             ),
+            const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 // Navigate to Register Screen
-                await Navigator.pushNamed(context, "/register");
+                context.go("/register");
               },
               child: const Text("Zarejestruj się"),
             ),
