@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
+import "features/auth/http_provider.dart";
 import "features/theme/theme_provider.dart";
 import "themes/app_theme.dart";
 import "themes/enums/mode_theme.dart";
 import "themes/utils.dart";
 import "utils/app_router.dart";
-import "utils/database/providers/database_provider.dart";
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,10 +19,11 @@ class TravelApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final db = ref.watch(databaseProvider);
+    final dio = ref.watch(clientDioProvider);
+    final goRouter = ref.watch(goRouterProvider);
     final baseTheme = _getTheme(context, ref);
 
-    return db.when(
+    return dio.when(
       data: (_) => MaterialApp.router(
         routerConfig: goRouter,
         title: "Travel App",

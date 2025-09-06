@@ -1,33 +1,68 @@
-import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:hooks_riverpod/hooks_riverpod.dart";
+import "package:riverpod_annotation/riverpod_annotation.dart";
 
+import "../features/auth/auth_provider.dart";
 import "../views/bucket_list_screen.dart";
+import "../views/create_dream_place_screen.dart";
 import "../views/dream_place_screen_consumer_router.dart";
+import "../views/login_screen.dart";
+import "../views/register_screen.dart";
 
-final goRouter = GoRouter(
-  initialLocation: "/",
-  routes: [
-    GoRoute(
-      path: "/",
-      builder: (context, state) => const BucketListScreen(),
-    ),
-    GoRoute(
-      path: "${DreamPlaceScreenConsumerRouter.route}/:id",
-      pageBuilder: (context, state) {
-        final id = state.pathParameters["id"]!;
-        //return DreamPlaceScreen(id: id);
-        return CustomTransitionPage(
-          child: DreamPlaceScreenConsumerRouter(id: id),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(0, 1);
-            const end = Offset.zero;
-            final tween = Tween(begin: begin, end: end);
-            final offsetAnimation = animation.drive(tween);
+part "app_router.g.dart";
 
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-        );
-      },
-    ),
-  ],
-);
+@Riverpod(keepAlive: true)
+GoRouter goRouter(Ref ref) {
+  final authState = ref.watch(authNotifierProvider);
+
+  return GoRouter(
+    redirect: (context, state) => _handleRedirect(authState, state),
+    routes: [
+      GoRoute(
+        path: "/",
+        builder: (context, state) => const BucketListScreen(),
+      ),
+      GoRoute(
+        path: "${DreamPlaceScreenConsumerRouter.route}/:id",
+        builder: (context, state) {
+          final id = state.pathParameters["id"]!;
+          return DreamPlaceScreenConsumerRouter(id: id);
+        },
+      ),
+      GoRoute(
+        path: LoginScreen.route,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: RegisterScreen.route,
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: CreateDreamPlaceScreen.route,
+        builder: (context, state) => const CreateDreamPlaceScreen(),
+      ),
+    ],
+  );
+}
+
+String? _handleRedirect(AsyncValue<String?> authState, GoRouterState state) {
+  final isLoggingIn = state.matchedLocation == LoginScreen.route || state.matchedLocation == RegisterScreen.route;
+
+  return authState.when(
+    data: (user) {
+      final isLoggedIn = user != null;
+
+      if (!isLoggingIn && !isLoggedIn) {
+        return LoginScreen.route;
+      }
+
+      if (isLoggingIn && isLoggedIn) {
+        return "/";
+      }
+
+      return null;
+    },
+    error: (error, stack) => isLoggingIn ? null : LoginScreen.route,
+    loading: () => null,
+  );
+}

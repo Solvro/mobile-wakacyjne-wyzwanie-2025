@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
-import "../features/places/places_provider.dart";
+import "../features/places/dream_place_service_provider.dart";
 import "../themes/utils.dart";
+import "../utils/error_handler.dart";
+import "../utils/paths.dart";
 
 class DreamPlaceScreenConsumerRouter extends ConsumerWidget {
   final String id;
@@ -14,20 +16,26 @@ class DreamPlaceScreenConsumerRouter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final placeAsync = ref.watch(placeProvider(id));
 
+    ref.listen(dreamPlaceServiceProvider, (previous, next) {
+      if (next.hasError) {
+        handleError(context, ref, next.error);
+      }
+    });
+
     return placeAsync.when(
       data: (place) {
         return Scaffold(
             backgroundColor: context.colorScheme.primary,
             appBar: AppBar(
               backgroundColor: context.colorScheme.surface,
-              title: Text(place.title),
+              title: Text(place.name),
               actions: [
                 IconButton(
                   onPressed: () async {
-                    await ref.read(placesProvider.notifier).toggleFavorite(id);
+                    await ref.read(dreamPlaceServiceProvider.notifier).toggleFavorite(id);
                   },
-                  icon: place.isFavorite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-                  color: place.isFavorite ? Colors.red : null,
+                  icon: place.isFavourite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+                  color: place.isFavourite ? Colors.red : null,
                 )
               ],
             ),
@@ -36,28 +44,24 @@ class DreamPlaceScreenConsumerRouter extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    place.path,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(15),
+                    child: SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: Image.network(Paths.photoPath + place.imageUrl, fit: BoxFit.cover),
+                    )),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(place.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(place.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Text(place.description)
                   ],
                 ),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                for (final attraction in place.attractionList)
-                  Column(children: [Icon(attraction.icon), Text(attraction.title)])
-              ])
             ])));
       },
       error: (error, stack) => const Center(child: Text("Blad")),
