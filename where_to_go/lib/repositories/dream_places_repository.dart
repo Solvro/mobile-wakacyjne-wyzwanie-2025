@@ -1,11 +1,10 @@
-//import "../models/attraction.dart";
-import "../models/place.dart";
+import "../models/place_create_without_owner_input_dto.dart";
+import "../models/place_response_dto.dart";
 
 abstract class DreamPlacesRepository {
-  Future<Place?> read(String id);
-  Future<List<Place>> readAll();
+  Future<PlaceResponseDto> read(String id);
+  Future<List<PlaceResponseDto>> readAll();
   Future<void> toggleFavorite(String id);
-  /*Future<Place> create(
-      {String title, String description, String path, bool isFavorite = false, List<Attraction> attractionList});
-  Future<Place> delete(String id);*/
+  Future<PlaceResponseDto> create(PlaceCreateWithoutOwnerInputDto newPlace);
+  Future<void> delete(String id);
 }
