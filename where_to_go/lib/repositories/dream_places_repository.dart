@@ -14,7 +14,7 @@ class DreamPlacesRepository {
   }
 
   // UPDATE - zmiana isFavorite
-  Future<void> toggleFavorite(int id, bool currentStatus) async {
+  Future<void> toggleFavorite(int id, {required bool currentStatus}) async {
     await (_db.update(
       _db.dreamPlaces,
     )..where((tbl) => tbl.id.equals(id))).write(DreamPlacesCompanion(isFavorite: Value(!currentStatus)));

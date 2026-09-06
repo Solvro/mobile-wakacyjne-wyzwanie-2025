@@ -110,7 +110,7 @@ class Places extends _$Places {
     ); // szukamy miejsca z odpowiednim id, to ktorego chcemy zmienic favorite
     if (currentPlace == null) return; // jak nie znajdziemy to przerywamy dzialanie funkcji
 
-    await repo.toggleFavorite(id, currentPlace.isFavorite); // zcalluj metode w repo ktora toggluje favorite
+    await repo.toggleFavorite(id, currentStatus: currentPlace.isFavorite); // zcalluj metode w repo ktora toggluje favorite
 
     ref.invalidateSelf(); // odswiez UI -> uruchom build() jeszcze raz
   }
