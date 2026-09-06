@@ -9,6 +9,8 @@ class AppTheme {
         backgroundColor: Colors.deepPurple[300],
         foregroundColor: Colors.grey[100],
         centerTitle: true,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
       ),
       cardTheme: CardThemeData(
         color: Colors.deepPurple[300],
@@ -28,7 +30,13 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: Colors.grey[900],
-      appBarTheme: AppBarTheme(backgroundColor: Colors.grey[850], foregroundColor: Colors.grey[100], centerTitle: true),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey[850],
+        foregroundColor: Colors.grey[100],
+        centerTitle: true,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+      ),
       cardTheme: CardThemeData(
         color: Colors.grey[850],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
