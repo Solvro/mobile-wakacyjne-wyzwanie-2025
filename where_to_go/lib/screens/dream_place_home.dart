@@ -10,7 +10,7 @@ class DreamPlaceHome extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final places = ref.watch(placesProvider);
+    final placesAsync = ref.watch(placesProvider);
     return Scaffold(
       //backgroundColor: Theme.of(context).colorScheme.onPrimary,
       appBar: AppBar(
@@ -24,15 +24,16 @@ class DreamPlaceHome extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              await showDialog<void>(
-                context: context,
-                builder: (context) =>  const SettingsDialog(),
-              );
+              await showDialog<void>(context: context, builder: (context) => const SettingsDialog());
             },
           ),
         ],
       ),
-      body: ListView(children: [for (final place in places) PlaceCard(place: place)]),
+      body: placesAsync.when(
+        data: (places) => ListView(children: [for (final place in places) PlaceCard(place: place)]),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text("Błąd ładowania: $err")),
+      ),
     );
   }
 }

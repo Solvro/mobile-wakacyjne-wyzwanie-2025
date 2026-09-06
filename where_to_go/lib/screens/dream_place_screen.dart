@@ -11,7 +11,15 @@ class DreamPlaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final place = ref.watch(placesProvider).firstWhere((p) => p.id == id);
+    final placeId = int.parse(id); // bo go_router przekazuje url string
+    final placesAsync = ref.watch(placesProvider);
+
+    final place = placesAsync.value?.firstWhere((p) => p.id == placeId);
+
+    if (place == null) {
+      // obsluga ladowania
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final isFavorited = place.isFavorite;
     return Scaffold(
       //backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -29,7 +37,7 @@ class DreamPlaceScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(id),
+            onPressed: () => ref.read(placesProvider.notifier).toggleFavorite(placeId),
             icon: isFavorited
                 ? Icon(Icons.star_rounded, color: Colors.amber[600])
                 : Icon(Icons.star_border_rounded, color: Theme.of(context).colorScheme.onPrimary),
@@ -68,7 +76,11 @@ class DreamPlaceScreen extends ConsumerWidget {
                         children: [
                           Text(
                             place.descriptionTitle,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Text(

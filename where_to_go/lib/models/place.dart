@@ -2,7 +2,7 @@ import "../gen/assets.gen.dart";
 import "place_feature.dart";
 
 class Place {
-  final String id;
+  final int id;
   final String title;
   final String descriptionTitle;
   final String description;

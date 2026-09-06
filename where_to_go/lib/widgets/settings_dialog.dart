@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+
 import "../features/theme/theme_provider.dart";
 
 class SettingsDialog extends ConsumerWidget {
@@ -7,12 +8,8 @@ class SettingsDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = Theme
-        .of(context)
-        .colorScheme;
-    final currentTheme = ref
-        .watch(themeProvider)
-        .value ?? ThemeMode.system;
+    final colors = Theme.of(context).colorScheme;
+    final currentTheme = ref.watch(themeProvider).value ?? ThemeMode.system;
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -25,18 +22,11 @@ class SettingsDialog extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.settings,
-                    color: colors.onPrimary,
-                  ),
+                  Icon(Icons.settings, color: colors.onPrimary),
                   const SizedBox(width: 12),
                   Text(
                     "Ustawienia",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colors.onPrimary,
-                        fontSize: 24
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: colors.onPrimary, fontSize: 24),
                   ),
                 ],
               ),
@@ -47,30 +37,18 @@ class SettingsDialog extends ConsumerWidget {
               //   decoration: BoxDecoration(color: Colors.grey[400],
               //       borderRadius: BorderRadius.circular(10)),
               // ),
-              Divider(height: 24, color: Colors.grey[400],),
+              Divider(height: 24, color: Colors.grey[400]),
               Text(
                 "Motyw aplikacji",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: colors.onPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, color: colors.onPrimary, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 6),
 
               SegmentedButton<ThemeMode>(
                 segments: const [
-                  ButtonSegment(
-                    value: ThemeMode.light,
-                    label: Text("Jasny"),
-                    icon: Icon(Icons.light_mode, size: 12,),
-                  ),
-                  ButtonSegment(
-                    value: ThemeMode.dark,
-                    label: Text("Ciemny"),
-                    icon: Icon(Icons.dark_mode, size: 12),
-                  ),
+                  ButtonSegment(value: ThemeMode.light, label: Text("Jasny"), icon: Icon(Icons.light_mode, size: 12)),
+                  ButtonSegment(value: ThemeMode.dark, label: Text("Ciemny"), icon: Icon(Icons.dark_mode, size: 12)),
                   ButtonSegment(
                     value: ThemeMode.system,
                     label: Text("System"),
@@ -85,9 +63,7 @@ class SettingsDialog extends ConsumerWidget {
                 style: SegmentedButton.styleFrom(
                   foregroundColor: colors.onPrimary,
                   side: BorderSide(color: colors.onPrimary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ],

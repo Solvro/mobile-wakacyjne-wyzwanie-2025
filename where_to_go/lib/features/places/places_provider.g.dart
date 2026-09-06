@@ -12,7 +12,7 @@ part of 'places_provider.dart';
 @ProviderFor(Places)
 final placesProvider = PlacesProvider._();
 
-final class PlacesProvider extends $NotifierProvider<Places, List<Place>> {
+final class PlacesProvider extends $AsyncNotifierProvider<Places, List<Place>> {
   PlacesProvider._()
     : super(
         from: null,
@@ -30,23 +30,24 @@ final class PlacesProvider extends $NotifierProvider<Places, List<Place>> {
   @$internal
   @override
   Places create() => Places();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Place> value) {
-    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<List<Place>>(value));
-  }
 }
 
-String _$placesHash() => r'a5a9faebb8cd7146774fdcf90d8ac9476cd8a853';
+String _$placesHash() => r'9e81a7d6413ad35f3ca48ced48188c50108000e4';
 
-abstract class _$Places extends $Notifier<List<Place>> {
-  List<Place> build();
+abstract class _$Places extends $AsyncNotifier<List<Place>> {
+  FutureOr<List<Place>> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<List<Place>, List<Place>>;
+    final ref = this.ref as $Ref<AsyncValue<List<Place>>, List<Place>>;
     final element =
-        ref.element as $ClassProviderElement<AnyNotifier<List<Place>, List<Place>>, List<Place>, Object?, Object?>;
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Place>>, List<Place>>,
+              AsyncValue<List<Place>>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

@@ -1,15 +1,16 @@
 import "package:flutter/material.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 
+import "../../database/database_provider.dart";
 import "../../gen/assets.gen.dart";
 import "../../models/place.dart";
 import "../../models/place_feature.dart";
 
 part "places_provider.g.dart";
 
-final _initalPlaces = [
+final initalPlaces = [
   Place(
-    id: "1",
+    id: 1,
     title: "🇨🇾 Pafos, Cypr",
     descriptionTitle: "Nadmorskie miasteczko na Cyprze",
     description: "Piękne widoki, malownicze plaże i urokliwe ulice",
@@ -21,7 +22,7 @@ final _initalPlaces = [
     ],
   ),
   Place(
-    id: "2",
+    id: 2,
     title: "🇮🇹 Rzym, Włochy",
     descriptionTitle: "Antyczne miasto pełne zabytków",
     description: "Wiele znalezisk archeologicznych, centrum kultury",
@@ -33,7 +34,7 @@ final _initalPlaces = [
     ],
   ),
   Place(
-    id: "3",
+    id: 3,
     title: "🇪🇸 Barcelona, Hiszpania",
     descriptionTitle: "Stolica katalońskiego modernizmu",
     description: "Niezwykła architektura Gaudiego, piaszczyste plaże i tętniąca życiem ulica La Rambla.",
@@ -45,7 +46,7 @@ final _initalPlaces = [
     ],
   ),
   Place(
-    id: "4",
+    id: 4,
     title: "🇲🇩 Kiszyniów, Mołdawia",
     descriptionTitle: "Najbardziej zielona stolica Europy",
     description: "Spokojne miasto z licznymi parkami, brutalistyczną architekturą i słynnymi winiarniami w okolicy.",
@@ -57,7 +58,7 @@ final _initalPlaces = [
     ],
   ),
   Place(
-    id: "5",
+    id: 5,
     title: "🇫🇷 Nicea, Francja",
     descriptionTitle: "Perła Lazurowego Wybrzeża",
     description: "Elegancka promenada Anglików, błękitne morze i urokliwe stare miasto Vieux Nice.",
@@ -73,12 +74,44 @@ final _initalPlaces = [
 @riverpod
 class Places extends _$Places {
   @override
-  List<Place> build() => _initalPlaces;
+  Future<List<Place>> build() async {
+    final repo = ref.watch(dreamPlacesRepositoryProvider);
 
-  void toggleFavorite(String id) {
-    state = [
-      for (final p in state)
-        if (p.id == id) p.copyWith(isFavorite: !p.isFavorite) else p,
-    ];
+    await repo.seedDatabase();
+
+    final dbPlaces = await repo.getAllPlaces();
+
+    return dbPlaces.map((dbPlace) {
+      // dla kazdego place w places
+      final initalMatch = initalPlaces.firstWhere(
+        // znajdz jego features w liscie initialPlaces
+        (p) => p.title == dbPlace.title,
+        orElse: () => initalPlaces
+            .first, // jesli w bazie jest miejsce, ktorego nie ma w initialplaces to uzyj ikon pierwszego miejsca
+      );
+      return Place(
+        // zwroc obiekt Place wraz ze wszystkimi features
+        id: dbPlace.id,
+        title: dbPlace.title,
+        descriptionTitle: dbPlace.descriptionTitle,
+        description: dbPlace.description,
+        image: AssetGenImage(dbPlace.imageUrl),
+        features: initalMatch.features,
+        isFavorite: dbPlace.isFavorite,
+      );
+    }).toList(); // jako lista places
+  }
+
+  Future<void> toggleFavorite(int id) async {
+    final repo = ref.read(dreamPlacesRepositoryProvider); // polaczenie z baza danych
+
+    final currentPlace = state.value?.firstWhere(
+      (p) => p.id == id,
+    ); // szukamy miejsca z odpowiednim id, to ktorego chcemy zmienic favorite
+    if (currentPlace == null) return; // jak nie znajdziemy to przerywamy dzialanie funkcji
+
+    await repo.toggleFavorite(id, currentPlace.isFavorite); // zcalluj metode w repo ktora toggluje favorite
+
+    ref.invalidateSelf(); // odswiez UI -> uruchom build() jeszcze raz
   }
 }
