@@ -16,16 +16,20 @@ class DreamPlacesRepository {
         .toList();
   }
 
-  Future<void> addPlace(DreamPlace place, String token) async {
-    await _client.post(
-      '/places',
-      data: place.toJson(),
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      ),
-    );
+
+    // CREATE: Tworzenie nowego miejsca
+  Future<void> createPlace(DreamPlace place) async {
+    await _client.post('/places', data: place.toJson());
+  }
+
+  // UPDATE: Edycja istniejącego miejsca (nazwa, opis, imageUrl)
+  Future<void> updatePlace(int id, DreamPlace place) async {
+    await _client.put('/places/$id', data: place.toJson());
+  }
+
+  // DELETE: Usuwanie miejsca
+  Future<void> deletePlace(int id) async {
+    await _client.delete('/places/$id');
   }
 
   Future<void> toggleFavorite(int id, bool currentStatus) async {

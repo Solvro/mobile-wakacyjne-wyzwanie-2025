@@ -3,6 +3,8 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 import "auth_provider.dart";
 import "features/auth/auth_screens.dart";
+import "features/places/add_edit_place_screen.dart";
+import "features/places/place_model.dart";
 import "features/places/screens.dart";
 
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -28,9 +30,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: "${DreamPlaceScreen.route}/:id",
         builder: (context, state) {
-          // Konwersja String z URL na int dla widoku ekranu
           final id = int.parse(state.pathParameters["id"]!);
           return DreamPlaceScreen(id: id);
+        },
+      ),
+      GoRoute(
+        path: AddEditPlaceScreen.routeName,
+        builder: (context, state) {
+          final place = state.extra as DreamPlace?;
+          return AddEditPlaceScreen(placeToEdit: place);
         },
       ),
     ],

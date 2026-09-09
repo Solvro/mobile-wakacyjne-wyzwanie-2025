@@ -7,6 +7,7 @@ import "package:go_router/go_router.dart";
 
 import "../../auth_provider.dart";
 import "../../theme_provider.dart";
+import "add_edit_place_screen.dart";
 import "places_provider.dart";
 
 class HomeScreen extends ConsumerWidget {
@@ -25,6 +26,10 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(AddEditPlaceScreen.routeName),
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: Text(
           "Wymarzone Miejsca",
@@ -41,21 +46,21 @@ class HomeScreen extends ConsumerWidget {
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.invalidate(placesProvider),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: IconButton(
-              icon: Icon(
-                isLightMode ? Icons.light_mode : Icons.dark_mode,
-              ),
-              onPressed: () {
-                ref.read(themeNotifierProvider.notifier).setTheme(!isLightMode);
-              },
+          IconButton(
+            tooltip: "Zmień motyw",
+            icon: Icon(
+              isLightMode ? Icons.light_mode : Icons.dark_mode,
             ),
+            onPressed: () {
+              ref.read(themeNotifierProvider.notifier).setTheme(!isLightMode);
+            },
           ),
           IconButton(
             tooltip: "Wyloguj się",
             icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authNotifierProvider.notifier).logout(),
+            onPressed: () {
+              ref.read(authNotifierProvider.notifier).logout();
+            },
           ),
         ],
       ),
@@ -75,7 +80,6 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
         data: (places) {
-          // 1. Obsługa pustej bazy backendu
           if (places.isEmpty) {
             return RefreshIndicator(
               onRefresh: () async => ref.invalidate(placesProvider),
@@ -85,7 +89,7 @@ class HomeScreen extends ConsumerWidget {
                   SizedBox(height: 200),
                   Center(
                     child: Text(
-                      "Brak miejsc w bazie danych.\nDodaj nowe miejsce przez API lub aplikację!",
+                      "Brak miejsc w bazie danych.\nDodaj nowe miejsce przez aplikację!",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
@@ -95,49 +99,95 @@ class HomeScreen extends ConsumerWidget {
             );
           }
 
-          // 2. Wyświetlanie istniejących miejsc z odświeżaniem w dół
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(placesProvider),
             child: ListView.builder(
               itemCount: places.length,
               itemBuilder: (context, index) {
                 final place = places[index];
-                return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: place.imageUrl.isNotEmpty
-                        ? Image.network(
-                            place.imageUrl,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) =>
-                                const Icon(Icons.broken_image),
-                          )
-                        : const Icon(Icons.place, size: 40),
+                return Dismissible(
+                  key: Key(place.id.toString()),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  title: Text(place.name),
-                  subtitle: Text(
-                    place.description,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                      place.isFavourite ? Icons.favorite : Icons.favorite_border,
-                      color: place.isFavourite ? Colors.red : textColor,
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(placesNotifierProvider)
-                          .toggleFavorite(place.id!, place.isFavourite);
-                    },
-                  ),
-                  onTap: () {
-                    unawaited(
-                      GoRouter.of(context).push("${DreamPlaceScreen.route}/${place.id}"),
+                  confirmDismiss: (_) async {
+                    return await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Usuń miejsce'),
+                        content: const Text('Czy na pewno chcesz usunąć to miejsce?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Anuluj'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text('Usuń', style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
                     );
                   },
+                  onDismissed: (_) async {
+                    await ref.read(placesRepositoryProvider).deletePlace(place.id!);
+                    ref.invalidate(placesProvider);
+                  },
+                  child: ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: place.imageUrl.isNotEmpty
+                          ? Image.network(
+                              place.imageUrl,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) =>
+                                  const Icon(Icons.broken_image),
+                            )
+                          : const Icon(Icons.place, size: 40),
+                    ),
+                    title: Text(place.name),
+                    subtitle: Text(
+                      place.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            place.isFavourite ? Icons.favorite : Icons.favorite_border,
+                            color: place.isFavourite ? Colors.red : textColor,
+                          ),
+                          onPressed: () {
+                            ref
+                                .read(placesNotifierProvider)
+                                .toggleFavorite(place.id!, place.isFavourite);
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit, size: 20),
+                          onPressed: () {
+                            context.push(
+                              AddEditPlaceScreen.routeName,
+                              extra: place,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      unawaited(
+                        GoRouter.of(context).push("${DreamPlaceScreen.route}/${place.id}"),
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -184,19 +234,53 @@ class DreamPlaceScreen extends ConsumerWidget {
               ),
               backgroundColor: theme.appBarTheme.backgroundColor,
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: IconButton(
-                    icon: Icon(
-                      place.isFavourite ? Icons.favorite : Icons.favorite_border,
-                      color: place.isFavourite ? Colors.red : textColor,
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(placesNotifierProvider)
-                          .toggleFavorite(place.id!, place.isFavourite);
-                    },
+                IconButton(
+                  icon: Icon(
+                    place.isFavourite ? Icons.favorite : Icons.favorite_border,
+                    color: place.isFavourite ? Colors.red : textColor,
                   ),
+                  onPressed: () {
+                    ref
+                        .read(placesNotifierProvider)
+                        .toggleFavorite(place.id!, place.isFavourite);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    context.push(
+                      AddEditPlaceScreen.routeName,
+                      extra: place,
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Usuń miejsce'),
+                        content: const Text('Czy na pewno chcesz usunąć to miejsce?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Anuluj'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text('Usuń', style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true) {
+                      await ref.read(placesRepositoryProvider).deletePlace(place.id!);
+                      ref.invalidate(placesProvider);
+                      if (context.mounted) Navigator.pop(context);
+                    }
+                  },
                 ),
               ],
             ),
