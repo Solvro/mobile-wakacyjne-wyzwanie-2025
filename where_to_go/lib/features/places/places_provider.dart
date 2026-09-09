@@ -1,27 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
+import '../../auth_provider.dart';
+import 'place_model.dart';
+import 'places_repository.dart';
 
-final databaseProvider = Provider<AppDatabase>((ref) {
-  final db = AppDatabase();
-  ref.onDispose(() => db.close());
-  return db;
+final placesRepositoryProvider = Provider<DreamPlacesRepository>((ref) {
+  return DreamPlacesRepository(ref.watch(apiClientProvider));
 });
 
-final placesProvider = StreamProvider<List<DreamPlace>>((ref) {
-  final db = ref.watch(databaseProvider);
-  return db.watchAllPlaces();
+final placesProvider = FutureProvider<List<DreamPlace>>((ref) async {
+  final repository = ref.watch(placesRepositoryProvider);
+  return repository.getPlaces();
 });
 
 class PlacesNotifier {
-  final AppDatabase _db;
-  PlacesNotifier(this._db);
+  final DreamPlacesRepository _repository;
+  final Ref _ref;
+
+  PlacesNotifier(this._repository, this._ref);
 
   Future<void> toggleFavorite(int id, bool currentStatus) async {
-    await _db.toggleFavorite(id, currentStatus);
+    await _repository.toggleFavorite(id, currentStatus);
+    _ref.invalidate(placesProvider);
   }
 }
 
 final placesNotifierProvider = Provider<PlacesNotifier>((ref) {
-  final db = ref.watch(databaseProvider);
-  return PlacesNotifier(db);
+  final repository = ref.watch(placesRepositoryProvider);
+  return PlacesNotifier(repository, ref);
 });

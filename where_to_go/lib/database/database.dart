@@ -25,12 +25,20 @@ class DreamPlaces extends Table {
   TextColumn get iconText3 => text()();
 }
 
-@DriftDatabase(tables: [DreamPlaces])
+// Nowa tabela użytkowników w lokalnej bazie Drift
+class Users extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get email => text().unique()();
+  TextColumn get username => text()();
+  TextColumn get password => text()();
+}
+
+@DriftDatabase(tables: [DreamPlaces, Users])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2; // Zwiększona wersja schematu z 1 na 2
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -38,6 +46,12 @@ class AppDatabase extends _$AppDatabase {
           await m.createAll();
           // Seedowanie wykonuje się WYŁĄCZNIE raz przy fizycznym tworzeniu pliku bazy
           await seedDatabase();
+        },
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from < 2) {
+            // Dodanie tabeli użytkowników przy aktualizacji
+            await m.createTable(users);
+          }
         },
       );
 
@@ -132,8 +146,7 @@ class AppDatabase extends _$AppDatabase {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
-    // Zmiana z db.sqlite na db_v2.sqlite wymusi stworzenie czystej bazy
-    final file = File(p.join(dbFolder.path, 'db_v3.sqlite'));
+    final file = File(p.join(dbFolder.path, 'db_v4.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
 }

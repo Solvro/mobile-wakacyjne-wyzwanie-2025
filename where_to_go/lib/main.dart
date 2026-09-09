@@ -2,19 +2,18 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "app_router.dart";
-import 'features/places/places_provider.dart';
 import "theme.dart";
 import "theme_provider.dart";
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final container = ProviderContainer();
-  // Pobieramy instancję bazy danych i dokonujemy sprawdzenia / seedowania
-  final db = container.read(databaseProvider);
-  await db.seedDatabase();
-
-  runApp(const ProviderScope(child: MyApp()));
+  // Zwykły ProviderScope wystarczy, bo nie inicjalizujemy już ręcznie bazy danych
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {
@@ -35,7 +34,7 @@ class MyApp extends ConsumerWidget {
     );
 
     return MaterialApp.router(
-      routerConfig: goRouter,
+      routerConfig: ref.watch(goRouterProvider),
       title: "Wymarzone Miejsca",
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
