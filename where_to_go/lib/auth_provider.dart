@@ -13,8 +13,9 @@ final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
 final apiClientProvider = Provider<Dio>((ref) {
   final storage = ref.watch(secureStorageProvider);
   final client = Dio(BaseOptions(baseUrl: apiBaseUrl));
-  
-  client.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+
+  client.interceptors
+      .add(LogInterceptor(requestBody: true, responseBody: true));
   client.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {

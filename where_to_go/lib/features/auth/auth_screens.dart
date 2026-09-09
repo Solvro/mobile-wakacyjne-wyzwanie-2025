@@ -32,38 +32,38 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _submit() async {
-  if (!_formKey.currentState!.validate()) return;
-  setState(() {
-    _submitting = true;
-    _error = null;
-  });
-  try {
-    final notifier = ref.read(authNotifierProvider.notifier);
-    if (widget.isRegistering) {
-      await notifier.register(
-          email: _emailController.text.trim(),
-          username: _usernameController.text.trim(),
-          password: _passwordController.text);
-    } else {
-      await notifier.login(
-          identifier: _emailController.text.trim(),
-          password: _passwordController.text);
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _submitting = true;
+      _error = null;
+    });
+    try {
+      final notifier = ref.read(authNotifierProvider.notifier);
+      if (widget.isRegistering) {
+        await notifier.register(
+            email: _emailController.text.trim(),
+            username: _usernameController.text.trim(),
+            password: _passwordController.text);
+      } else {
+        await notifier.login(
+            identifier: _emailController.text.trim(),
+            password: _passwordController.text);
+      }
+      final auth = ref.read(authNotifierProvider);
+      if (mounted && auth.hasError) {
+        setState(() => _error = _message(auth.error));
+      } else if (mounted) {
+        ref.invalidate(placesProvider);
+        context.go("/");
+      }
+    } on DioException catch (error) {
+      if (mounted) setState(() => _error = _message(error));
+    } on FormatException catch (error) {
+      if (mounted) setState(() => _error = error.message);
+    } finally {
+      if (mounted) setState(() => _submitting = false);
     }
-    final auth = ref.read(authNotifierProvider);
-    if (mounted && auth.hasError) {
-      setState(() => _error = _message(auth.error));
-    } else if (mounted) {
-      ref.invalidate(placesProvider);
-      context.go("/");
-    }
-  } on DioException catch (error) {
-    if (mounted) setState(() => _error = _message(error));
-  } on FormatException catch (error) {
-    if (mounted) setState(() => _error = error.message);
-  } finally {
-    if (mounted) setState(() => _submitting = false);
   }
-}
 
   String _message(Object? error) {
     if (error is DioException) {

@@ -119,7 +119,8 @@ class HomeScreen extends ConsumerWidget {
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Usuń miejsce'),
-                        content: const Text('Czy na pewno chcesz usunąć to miejsce?'),
+                        content: const Text(
+                            'Czy na pewno chcesz usunąć to miejsce?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, false),
@@ -127,14 +128,17 @@ class HomeScreen extends ConsumerWidget {
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
-                            child: const Text('Usuń', style: TextStyle(color: Colors.red)),
+                            child: const Text('Usuń',
+                                style: TextStyle(color: Colors.red)),
                           ),
                         ],
                       ),
                     );
                   },
                   onDismissed: (_) async {
-                    await ref.read(placesRepositoryProvider).deletePlace(place.id!);
+                    await ref
+                        .read(placesRepositoryProvider)
+                        .deletePlace(place.id!);
                     ref.invalidate(placesProvider);
                   },
                   child: ListTile(
@@ -162,7 +166,9 @@ class HomeScreen extends ConsumerWidget {
                       children: [
                         IconButton(
                           icon: Icon(
-                            place.isFavourite ? Icons.favorite : Icons.favorite_border,
+                            place.isFavourite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: place.isFavourite ? Colors.red : textColor,
                           ),
                           onPressed: () {
@@ -184,7 +190,8 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     onTap: () {
                       unawaited(
-                        GoRouter.of(context).push("${DreamPlaceScreen.route}/${place.id}"),
+                        GoRouter.of(context)
+                            .push("${DreamPlaceScreen.route}/${place.id}"),
                       );
                     },
                   ),
@@ -261,7 +268,8 @@ class DreamPlaceScreen extends ConsumerWidget {
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Usuń miejsce'),
-                        content: const Text('Czy na pewno chcesz usunąć to miejsce?'),
+                        content: const Text(
+                            'Czy na pewno chcesz usunąć to miejsce?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, false),
@@ -269,14 +277,17 @@ class DreamPlaceScreen extends ConsumerWidget {
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
-                            child: const Text('Usuń', style: TextStyle(color: Colors.red)),
+                            child: const Text('Usuń',
+                                style: TextStyle(color: Colors.red)),
                           ),
                         ],
                       ),
                     );
 
                     if (confirm == true) {
-                      await ref.read(placesRepositoryProvider).deletePlace(place.id!);
+                      await ref
+                          .read(placesRepositoryProvider)
+                          .deletePlace(place.id!);
                       ref.invalidate(placesProvider);
                       if (context.mounted) Navigator.pop(context);
                     }
@@ -314,7 +325,8 @@ class DreamPlaceScreen extends ConsumerWidget {
                             else
                               const SizedBox(
                                 height: 150,
-                                child: Center(child: Icon(Icons.place, size: 80)),
+                                child:
+                                    Center(child: Icon(Icons.place, size: 80)),
                               ),
                             Padding(
                               padding: const EdgeInsets.all(16),

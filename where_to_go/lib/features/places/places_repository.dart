@@ -16,8 +16,7 @@ class DreamPlacesRepository {
         .toList();
   }
 
-
-    // CREATE: Tworzenie nowego miejsca
+  // CREATE: Tworzenie nowego miejsca
   Future<void> createPlace(DreamPlace place) async {
     await _client.post('/places', data: place.toJson());
   }

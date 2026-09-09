@@ -46,8 +46,9 @@ class AuthenticationRepository {
   Future<void> _authenticate(String path, Map<String, dynamic> data) async {
     final response = await _client.post<Map<String, dynamic>>(path, data: data);
     final body = response.data ?? const <String, dynamic>{};
-    final accessToken = body["accessToken"] ?? body["access_token"] ?? body["token"];
-    
+    final accessToken =
+        body["accessToken"] ?? body["access_token"] ?? body["token"];
+
     if (accessToken is! String || accessToken.isEmpty) {
       throw const FormatException("API nie zwróciło tokenu dostępu.");
     }

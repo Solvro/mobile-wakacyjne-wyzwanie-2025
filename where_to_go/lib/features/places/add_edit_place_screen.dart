@@ -18,7 +18,7 @@ class _AddEditPlaceScreenState extends ConsumerState<AddEditPlaceScreen> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _imageUrlController;
-  
+
   late bool _isFavourite;
 
   bool get isEditing => widget.placeToEdit != null;
@@ -26,10 +26,13 @@ class _AddEditPlaceScreenState extends ConsumerState<AddEditPlaceScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.placeToEdit?.name ?? '');
-    _descriptionController = TextEditingController(text: widget.placeToEdit?.description ?? '');
-    _imageUrlController = TextEditingController(text: widget.placeToEdit?.imageUrl ?? '');
-    
+    _nameController =
+        TextEditingController(text: widget.placeToEdit?.name ?? '');
+    _descriptionController =
+        TextEditingController(text: widget.placeToEdit?.description ?? '');
+    _imageUrlController =
+        TextEditingController(text: widget.placeToEdit?.imageUrl ?? '');
+
     _isFavourite = widget.placeToEdit?.isFavourite ?? false;
   }
 
@@ -102,10 +105,11 @@ class _AddEditPlaceScreenState extends ConsumerState<AddEditPlaceScreen> {
                 decoration: const InputDecoration(
                   labelText: 'URL obrazka',
                 ),
-                validator: (v) => v == null || v.isEmpty ? 'Podaj URL obrazka' : null,
+                validator: (v) =>
+                    v == null || v.isEmpty ? 'Podaj URL obrazka' : null,
               ),
               const SizedBox(height: 12),
-              
+
               // 4. Widget przełącznika wewnątrz formularza
               SwitchListTile(
                 title: const Text('Dodaj do ulubionych'),
@@ -116,7 +120,7 @@ class _AddEditPlaceScreenState extends ConsumerState<AddEditPlaceScreen> {
                   });
                 },
               ),
-              
+
               const SizedBox(height: 24),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
